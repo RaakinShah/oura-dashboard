@@ -28,17 +28,28 @@ export default function ThemeToggle() {
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
+    console.log('Toggle theme from', theme, 'to', newTheme);
+
     setTheme(newTheme);
 
-    // Update the DOM
+    // Update the DOM immediately
+    const htmlElement = document.documentElement;
     if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
+      htmlElement.classList.add('dark');
+      console.log('Added dark class');
     } else {
-      document.documentElement.classList.remove('dark');
+      htmlElement.classList.remove('dark');
+      console.log('Removed dark class');
     }
 
     // Save to localStorage
     localStorage.setItem('theme', newTheme);
+    console.log('Theme saved to localStorage:', newTheme);
+
+    // Force a re-render by ensuring state updates
+    setTimeout(() => {
+      console.log('Current classes:', htmlElement.className);
+    }, 100);
   };
 
   // Don't render until mounted to prevent hydration mismatch
@@ -56,12 +67,18 @@ export default function ThemeToggle() {
   return (
     <div className="mt-3 pt-3 border-t border-gray-800/50">
       <button
-        onClick={toggleTheme}
-        className="flex w-full items-center justify-between px-3 py-2 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-all duration-200 group"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleTheme();
+        }}
+        type="button"
+        className="flex w-full items-center justify-between px-3 py-2 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-all duration-200 group cursor-pointer"
+        style={{ pointerEvents: 'auto' }}
         aria-label="Toggle dark mode"
       >
-        <span className="text-xs text-gray-400 font-medium">Theme</span>
-        <div className="flex items-center gap-2">
+        <span className="text-xs text-gray-400 font-medium pointer-events-none">Theme</span>
+        <div className="flex items-center gap-2 pointer-events-none">
           {theme === 'dark' ? (
             <Moon className="h-4 w-4 text-purple-400" />
           ) : (
