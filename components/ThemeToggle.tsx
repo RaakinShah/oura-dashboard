@@ -15,7 +15,11 @@ export default function ThemeToggle() {
 
     if (stored) {
       setTheme(stored);
-      document.documentElement.classList.toggle('dark', stored === 'dark');
+      if (stored === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     } else if (systemPrefersDark) {
       setTheme('dark');
       document.documentElement.classList.add('dark');
@@ -25,7 +29,15 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+
+    // Update the DOM
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Save to localStorage
     localStorage.setItem('theme', newTheme);
   };
 
