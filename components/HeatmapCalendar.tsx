@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { SleepData, ActivityData, ReadinessData } from '@/types/oura';
+import { SleepData, ActivityData, ReadinessData } from '@/lib/oura-api';
 
 interface HeatmapCalendarProps {
   sleep: SleepData[];
