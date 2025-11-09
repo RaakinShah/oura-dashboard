@@ -343,6 +343,7 @@ export class LifestyleCorrelationAnalyzer {
       caffeine: 'Late caffeine intake',
       exercise_timing: 'Late evening exercise',
       meal_timing: 'Late meal timing',
+      screen_time: 'Screen time before bed',
       stress: 'Elevated stress',
       nap: 'Daytime napping',
     };
@@ -387,6 +388,10 @@ export class LifestyleCorrelationAnalyzer {
       meal_timing: {
         negative: 'Finish last meal 3 hours before bed. Late eating disrupts thermoregulation and sleep quality.',
         positive: 'Meal timing appears optimal. Maintain current eating schedule.',
+      },
+      screen_time: {
+        negative: 'Avoid screens 2 hours before bed. Blue light suppresses melatonin and delays sleep onset.',
+        positive: 'Screen time habits appear optimal. Continue current practices.',
       },
       stress: {
         negative: 'Implement evening wind-down routine: Meditation, breathing exercises, or gentle stretching before bed.',

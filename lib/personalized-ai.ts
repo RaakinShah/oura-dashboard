@@ -1,4 +1,4 @@
-import { SleepData, ActivityData, ReadinessData } from '@/types/oura';
+import { SleepData, ActivityData, ReadinessData } from '@/lib/oura-api';
 import { DailyNote, getNotes } from './notes-storage';
 
 /**

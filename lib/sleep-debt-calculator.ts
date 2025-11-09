@@ -376,7 +376,7 @@ export class SleepDebtCalculator {
     history: SleepDebtAnalysis['debtHistory'],
     sleepNeed: number
   ): SleepDebtAnalysis['insights'] {
-    const insights: SleepDebtAnalysis['insights'][] = [];
+    const insights: SleepDebtAnalysis['insights'] = [];
 
     // Main debt status insight
     insights.push({

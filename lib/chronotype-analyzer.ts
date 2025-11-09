@@ -475,8 +475,8 @@ export class ChronotypeAnalyzer {
     workDays: SleepData[],
     freeDays: SleepData[],
     performance: ChronotypeAnalysis['performancePatterns']
-  ): ChronotypeAnalysis['insights'][] {
-    const insights: ChronotypeAnalysis['insights'][] = [];
+  ): ChronotypeAnalysis['insights'] {
+    const insights: ChronotypeAnalysis['insights'] = [];
 
     // Chronotype distribution insight
     const chronotypeDistribution = {
