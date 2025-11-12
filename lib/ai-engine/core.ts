@@ -13,10 +13,12 @@ import { PatternRecognition } from './patterns';
 import { ContextualIntelligence } from './context';
 import { RecoveryEngine } from './recovery';
 import { OptimizationEngine } from './optimization';
+import { MLPersonalizationEngine } from './ml-personalization';
+import { PersonalizedInsightEngine } from './personalized-insights';
 
 /**
  * Next-Generation AI Health Engine
- * Dramatically enhanced with advanced analytics, personalization, and predictions
+ * ML-powered with truly personalized insights based on individual patterns
  */
 export class EnhancedAIEngine {
   private static defaultOptions: AnalysisOptions = {
@@ -49,6 +51,21 @@ export class EnhancedAIEngine {
       const healthData: HealthData = { sleep, activity, readiness };
       const baselines = PersonalizationEngine.generateBaselines(healthData);
 
+      // ========== PERSONALIZED INSIGHTS (ML-POWERED) ==========
+      // These are prioritized because they're specific to THIS user
+      if (sleep.length >= 14) {
+        const userProfile = MLPersonalizationEngine.buildUserProfile(sleep, activity, readiness, baselines);
+        const personalizedInsights = PersonalizedInsightEngine.generatePersonalizedInsights(
+          sleep,
+          activity,
+          readiness,
+          baselines,
+          userProfile
+        );
+        insights.push(...personalizedInsights);
+      }
+
+      // ========== GENERAL INSIGHTS (STILL VALUABLE) ==========
       // 1. Sleep Analysis Insights
       const sleepInsights = this.analyzeSleepPatterns(sleep, readiness, baselines, opts);
       insights.push(...sleepInsights);

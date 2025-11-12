@@ -1,27 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  /* Peaceful Light Mode - Soft, natural tones */
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --card-background: #ffffff;
-  --border-color: #e7e5e4;
+  /* Nature-Inspired Light Mode - Earth, Sky, Forest */
+  --background: #f7f9f7;
+  --foreground: #2f3e2d;
+  --card-background: #fefffe;
+  --border-color: #e8ede8;
 
-  /* Peaceful accent colors - Soft, muted */
-  --accent-primary: #7c3aed;
-  --accent-secondary: #0ea5e9;
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --accent-danger: #ef4444;
+  /* Nature color palette - Inspired by earth, sky, and forest */
+  --nature-sage: #8b9d83;
+  --nature-forest: #4a6b5a;
+  --nature-sky: #87b5d8;
+  --nature-ocean: #5b9aa8;
+  --nature-sand: #d4c5a9;
+  --nature-sunrise: #e6a87c;
+  --nature-sunset: #d88f7a;
+  --nature-leaf: #7ba35c;
+  --nature-moss: #6d8c5e;
 
-  /* Soft gradients */
-  --gradient-calm: linear-gradient(135deg, #f0f9ff 0%, #faf5ff 100%);
-  --gradient-warm: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  /* Semantic nature colors */
+  --accent-primary: var(--nature-forest);
+  --accent-secondary: var(--nature-sky);
+  --accent-success: var(--nature-leaf);
+  --accent-warning: var(--nature-sunrise);
+  --accent-danger: var(--nature-sunset);
 
-  /* Shadows - Softer, more subtle */
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
-  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  /* Organic gradients */
+  --gradient-dawn: linear-gradient(135deg, #fef4e8 0%, #e8f4f8 100%);
+  --gradient-forest: linear-gradient(135deg, #f0f7ed 0%, #e8f2e8 100%);
+  --gradient-ocean: linear-gradient(135deg, #e8f4f8 0%, #e8f0f4 100%);
+  --gradient-earth: linear-gradient(135deg, #f8f4ed 0%, #f0ebe0 100%);
+
+  /* Softer, natural shadows */
+  --shadow-soft: 0 1px 2px 0 rgba(47, 62, 45, 0.02), 0 1px 3px 0 rgba(47, 62, 45, 0.01);
+  --shadow-medium: 0 2px 4px -1px rgba(47, 62, 45, 0.03), 0 4px 6px -1px rgba(47, 62, 45, 0.02);
+  --shadow-large: 0 8px 12px -3px rgba(47, 62, 45, 0.04), 0 12px 16px -4px rgba(47, 62, 45, 0.03);
 }
 
 @theme inline {
@@ -33,31 +46,42 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.dark) {
-    --background: #1a1816;
-    --foreground: #f5f5f4;
-    --card-background: #262320;
-    --border-color: #3f3b37;
+    --background: #1a1f1a;
+    --foreground: #e8ede8;
+    --card-background: #242924;
+    --border-color: #363d36;
   }
 }
 
 .dark {
-  /* Warm Dark Mode - Easier on eyes */
-  --background: #1a1816;
-  --foreground: #f5f5f4;
-  --card-background: #262320;
-  --border-color: #3f3b37;
+  /* Night Forest Mode - Deep, peaceful darkness */
+  --background: #1a1f1a;
+  --foreground: #e8ede8;
+  --card-background: #242924;
+  --border-color: #363d36;
 
-  /* Darker mode accents - Slightly desaturated for comfort */
-  --accent-primary: #a78bfa;
-  --accent-secondary: #38bdf8;
-  --accent-success: #34d399;
-  --accent-warning: #fbbf24;
-  --accent-danger: #f87171;
+  /* Night nature colors - Moonlit tones */
+  --nature-sage: #9aad92;
+  --nature-forest: #6b8c7a;
+  --nature-sky: #8fa9bd;
+  --nature-ocean: #7ba8b5;
+  --nature-sand: #bfb39a;
+  --nature-sunrise: #d4a88a;
+  --nature-sunset: #c89585;
+  --nature-leaf: #8fb570;
+  --nature-moss: #7d9c6f;
 
-  /* Dark mode shadows */
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
-  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  /* Semantic nature colors for dark mode */
+  --accent-primary: var(--nature-forest);
+  --accent-secondary: var(--nature-sky);
+  --accent-success: var(--nature-leaf);
+  --accent-warning: var(--nature-sunrise);
+  --accent-danger: var(--nature-sunset);
+
+  /* Night shadows - Deeper but soft */
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -102,7 +126,7 @@ ul, ol {
   line-height: 1.8;
 }
 
-/* Apple-esque smooth animations */
+/* Organic, flowing animations inspired by nature */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -137,7 +161,7 @@ ul, ol {
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.96);
   }
   to {
     opacity: 1;
@@ -148,7 +172,7 @@ ul, ol {
 @keyframes slide-in-right {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-15px);
   }
   to {
     opacity: 1;
@@ -156,15 +180,29 @@ ul, ol {
   }
 }
 
-@keyframes pulse-slow {
+/* Gentle breathing animation - like nature */
+@keyframes breathe {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+}
+
+/* Gentle pulse - like a heartbeat */
+@keyframes pulse-gentle {
   0%, 100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 }
 
+/* Shimmer like morning dew */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -174,54 +212,94 @@ ul, ol {
   }
 }
 
-@keyframes float {
+/* Float like a leaf */
+@keyframes float-gentle {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
-  50% {
-    transform: translateY(-10px);
+  25% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(-6px) rotate(-1deg);
   }
 }
 
-@keyframes glow {
+/* Glow like fireflies */
+@keyframes glow-nature {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 15px rgba(123, 163, 92, 0.2);
   }
   50% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 25px rgba(123, 163, 92, 0.4);
+  }
+}
+
+/* Wave motion like water */
+@keyframes wave {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) translateZ(0) scaleY(0.95);
+  }
+  100% {
+    transform: translateX(-50%) translateZ(0) scaleY(1);
+  }
+}
+
+/* Sway like branches in wind */
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0.5deg);
+  }
+  75% {
+    transform: rotate(-0.5deg);
   }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fade-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fade-in-up 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .animate-fade-in-down {
-  animation: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fade-in-down 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .animate-scale-in {
-  animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scale-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slide-in-right 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Nature-inspired animations */
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-pulse-gentle {
+  animation: pulse-gentle 3s ease-in-out infinite;
 }
 
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.animate-glow-nature {
+  animation: glow-nature 3s ease-in-out infinite;
+}
+
+.animate-sway {
+  animation: sway 4s ease-in-out infinite;
 }
 
 /* Smooth scrolling */
@@ -501,37 +579,48 @@ button, .card-hover, .card-interactive {
   padding: 2rem;
 }
 
-/* Peaceful Gradients */
-.gradient-calm {
-  background: var(--gradient-calm);
+/* Nature-inspired gradients */
+.gradient-dawn {
+  background: var(--gradient-dawn);
 }
 
-.gradient-warm {
-  background: var(--gradient-warm);
+.gradient-forest {
+  background: var(--gradient-forest);
 }
 
-.gradient-peaceful-purple {
-  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+.gradient-ocean {
+  background: var(--gradient-ocean);
 }
 
-.dark .gradient-peaceful-purple {
-  background: linear-gradient(135deg, #2d1b4e 0%, #3730a3 100%);
+.gradient-earth {
+  background: var(--gradient-earth);
 }
 
-.gradient-peaceful-blue {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+/* Sleep - Night sky to dawn */
+.gradient-nature-sleep {
+  background: linear-gradient(135deg, #e8f0f4 0%, #d8e8f0 100%);
 }
 
-.dark .gradient-peaceful-blue {
-  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+.dark .gradient-nature-sleep {
+  background: linear-gradient(135deg, #2a3f4a 0%, #1f3440 100%);
 }
 
-.gradient-peaceful-green {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+/* Activity - Forest and moss */
+.gradient-nature-activity {
+  background: linear-gradient(135deg, #f0f7ed 0%, #e8f2e8 100%);
 }
 
-.dark .gradient-peaceful-green {
-  background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+.dark .gradient-nature-activity {
+  background: linear-gradient(135deg, #2d3f2d 0%, #243429 100%);
+}
+
+/* Readiness - Sunrise and earth */
+.gradient-nature-readiness {
+  background: linear-gradient(135deg, #fef4e8 0%, #f8f0e8 100%);
+}
+
+.dark .gradient-nature-readiness {
+  background: linear-gradient(135deg, #3f3529 0%, #352d24 100%);
 }
 
 /* Peaceful Text Colors */
