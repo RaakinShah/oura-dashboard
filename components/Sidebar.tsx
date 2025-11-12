@@ -38,18 +38,18 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-72 flex-col bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 text-white shadow-2xl">
-      {/* Logo */}
-      <div className="flex h-20 items-center justify-center border-b border-gray-800/50 backdrop-blur-sm">
+    <div className="flex h-screen w-72 flex-col bg-gradient-to-b from-stone-900 via-stone-900 to-stone-950 dark:from-stone-950 dark:via-stone-950 dark:to-black text-white shadow-2xl border-r border-stone-800/50 dark:border-stone-900">
+      {/* Logo - Peaceful Design */}
+      <div className="flex h-20 items-center justify-center border-b border-stone-800/50 dark:border-stone-900/50 backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg animate-glow">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400 bg-clip-text text-transparent">
               Oura Dashboard
             </h1>
-            <p className="text-[10px] text-gray-500">AI-Powered Health Insights</p>
+            <p className="text-[10px] text-stone-400 dark:text-stone-500">AI-Powered Health Insights</p>
           </div>
         </div>
       </div>
@@ -66,8 +66,8 @@ export default function Sidebar() {
               href={item.href}
               className={`group relative flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 ease-out animate-slide-in-right ${
                 isActive
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30 scale-105'
-                  : 'text-gray-400 hover:bg-gray-800/50 hover:text-white hover:scale-102 active:scale-98'
+                  ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/20 scale-105'
+                  : 'text-stone-400 hover:bg-stone-800/50 hover:text-white hover:scale-102 active:scale-98 dark:text-stone-500 dark:hover:bg-stone-900/50'
               }`}
               style={{
                 animationDelay: `${index * 50}ms`,
@@ -88,34 +88,34 @@ export default function Sidebar() {
 
               {/* Hover effect */}
               {!isActive && (
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600/0 to-pink-600/0 group-hover:from-purple-600/10 group-hover:to-pink-600/10 transition-all duration-300" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-600/0 to-purple-600/0 group-hover:from-violet-600/10 group-hover:to-purple-600/10 transition-all duration-300" />
               )}
             </Link>
           );
         })}
       </nav>
 
-      {/* Footer with stats */}
-      <div className="border-t border-gray-800/50 p-5 space-y-3 backdrop-blur-sm">
-        <div className="glass rounded-2xl p-3 bg-gradient-to-br from-gray-800/40 to-gray-900/40">
+      {/* Footer with stats - Peaceful Design */}
+      <div className="border-t border-stone-800/50 dark:border-stone-900/50 p-5 space-y-3 backdrop-blur-sm">
+        <div className="glass-peaceful rounded-2xl p-3 bg-gradient-to-br from-stone-800/40 to-stone-900/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-400 font-medium">Today's Status</span>
-            <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-xs text-stone-400 dark:text-stone-500 font-medium">Today's Status</span>
+            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
               Good
             </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="text-[10px] text-gray-500 font-medium">
+          <p className="text-[10px] text-stone-500 dark:text-stone-600 font-medium">
             Powered by Oura Ring
           </p>
           <div className="flex items-center gap-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
-            <span className="text-[10px] text-purple-400 font-semibold">Live</span>
+            <div className="h-1.5 w-1.5 rounded-full bg-violet-500 animate-pulse" />
+            <span className="text-[10px] text-violet-400 font-semibold">Live</span>
           </div>
         </div>
 

@@ -126,57 +126,69 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Main Score Cards - Simplified */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Main Score Cards - Peaceful Design */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Sleep */}
-        <Link href="/sleep" className="bg-white rounded-3xl p-6 border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all group">
-          <div className="flex items-center justify-between mb-4">
-            <Moon className="h-7 w-7 text-indigo-600 group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Sleep</span>
+        <Link href="/sleep" className="card-peaceful card-peaceful-lg hover-lift group">
+          <div className="flex items-center justify-between mb-5">
+            <div className="p-3 rounded-2xl gradient-peaceful-purple">
+              <Moon className="h-6 w-6 text-violet-700 dark:text-violet-300 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="text-sm font-semibold text-peaceful-muted uppercase tracking-wide">Sleep</span>
           </div>
-          <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-5xl font-bold text-gray-900">{latestSleep.score}</span>
-            <span className="text-2xl text-gray-400">/100</span>
+          <div className="flex items-baseline gap-2 mb-3">
+            <span className="text-5xl font-bold bg-gradient-to-br from-violet-600 to-purple-600 bg-clip-text text-transparent dark:from-violet-400 dark:to-purple-400">{latestSleep.score}</span>
+            <span className="text-2xl text-peaceful-muted">/100</span>
           </div>
-          <p className="text-base text-gray-600 font-medium">
-            {(latestSleep.total_sleep_duration / 3600).toFixed(1)}h • {latestSleep.efficiency}% efficiency
-          </p>
+          <div className="flex items-center gap-3 text-peaceful">
+            <span className="font-medium">{(latestSleep.total_sleep_duration / 3600).toFixed(1)}h</span>
+            <span className="text-peaceful-muted">•</span>
+            <span className="font-medium">{latestSleep.efficiency}% efficiency</span>
+          </div>
         </Link>
 
         {/* Activity */}
-        <Link href="/activity" className="bg-white rounded-3xl p-6 border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all group">
-          <div className="flex items-center justify-between mb-4">
-            <Activity className="h-7 w-7 text-green-600 group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Activity</span>
+        <Link href="/activity" className="card-peaceful card-peaceful-lg hover-lift group">
+          <div className="flex items-center justify-between mb-5">
+            <div className="p-3 rounded-2xl gradient-peaceful-green">
+              <Activity className="h-6 w-6 text-emerald-700 dark:text-emerald-300 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="text-sm font-semibold text-peaceful-muted uppercase tracking-wide">Activity</span>
           </div>
-          <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-5xl font-bold text-gray-900">{latestActivity.score}</span>
-            <span className="text-2xl text-gray-400">/100</span>
+          <div className="flex items-baseline gap-2 mb-3">
+            <span className="text-5xl font-bold bg-gradient-to-br from-emerald-600 to-green-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-green-400">{latestActivity.score}</span>
+            <span className="text-2xl text-peaceful-muted">/100</span>
           </div>
-          <p className="text-base text-gray-600 font-medium">
-            {latestActivity.steps.toLocaleString()} steps • {latestActivity.active_calories} cal
-          </p>
+          <div className="flex items-center gap-3 text-peaceful">
+            <span className="font-medium">{latestActivity.steps.toLocaleString()} steps</span>
+            <span className="text-peaceful-muted">•</span>
+            <span className="font-medium">{latestActivity.active_calories} cal</span>
+          </div>
         </Link>
 
         {/* Readiness */}
-        <Link href="/readiness" className="bg-white rounded-3xl p-6 border border-gray-200 hover:border-red-300 hover:shadow-lg transition-all group">
-          <div className="flex items-center justify-between mb-4">
-            <Heart className="h-7 w-7 text-red-600 group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Readiness</span>
+        <Link href="/readiness" className="card-peaceful card-peaceful-lg hover-lift group">
+          <div className="flex items-center justify-between mb-5">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-rose-50 to-red-50 dark:from-rose-950 dark:to-red-950">
+              <Heart className="h-6 w-6 text-rose-700 dark:text-rose-300 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="text-sm font-semibold text-peaceful-muted uppercase tracking-wide">Readiness</span>
           </div>
-          <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-5xl font-bold text-gray-900">{latestReadiness.score}</span>
-            <span className="text-2xl text-gray-400">/100</span>
+          <div className="flex items-baseline gap-2 mb-3">
+            <span className="text-5xl font-bold bg-gradient-to-br from-rose-600 to-red-600 bg-clip-text text-transparent dark:from-rose-400 dark:to-red-400">{latestReadiness.score}</span>
+            <span className="text-2xl text-peaceful-muted">/100</span>
           </div>
-          <p className="text-base text-gray-600 font-medium">
-            {latestReadiness.resting_heart_rate} bpm resting
-          </p>
+          <div className="flex items-center gap-3 text-peaceful">
+            <span className="font-medium">{latestReadiness.resting_heart_rate} bpm</span>
+            <span className="text-peaceful-muted">•</span>
+            <span className="font-medium">resting</span>
+          </div>
         </Link>
       </div>
 
-      {/* AI Insight */}
+      {/* AI Insight - Peaceful Design */}
       {topInsight && (
-        <div className={`bg-gradient-to-br ${getPriorityGradient(topInsight.priority)} rounded-3xl p-6 text-white shadow-lg animate-fade-in-up`}>
+        <div className={`bg-gradient-to-br ${getPriorityGradient(topInsight.priority)} card-peaceful-lg text-white shadow-lg animate-fade-in-up border-0`}>
           <div className="flex items-start gap-3 mb-4">
             <Zap className="h-7 w-7 flex-shrink-0 mt-1" />
             <div className="flex-1">
@@ -216,9 +228,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Weekly Trends - Simplified */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-200">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6">7-Day Trend</h3>
+      {/* Weekly Trends - Peaceful Design */}
+      <div className="card-peaceful card-peaceful-lg">
+        <h3 className="text-2xl font-bold mb-6">7-Day Trend</h3>
         <div className="grid grid-cols-3 gap-6">
           {(() => {
             const last7Sleep = sleep.slice(-7);
@@ -280,15 +292,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Today's Highlights */}
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 border border-gray-200">
-        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Target className="h-6 w-6 text-purple-600" />
+      {/* Today's Highlights - Peaceful Design */}
+      <div className="card-peaceful card-peaceful-lg gradient-calm">
+        <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <Target className="h-6 w-6 text-purple-600 dark:text-purple-400" />
           Today's Highlights
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl p-4">
-            <p className="text-sm text-gray-500 mb-1">Best Metric</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="card-peaceful">
+            <p className="text-sm text-peaceful-muted mb-1 font-medium">Best Metric</p>
             <p className="text-2xl font-bold text-gray-900">
               {Math.max(latestSleep.score, latestActivity.score, latestReadiness.score) === latestSleep.score
                 ? 'Sleep'
@@ -300,13 +312,13 @@ export default function Dashboard() {
               {Math.max(latestSleep.score, latestActivity.score, latestReadiness.score)} score
             </p>
           </div>
-          <div className="bg-white rounded-xl p-4">
-            <p className="text-sm text-gray-500 mb-1">Sleep Quality</p>
-            <p className="text-2xl font-bold text-gray-900">{latestSleep.efficiency}%</p>
-            <p className="text-base text-gray-600 font-medium">Efficiency</p>
+          <div className="card-peaceful">
+            <p className="text-sm text-peaceful-muted mb-1 font-medium">Sleep Quality</p>
+            <p className="text-2xl font-bold">{latestSleep.efficiency}%</p>
+            <p className="text-base text-peaceful font-medium">Efficiency</p>
           </div>
-          <div className="bg-white rounded-xl p-4">
-            <p className="text-sm text-gray-500 mb-1">Recovery Status</p>
+          <div className="card-peaceful">
+            <p className="text-sm text-peaceful-muted mb-1 font-medium">Recovery Status</p>
             <p className="text-2xl font-bold text-gray-900">
               {latestReadiness.score >= 85 ? 'Optimal' : latestReadiness.score >= 70 ? 'Good' : 'Low'}
             </p>
@@ -315,38 +327,46 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Quick Links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Quick Links - Peaceful Design */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
         <Link
           href="/insights"
-          className="bg-white rounded-2xl p-5 border border-gray-200 hover:border-purple-400 hover:shadow-md transition-all group"
+          className="card-peaceful hover-lift group"
         >
-          <Sparkles className="h-6 w-6 text-purple-600 mb-3 group-hover:scale-110 transition-transform" />
-          <p className="text-base font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">AI Insights</p>
+          <div className="p-2.5 rounded-xl gradient-peaceful-purple w-fit mb-3">
+            <Sparkles className="h-5 w-5 text-purple-700 dark:text-purple-300 group-hover:scale-110 transition-transform" />
+          </div>
+          <p className="text-base font-semibold group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">AI Insights</p>
         </Link>
 
         <Link
           href="/analytics"
-          className="bg-white rounded-2xl p-5 border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all group"
+          className="card-peaceful hover-lift group"
         >
-          <TrendingUp className="h-6 w-6 text-blue-600 mb-3 group-hover:scale-110 transition-transform" />
-          <p className="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Analytics</p>
+          <div className="p-2.5 rounded-xl gradient-peaceful-blue w-fit mb-3">
+            <TrendingUp className="h-5 w-5 text-blue-700 dark:text-blue-300 group-hover:scale-110 transition-transform" />
+          </div>
+          <p className="text-base font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Analytics</p>
         </Link>
 
         <Link
           href="/goals"
-          className="bg-white rounded-2xl p-5 border border-gray-200 hover:border-green-400 hover:shadow-md transition-all group"
+          className="card-peaceful hover-lift group"
         >
-          <Target className="h-6 w-6 text-green-600 mb-3 group-hover:scale-110 transition-transform" />
-          <p className="text-base font-semibold text-gray-900 group-hover:text-green-600 transition-colors">Goals</p>
+          <div className="p-2.5 rounded-xl gradient-peaceful-green w-fit mb-3">
+            <Target className="h-5 w-5 text-emerald-700 dark:text-emerald-300 group-hover:scale-110 transition-transform" />
+          </div>
+          <p className="text-base font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Goals</p>
         </Link>
 
         <Link
           href="/settings"
-          className="bg-white rounded-2xl p-5 border border-gray-200 hover:border-gray-400 hover:shadow-md transition-all group"
+          className="card-peaceful hover-lift group"
         >
-          <ArrowRight className="h-6 w-6 text-gray-600 mb-3 group-hover:scale-110 transition-transform" />
-          <p className="text-base font-semibold text-gray-900 transition-colors">Settings</p>
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-stone-50 to-gray-50 dark:from-stone-900 dark:to-gray-900 w-fit mb-3">
+            <ArrowRight className="h-5 w-5 text-stone-700 dark:text-stone-300 group-hover:scale-110 transition-transform" />
+          </div>
+          <p className="text-base font-semibold group-hover:text-stone-600 dark:group-hover:text-stone-400 transition-colors">Settings</p>
         </Link>
       </div>
     </div>
