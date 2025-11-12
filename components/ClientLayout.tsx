@@ -26,9 +26,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   // Prevent hydration mismatch by not rendering until client-side
   if (!isClient) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       </div>
     );
@@ -40,7 +40,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <ErrorBoundary>
-      <div className="flex h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
+      <div className="flex h-screen bg-gray-50 dark:bg-black transition-colors duration-200">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <ErrorBoundary>

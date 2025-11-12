@@ -1,40 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  /* Nature-Inspired Light Mode - Earth, Sky, Forest */
-  --background: #f7f9f7;
-  --foreground: #2f3e2d;
-  --card-background: #fefffe;
-  --border-color: #e8ede8;
+  /* Clinical Design System - Medical-Grade Aesthetics */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card-background: #ffffff;
+  --border-color: #e5e7eb;
 
-  /* Nature color palette - Inspired by earth, sky, and forest */
-  --nature-sage: #8b9d83;
-  --nature-forest: #4a6b5a;
-  --nature-sky: #87b5d8;
-  --nature-ocean: #5b9aa8;
-  --nature-sand: #d4c5a9;
-  --nature-sunrise: #e6a87c;
-  --nature-sunset: #d88f7a;
-  --nature-leaf: #7ba35c;
-  --nature-moss: #6d8c5e;
+  /* Clinical color palette - Trust and precision */
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
 
-  /* Semantic nature colors */
-  --accent-primary: var(--nature-forest);
-  --accent-secondary: var(--nature-sky);
-  --accent-success: var(--nature-leaf);
-  --accent-warning: var(--nature-sunrise);
-  --accent-danger: var(--nature-sunset);
+  /* Health indicators */
+  --success: #10b981;
+  --success-dark: #059669;
+  --success-light: #34d399;
 
-  /* Organic gradients */
-  --gradient-dawn: linear-gradient(135deg, #fef4e8 0%, #e8f4f8 100%);
-  --gradient-forest: linear-gradient(135deg, #f0f7ed 0%, #e8f2e8 100%);
-  --gradient-ocean: linear-gradient(135deg, #e8f4f8 0%, #e8f0f4 100%);
-  --gradient-earth: linear-gradient(135deg, #f8f4ed 0%, #f0ebe0 100%);
+  --warning: #f59e0b;
+  --warning-dark: #d97706;
+  --warning-light: #fbbf24;
 
-  /* Softer, natural shadows */
-  --shadow-soft: 0 1px 2px 0 rgba(47, 62, 45, 0.02), 0 1px 3px 0 rgba(47, 62, 45, 0.01);
-  --shadow-medium: 0 2px 4px -1px rgba(47, 62, 45, 0.03), 0 4px 6px -1px rgba(47, 62, 45, 0.02);
-  --shadow-large: 0 8px 12px -3px rgba(47, 62, 45, 0.04), 0 12px 16px -4px rgba(47, 62, 45, 0.03);
+  --danger: #ef4444;
+  --danger-dark: #dc2626;
+  --danger-light: #f87171;
+
+  /* Neutral palette */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Clinical shadows - Strong and defined */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 @theme inline {
@@ -46,87 +55,87 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.dark) {
-    --background: #1a1f1a;
-    --foreground: #e8ede8;
-    --card-background: #242924;
-    --border-color: #363d36;
+    --background: #0a0a0a;
+    --foreground: #f5f5f5;
+    --card-background: #171717;
+    --border-color: #262626;
   }
 }
 
 .dark {
-  /* Night Forest Mode - Deep, peaceful darkness */
-  --background: #1a1f1a;
-  --foreground: #e8ede8;
-  --card-background: #242924;
-  --border-color: #363d36;
+  /* Clinical Dark Mode - Deep, professional */
+  --background: #0a0a0a;
+  --foreground: #f5f5f5;
+  --card-background: #171717;
+  --border-color: #262626;
 
-  /* Night nature colors - Moonlit tones */
-  --nature-sage: #9aad92;
-  --nature-forest: #6b8c7a;
-  --nature-sky: #8fa9bd;
-  --nature-ocean: #7ba8b5;
-  --nature-sand: #bfb39a;
-  --nature-sunrise: #d4a88a;
-  --nature-sunset: #c89585;
-  --nature-leaf: #8fb570;
-  --nature-moss: #7d9c6f;
+  /* Adjusted colors for dark mode */
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
 
-  /* Semantic nature colors for dark mode */
-  --accent-primary: var(--nature-forest);
-  --accent-secondary: var(--nature-sky);
-  --accent-success: var(--nature-leaf);
-  --accent-warning: var(--nature-sunrise);
-  --accent-danger: var(--nature-sunset);
+  --success: #34d399;
+  --success-dark: #10b981;
+  --success-light: #6ee7b7;
 
-  /* Night shadows - Deeper but soft */
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
-  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --warning: #fbbf24;
+  --warning-dark: #f59e0b;
+  --warning-light: #fcd34d;
+
+  --danger: #f87171;
+  --danger-dark: #ef4444;
+  --danger-light: #fca5a5;
+
+  /* Dark mode shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -4px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "SF Pro Display", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   letter-spacing: -0.011em;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Improved Typography Hierarchy */
+/* Professional Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
   color: var(--foreground);
 }
 
 h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
   font-weight: 700;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
 }
 
 h3 {
-  font-size: clamp(1.25rem, 3vw, 1.875rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
 }
 
-/* Improved readability for paragraphs */
+/* Clinical readability */
 p {
-  line-height: 1.75;
+  line-height: 1.65;
   color: var(--foreground);
-  opacity: 0.9;
 }
 
-/* Better list styling */
-ul, ol {
-  line-height: 1.8;
-}
-
-/* Organic, flowing animations inspired by nature */
+/* Professional animations - Fast and purposeful */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -139,7 +148,7 @@ ul, ol {
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -150,7 +159,7 @@ ul, ol {
 @keyframes fade-in-down {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;
@@ -161,7 +170,7 @@ ul, ol {
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -172,7 +181,7 @@ ul, ol {
 @keyframes slide-in-right {
   from {
     opacity: 0;
-    transform: translateX(-15px);
+    transform: translateX(-12px);
   }
   to {
     opacity: 1;
@@ -180,29 +189,6 @@ ul, ol {
   }
 }
 
-/* Gentle breathing animation - like nature */
-@keyframes breathe {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.75;
-    transform: scale(0.98);
-  }
-}
-
-/* Gentle pulse - like a heartbeat */
-@keyframes pulse-gentle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-/* Shimmer like morning dew */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -212,94 +198,56 @@ ul, ol {
   }
 }
 
-/* Float like a leaf */
-@keyframes float-gentle {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-6px) rotate(1deg);
-  }
-  75% {
-    transform: translateY(-6px) rotate(-1deg);
-  }
-}
-
-/* Glow like fireflies */
-@keyframes glow-nature {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(123, 163, 92, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(123, 163, 92, 0.4);
-  }
-}
-
-/* Wave motion like water */
-@keyframes wave {
+@keyframes pulse-ring {
   0% {
-    transform: translateX(0) translateZ(0) scaleY(1);
+    transform: scale(0.95);
+    opacity: 1;
   }
   50% {
-    transform: translateX(-25%) translateZ(0) scaleY(0.95);
+    transform: scale(1);
+    opacity: 0.8;
   }
   100% {
-    transform: translateX(-50%) translateZ(0) scaleY(1);
+    transform: scale(0.95);
+    opacity: 1;
   }
 }
 
-/* Sway like branches in wind */
-@keyframes sway {
-  0%, 100% {
+@keyframes spin {
+  from {
     transform: rotate(0deg);
   }
-  25% {
-    transform: rotate(0.5deg);
-  }
-  75% {
-    transform: rotate(-0.5deg);
+  to {
+    transform: rotate(360deg);
   }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 1s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-fade-in-down {
-  animation: fade-in-down 1s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fade-in-down 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-scale-in {
-  animation: scale-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Nature-inspired animations */
-.animate-breathe {
-  animation: breathe 4s ease-in-out infinite;
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.animate-pulse-gentle {
-  animation: pulse-gentle 3s ease-in-out infinite;
-}
-
-.animate-float-gentle {
-  animation: float-gentle 6s ease-in-out infinite;
-}
-
-.animate-glow-nature {
-  animation: glow-nature 3s ease-in-out infinite;
-}
-
-.animate-sway {
-  animation: sway 4s ease-in-out infinite;
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 /* Smooth scrolling */
@@ -307,217 +255,379 @@ ul, ol {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar - Apple style */
+/* Professional scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--gray-100);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--card-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  background: var(--gray-300);
+  border-radius: 6px;
+  border: 2px solid var(--background);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--gray-700);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--gray-400);
 }
 
-/* Glassmorphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
 }
 
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* Professional card system */
+.card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+.card-lg {
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
 }
 
-/* Smooth transitions for all interactive elements */
+.card-xl {
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Interactive card hover */
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gray-300);
+}
+
+.dark .card-interactive:hover {
+  border-color: var(--gray-600);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Fast transitions for all interactive elements */
 button, a, input, textarea, select {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Focus styles - Peaceful, accessible */
+/* Professional focus styles */
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-  outline: 2px solid var(--accent-primary);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 0.5rem;
 }
 
-/* Remove default focus for mouse users but keep for keyboard */
 button:focus:not(:focus-visible),
 a:focus:not(:focus-visible) {
   outline: none;
 }
 
-/* Loading shimmer effect */
+/* Loading states */
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0) 100%
+    var(--gray-100) 0%,
+    var(--gray-200) 50%,
+    var(--gray-100) 100%
   );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-/* Fix hydration errors from browser extensions (Dark Reader, etc.) */
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gray-800) 0%,
+    var(--gray-700) 50%,
+    var(--gray-800) 100%
+  );
+}
+
+/* Fix hydration errors from browser extensions */
 svg {
   -webkit-appearance: none;
 }
 
-/* Prevent browser extensions from modifying SVG elements and causing hydration mismatches */
 svg[data-darkreader-inline-stroke],
 svg[data-darkreader-inline-fill],
 svg[style*="darkreader"] {
-  /* These styles won't prevent the extension from adding attributes,
-     but they ensure visual consistency */
   stroke: currentColor !important;
   fill: currentColor !important;
 }
 
-/* Enhanced Spacing System - More breathing room */
+/* Professional spacing system */
 .space-comfortable {
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.space-generous {
   padding: 2rem;
   gap: 1.5rem;
 }
 
-.space-generous {
+.space-luxurious {
   padding: 2.5rem;
   gap: 2rem;
 }
 
-.space-luxurious {
-  padding: 3rem;
-  gap: 2.5rem;
+/* Professional button styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-/* Improved Card Shadows & Hover States */
-.card-shadow-sm {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
-              0 1px 2px rgba(0, 0, 0, 0.05);
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
 }
 
-.card-shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
-              0 2px 4px -1px rgba(0, 0, 0, 0.04);
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-.card-shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
-              0 4px 6px -2px rgba(0, 0, 0, 0.04);
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-xs);
 }
 
-.card-shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08),
-              0 10px 10px -5px rgba(0, 0, 0, 0.03);
+.btn-secondary {
+  background: var(--card-background);
+  color: var(--foreground);
+  border-color: var(--border-color);
 }
 
-/* Enhanced Card Hover with smooth transitions */
-.card-interactive {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+.btn-secondary:hover {
+  border-color: var(--gray-400);
+  box-shadow: var(--shadow-sm);
 }
 
-.card-interactive:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.12),
-              0 8px 12px -4px rgba(0, 0, 0, 0.06);
+/* Health status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.375rem;
 }
 
-.card-interactive:active {
-  transform: translateY(0) scale(1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+.badge-excellent {
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--success-dark);
 }
 
-/* Dark mode shadow improvements */
-.dark .card-shadow-sm {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3),
-              0 1px 2px rgba(0, 0, 0, 0.2);
+.dark .badge-excellent {
+  background: color-mix(in srgb, var(--success) 20%, transparent);
+  color: var(--success-light);
 }
 
-.dark .card-shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
-              0 2px 4px -1px rgba(0, 0, 0, 0.3);
+.badge-good {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: var(--primary-dark);
 }
 
-.dark .card-shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
-              0 4px 6px -2px rgba(0, 0, 0, 0.3);
+.dark .badge-good {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  color: var(--primary-light);
 }
 
-.dark .card-shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6),
-              0 10px 10px -5px rgba(0, 0, 0, 0.4);
+.badge-moderate {
+  background: color-mix(in srgb, var(--warning) 10%, transparent);
+  color: var(--warning-dark);
 }
 
-/* Loading Skeleton */
+.dark .badge-moderate {
+  background: color-mix(in srgb, var(--warning) 20%, transparent);
+  color: var(--warning-light);
+}
+
+.badge-poor {
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger-dark);
+}
+
+.dark .badge-poor {
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
+  color: var(--danger-light);
+}
+
+/* Circular progress rings (Oura-style) */
+.ring-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-background {
+  stroke: var(--gray-200);
+}
+
+.dark .ring-background {
+  stroke: var(--gray-700);
+}
+
+.ring-progress {
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+/* Health metric cards */
+.metric-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.metric-card-sleep {
+  background: linear-gradient(135deg, var(--card-background) 0%, color-mix(in srgb, var(--primary) 3%, var(--card-background)) 100%);
+  border-color: color-mix(in srgb, var(--primary) 20%, var(--border-color));
+}
+
+.metric-card-activity {
+  background: linear-gradient(135deg, var(--card-background) 0%, color-mix(in srgb, var(--success) 3%, var(--card-background)) 100%);
+  border-color: color-mix(in srgb, var(--success) 20%, var(--border-color));
+}
+
+.metric-card-readiness {
+  background: linear-gradient(135deg, var(--card-background) 0%, color-mix(in srgb, var(--warning) 3%, var(--card-background)) 100%);
+  border-color: color-mix(in srgb, var(--warning) 20%, var(--border-color));
+}
+
+/* Dividers */
+.divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 1.5rem 0;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dark .glass {
+  background: rgba(23, 23, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Skeleton loading */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #e0e0e0 50%,
-    #f0f0f0 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  background: var(--gray-200);
   border-radius: 0.5rem;
+  animation: shimmer 1.5s infinite;
 }
 
 .dark .skeleton {
-  background: linear-gradient(
-    90deg,
-    #2a2a2a 25%,
-    #3a3a3a 50%,
-    #2a2a2a 75%
-  );
-  background-size: 200% 100%;
+  background: var(--gray-800);
 }
 
-/* Mobile Responsive Enhancements */
+/* Trend indicators */
+.trend-up {
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.trend-down {
+  color: var(--danger);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.trend-neutral {
+  color: var(--gray-500);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Mobile optimizations */
 @media (max-width: 768px) {
-  /* Reduce spacing on mobile */
   .space-comfortable {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .space-generous {
     padding: 1.25rem;
     gap: 1rem;
   }
 
-  .space-generous {
+  .space-luxurious {
     padding: 1.5rem;
     gap: 1.25rem;
   }
 
-  .space-luxurious {
-    padding: 2rem;
-    gap: 1.5rem;
+  .metric-card {
+    padding: 1.5rem;
   }
 
-  /* Adjust card shadows for mobile */
-  .card-shadow-xl {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
-                0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Better touch targets */
   button, a {
     min-height: 44px;
     min-width: 44px;
   }
 
-  /* Optimize font sizes for mobile */
   h1 {
     font-size: 2rem;
   }
@@ -526,7 +636,6 @@ svg[style*="darkreader"] {
     font-size: 1.5rem;
   }
 
-  /* Adjust card hover for touch devices */
   .card-interactive:hover {
     transform: none;
   }
@@ -539,307 +648,45 @@ svg[style*="darkreader"] {
 /* Tablet optimizations */
 @media (min-width: 769px) and (max-width: 1024px) {
   .space-comfortable {
-    padding: 1.75rem;
-    gap: 1.25rem;
+    padding: 1.25rem;
+    gap: 0.875rem;
   }
 
   .space-generous {
-    padding: 2rem;
-    gap: 1.5rem;
+    padding: 1.5rem;
+    gap: 1.125rem;
   }
 }
 
 /* Prevent text selection on interactive elements */
-button, .card-hover, .card-interactive {
+button, .card-interactive, .metric-card {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== PEACEFUL DESIGN SYSTEM ===== */
-
-/* Peaceful Card Styles */
-.card-peaceful {
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Utility classes */
+.text-balance {
+  text-wrap: balance;
 }
 
-.card-peaceful:hover {
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-2px);
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.card-peaceful-lg {
-  border-radius: 2rem;
-  padding: 2rem;
-}
-
-/* Nature-inspired gradients */
-.gradient-dawn {
-  background: var(--gradient-dawn);
-}
-
-.gradient-forest {
-  background: var(--gradient-forest);
-}
-
-.gradient-ocean {
-  background: var(--gradient-ocean);
-}
-
-.gradient-earth {
-  background: var(--gradient-earth);
-}
-
-/* Sleep - Night sky to dawn */
-.gradient-nature-sleep {
-  background: linear-gradient(135deg, #e8f0f4 0%, #d8e8f0 100%);
-}
-
-.dark .gradient-nature-sleep {
-  background: linear-gradient(135deg, #2a3f4a 0%, #1f3440 100%);
-}
-
-/* Activity - Forest and moss */
-.gradient-nature-activity {
-  background: linear-gradient(135deg, #f0f7ed 0%, #e8f2e8 100%);
-}
-
-.dark .gradient-nature-activity {
-  background: linear-gradient(135deg, #2d3f2d 0%, #243429 100%);
-}
-
-/* Readiness - Sunrise and earth */
-.gradient-nature-readiness {
-  background: linear-gradient(135deg, #fef4e8 0%, #f8f0e8 100%);
-}
-
-.dark .gradient-nature-readiness {
-  background: linear-gradient(135deg, #3f3529 0%, #352d24 100%);
-}
-
-/* Peaceful Text Colors */
-.text-peaceful {
-  color: var(--foreground);
-  opacity: 0.85;
-}
-
-.text-peaceful-muted {
-  color: var(--foreground);
-  opacity: 0.6;
-}
-
-/* Peaceful Borders */
-.border-peaceful {
-  border-color: var(--border-color);
-}
-
-/* Breathing Room - Extra generous spacing */
-.space-breathe {
-  padding: 3rem;
-  gap: 2.5rem;
-}
-
-@media (max-width: 768px) {
-  .space-breathe {
-    padding: 1.5rem;
-    gap: 1.5rem;
-  }
-}
-
-/* Peaceful Button Styles */
-.btn-peaceful {
-  padding: 0.75rem 1.5rem;
-  border-radius: 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-color);
-  background: var(--card-background);
-}
-
-.btn-peaceful:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-.btn-peaceful:active {
-  transform: translateY(0);
-}
-
-.btn-peaceful-primary {
-  background: var(--accent-primary);
-  color: white;
-  border-color: transparent;
-}
-
-.btn-peaceful-primary:hover {
-  opacity: 0.9;
-}
-
-/* Peaceful Badge/Tag */
-.badge-peaceful {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.375rem 0.875rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-}
-
-/* Peaceful Divider */
-.divider-peaceful {
-  height: 1px;
-  background: var(--border-color);
-  margin: 2rem 0;
-  opacity: 0.5;
-}
-
-/* Peaceful Glassmorphism */
-.glass-peaceful {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.dark .glass-peaceful {
-  background: rgba(38, 35, 32, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Peaceful Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 10px;
-  border: 2px solid var(--background);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
-  opacity: 0.3;
-}
-
-/* Peaceful Loading State */
-.loading-peaceful {
-  position: relative;
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.loading-peaceful::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 100%
-  );
-  animation: shimmer 2s infinite;
-}
-
-.dark .loading-peaceful::after {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    transparent 100%
-  );
-}
-
-/* Enhanced Transitions - Butter smooth */
-.transition-peaceful {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.transition-peaceful-fast {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.transition-peaceful-slow {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Peaceful Hover Effects */
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-large);
-}
-
-.hover-glow {
-  transition: box-shadow 0.3s ease;
-}
-
-.hover-glow:hover {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-}
-
-/* Peaceful Grid Layouts */
-.grid-peaceful {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.grid-peaceful-lg {
-  gap: 2rem;
-}
-
-/* Status Indicators - Peaceful colors */
-.status-excellent {
-  color: var(--accent-success);
-  background: color-mix(in srgb, var(--accent-success) 10%, transparent);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-good {
-  color: #06b6d4;
-  background: color-mix(in srgb, #06b6d4 10%, transparent);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-moderate {
-  color: var(--accent-warning);
-  background: color-mix(in srgb, var(--accent-warning) 10%, transparent);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-poor {
-  color: var(--accent-danger);
-  background: color-mix(in srgb, var(--accent-danger) 10%, transparent);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
