@@ -10,6 +10,15 @@ import Link from 'next/link';
 export default function Dashboard() {
   const { sleep, activity, readiness, loading, hasToken, error, refetch } = useOuraData();
 
+  // Generate AI insights with memoization for performance
+  // Must be called before any conditional returns (Rules of Hooks)
+  const insights = useMemo(() => {
+    if (sleep.length > 0 && activity.length > 0 && readiness.length > 0) {
+      return AdvancedAIEngine.generateDeepInsights(sleep, activity, readiness);
+    }
+    return [];
+  }, [sleep, activity, readiness]);
+
   if (!hasToken) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
@@ -88,11 +97,6 @@ export default function Dashboard() {
   const latestSleep = sleep[sleep.length - 1];
   const latestActivity = activity[activity.length - 1];
   const latestReadiness = readiness[readiness.length - 1];
-
-  // Generate AI insights with memoization for performance
-  const insights = useMemo(() => {
-    return AdvancedAIEngine.generateDeepInsights(sleep, activity, readiness);
-  }, [sleep, activity, readiness]);
 
   const topInsight = insights[0];
 
