@@ -7,6 +7,7 @@ import { EnhancedAIEngine as AdvancedAIEngine } from '@/lib/ai-engine/core';
 import { formatFullDate } from '@/lib/date-utils';
 import Link from 'next/link';
 import { DashboardSkeleton } from '@/components/LoadingSkeleton';
+import { InsightNarrative } from '@/components/InsightNarrative';
 
 export default function Dashboard() {
   const { sleep, activity, readiness, loading, hasToken, error, refetch } = useOuraData();
@@ -155,10 +156,8 @@ export default function Dashboard() {
                 <Zap className="h-6 w-6 text-stone-700" />
               </div>
               <div className="flex-1">
-                <h2 className="text-3xl font-light mb-3">{topInsight.title}</h2>
-                <p className="text-stone-600 text-lg leading-relaxed">
-                  {topInsight.narrative}
-                </p>
+                <h2 className="text-3xl font-light mb-4">{topInsight.title}</h2>
+                <InsightNarrative narrative={topInsight.narrative} />
               </div>
             </div>
 
