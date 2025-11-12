@@ -11,6 +11,8 @@ import { PersonalizationEngine } from './personalization';
 import { PredictiveAnalytics } from './predictions';
 import { PatternRecognition } from './patterns';
 import { ContextualIntelligence } from './context';
+import { RecoveryEngine } from './recovery';
+import { OptimizationEngine } from './optimization';
 
 /**
  * Next-Generation AI Health Engine
@@ -75,13 +77,21 @@ export class EnhancedAIEngine {
       const contextInsights = this.generateContextualInsights(sleep, readiness, baselines);
       insights.push(...contextInsights);
 
+      // 8. Advanced Recovery & Stress Insights (NEWEST!)
+      const recoveryStressInsights = this.generateRecoveryStressInsights(sleep, activity, readiness, baselines);
+      insights.push(...recoveryStressInsights);
+
+      // 9. Optimization Opportunities (NEWEST!)
+      const optimizationOpportunities = this.generateOptimizationOpportunities(sleep, activity, readiness, baselines);
+      insights.push(...optimizationOpportunities);
+
       // Sort by priority
       insights.sort((a, b) => {
         const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
         return priorityOrder[a.priority] - priorityOrder[b.priority];
       });
 
-      return insights.slice(0, 10); // Top 10 insights
+      return insights.slice(0, 12); // Top 12 insights (increased from 10)
     } catch (error) {
       console.error('Error generating insights:', error);
       return insights;
@@ -621,6 +631,173 @@ export class EnhancedAIEngine {
       }
     } catch (error) {
       // Silently handle contextual insight errors
+    }
+
+    return insights;
+  }
+
+  /**
+   * Generate advanced recovery and stress insights
+   */
+  private static generateRecoveryStressInsights(
+    sleep: SleepData[],
+    activity: ActivityData[],
+    readiness: ReadinessData[],
+    baselines: PersonalBaselines
+  ): AdvancedInsight[] {
+    const insights: AdvancedInsight[] = [];
+
+    try {
+      // Recovery state analysis
+      const recoveryAnalysis = RecoveryEngine.analyzeRecoveryState(sleep, activity, readiness, baselines);
+
+      if (recoveryAnalysis.overtrainingRisk === 'high' || recoveryAnalysis.currentState === 'exhausted') {
+        insights.push({
+          id: `recovery-critical-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          category: 'recovery',
+          priority: 'critical',
+          title: `${recoveryAnalysis.currentState === 'exhausted' ? 'Critical Recovery Deficit' : 'High Overtraining Risk Detected'}`,
+          summary: `Your body is in a ${recoveryAnalysis.currentState} state with ${recoveryAnalysis.overtrainingRisk} overtraining risk`,
+          narrative: `Comprehensive recovery analysis reveals concerning patterns:\n\n• Current State: ${recoveryAnalysis.currentState.toUpperCase()}\n• Recovery Debt: ${recoveryAnalysis.recoveryDebt.toFixed(1)} days\n• Estimated Recovery Time: ${recoveryAnalysis.estimatedRecoveryTime} days\n• Acute:Chronic Workload Ratio: ${recoveryAnalysis.acuteChronicRatio} ${recoveryAnalysis.acuteChronicRatio > 1.3 ? '⚠️ ELEVATED' : ''}\n• Overtraining Risk: ${recoveryAnalysis.overtrainingRisk.toUpperCase()}\n\nYour body is signaling need for immediate recovery intervention. The acute:chronic workload ratio indicates ${recoveryAnalysis.acuteChronicRatio > 1.5 ? 'severe' : 'moderate'} training load imbalance, which significantly increases injury risk and performance decline.`,
+          confidence: 0.88,
+          evidenceStrength: 'strong',
+          dataPoints: [
+            { metric: 'Recovery Debt', value: recoveryAnalysis.recoveryDebt },
+            { metric: 'Acute Workload', value: recoveryAnalysis.acuteWorkload },
+            { metric: 'Chronic Workload', value: recoveryAnalysis.chronicWorkload },
+            { metric: 'A:C Ratio', value: recoveryAnalysis.acuteChronicRatio * 100 },
+          ],
+          patterns: [],
+          actionPlan: {
+            immediate: recoveryAnalysis.recommendations.slice(0, 2),
+            shortTerm: recoveryAnalysis.recommendations.slice(2, 4),
+            longTerm: ['Implement structured periodization', 'Build recovery capacity systematically'],
+            priority: 1,
+          },
+          expectedOutcome: 'Strategic recovery prevents injury and enables sustainable performance',
+          timeframeToImprovement: `${recoveryAnalysis.estimatedRecoveryTime}-${recoveryAnalysis.estimatedRecoveryTime + 3} days`,
+        });
+      }
+
+      // Stress detection
+      const stressAnalysis = RecoveryEngine.detectStressSignals(sleep, readiness, baselines);
+
+      if (stressAnalysis.stressLevel === 'very_high' || stressAnalysis.stressLevel === 'high') {
+        insights.push({
+          id: `stress-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          category: 'health_risk',
+          priority: stressAnalysis.stressLevel === 'very_high' ? 'critical' : 'high',
+          title: `${stressAnalysis.stressLevel === 'very_high' ? 'Severe' : 'Elevated'} Physiological Stress Detected`,
+          summary: `Stress score: ${stressAnalysis.stressScore}/100 - Multiple stress signals identified`,
+          narrative: `Multi-system stress analysis reveals ${stressAnalysis.stressLevel.replace('_', ' ')} stress burden:\n\n**Detected Signals:**\n${stressAnalysis.signals.map((s, i) => `${i + 1}. ${s.signal}: ${s.description} (severity: ${s.severity.toFixed(1)}/10)`).join('\n')}\n\n**Stress Score: ${stressAnalysis.stressScore}/100**\n\nPhysiological stress markers indicate your autonomic nervous system is under significant load. Multiple systems (cardiac, thermoregulatory, sleep) show dysfunction patterns consistent with chronic stress exposure.\n\nImmediate stress management intervention is ${stressAnalysis.stressLevel === 'very_high' ? 'CRITICAL' : 'strongly recommended'} to prevent health deterioration.`,
+          confidence: 0.85,
+          evidenceStrength: stressAnalysis.signals.length >= 3 ? 'strong' : 'moderate',
+          dataPoints: stressAnalysis.signals.map(s => ({
+            metric: s.signal,
+            value: s.severity * 10,
+          })),
+          patterns: [],
+          actionPlan: {
+            immediate: stressAnalysis.recommendations.slice(0, 2),
+            shortTerm: stressAnalysis.recommendations.slice(2, 4),
+            longTerm: ['Build long-term stress resilience', 'Address root stressors'],
+            priority: stressAnalysis.stressLevel === 'very_high' ? 1 : 2,
+          },
+          expectedOutcome: 'Stress reduction improves all health metrics and prevents burnout',
+          timeframeToImprovement: '1-2 weeks with consistent intervention',
+        });
+      }
+
+      // Recovery capacity assessment
+      if (sleep.length >= 14 && activity.length >= 14 && readiness.length >= 14) {
+        const capacityAnalysis = RecoveryEngine.assessRecoveryCapacity(sleep, activity, readiness);
+
+        if (capacityAnalysis.capacity === 'excellent' || capacityAnalysis.capacity === 'poor') {
+          insights.push({
+            id: `recovery-capacity-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            category: 'recovery',
+            priority: capacityAnalysis.capacity === 'poor' ? 'high' : 'low',
+            title: `${capacityAnalysis.capacity === 'excellent' ? 'Exceptional' : 'Limited'} Recovery Capacity Identified`,
+            summary: capacityAnalysis.insights[0],
+            narrative: `Recovery capacity assessment score: ${capacityAnalysis.score}/100 (${capacityAnalysis.capacity})\n\n${capacityAnalysis.insights.join('\n\n')}\n\n**Key Factors:**\n${capacityAnalysis.factors.map(f => `• ${f.factor} (${f.impact}): ${f.explanation}`).join('\n')}\n\nRecovery capacity determines how quickly you bounce back from stress and adapt to training. This assessment provides actionable insights for optimizing your recovery systems.`,
+            confidence: 0.78,
+            evidenceStrength: 'moderate',
+            dataPoints: [
+              { metric: 'Recovery Capacity Score', value: capacityAnalysis.score },
+            ],
+            patterns: [],
+            actionPlan: {
+              immediate: [capacityAnalysis.factors.filter(f => f.impact === 'negative')[0]?.factor || 'Maintain current recovery practices'].slice(0, 50),
+              shortTerm: ['Focus on factors with most negative impact', 'Build on existing strengths'],
+              longTerm: ['Systematically improve recovery capacity', 'Regular reassessment every 4 weeks'],
+              priority: capacityAnalysis.capacity === 'poor' ? 2 : 3,
+            },
+            expectedOutcome: `${capacityAnalysis.capacity === 'excellent' ? 'Maintain elite recovery capacity' : 'Improve recovery capacity by 20-30% in 6-8 weeks'}`,
+            timeframeToImprovement: capacityAnalysis.capacity === 'poor' ? '6-8 weeks' : 'Ongoing',
+          });
+        }
+      }
+    } catch (error) {
+      // Silently handle recovery/stress insight errors
+    }
+
+    return insights;
+  }
+
+  /**
+   * Generate optimization opportunity insights
+   */
+  private static generateOptimizationOpportunities(
+    sleep: SleepData[],
+    activity: ActivityData[],
+    readiness: ReadinessData[],
+    baselines: PersonalBaselines
+  ): AdvancedInsight[] {
+    const insights: AdvancedInsight[] = [];
+
+    try {
+      const opportunities = OptimizationEngine.identifyOptimalImprovements(
+        sleep,
+        activity,
+        readiness,
+        baselines
+      );
+
+      // Take top 2 opportunities by ROI
+      const topOpportunities = opportunities.slice(0, 2);
+
+      for (const opp of topOpportunities) {
+        insights.push({
+          id: `optimization-${Date.now()}-${Math.random()}`,
+          timestamp: new Date().toISOString(),
+          category: 'performance',
+          priority: opp.roi > 10 ? 'high' : 'medium',
+          title: `High-Impact Opportunity: ${opp.area}`,
+          summary: `${opp.potentialGain} point improvement potential with ${opp.effort} effort`,
+          narrative: `**Optimization Opportunity Identified**\n\nArea: ${opp.area}\nCurrent Performance: ${opp.currentPerformance}%\nPotential Gain: +${opp.potentialGain} points\nEffort Required: ${opp.effort.toUpperCase()}\nROI Score: ${opp.roi.toFixed(1)}\nTime to Results: ${opp.timeToResults}\n\nThis represents one of your highest-leverage opportunities for improvement. The analysis indicates strong potential for measurable gains with focused intervention.\n\n**Why This Matters:**\nBased on your current patterns, addressing ${opp.area.toLowerCase()} can unlock significant performance improvements across multiple health metrics. The ${opp.effort} effort requirement makes this an excellent optimization target.`,
+          confidence: 0.82,
+          evidenceStrength: 'strong',
+          dataPoints: [
+            { metric: 'Current Performance', value: opp.currentPerformance },
+            { metric: 'Potential Gain', value: opp.potentialGain },
+            { metric: 'ROI Score', value: Math.round(opp.roi * 10) },
+          ],
+          patterns: [],
+          actionPlan: {
+            immediate: opp.specificActions.slice(0, 2),
+            shortTerm: opp.specificActions.slice(2),
+            longTerm: [`Maintain improvements in ${opp.area.toLowerCase()}`, 'Document successful strategies'],
+            priority: opp.effort === 'low' ? 2 : 3,
+          },
+          expectedOutcome: `+${opp.potentialGain} point improvement in related metrics`,
+          timeframeToImprovement: opp.timeToResults,
+        });
+      }
+    } catch (error) {
+      // Silently handle optimization errors
     }
 
     return insights;

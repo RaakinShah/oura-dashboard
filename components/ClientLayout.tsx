@@ -40,7 +40,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <ErrorBoundary>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      <div className="flex h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <ErrorBoundary>

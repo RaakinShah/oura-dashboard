@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Peaceful Light Mode - Soft, natural tones */
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --card-background: #ffffff;
+  --border-color: #e7e5e4;
+
+  /* Peaceful accent colors - Soft, muted */
+  --accent-primary: #7c3aed;
+  --accent-secondary: #0ea5e9;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+
+  /* Soft gradients */
+  --gradient-calm: linear-gradient(135deg, #f0f9ff 0%, #faf5ff 100%);
+  --gradient-warm: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+
+  /* Shadows - Softer, more subtle */
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
 }
 
 @theme inline {
@@ -14,20 +33,73 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.dark) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1816;
+    --foreground: #f5f5f4;
+    --card-background: #262320;
+    --border-color: #3f3b37;
   }
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* Warm Dark Mode - Easier on eyes */
+  --background: #1a1816;
+  --foreground: #f5f5f4;
+  --card-background: #262320;
+  --border-color: #3f3b37;
+
+  /* Darker mode accents - Slightly desaturated for comfort */
+  --accent-primary: #a78bfa;
+  --accent-secondary: #38bdf8;
+  --accent-success: #34d399;
+  --accent-warning: #fbbf24;
+  --accent-danger: #f87171;
+
+  /* Dark mode shadows */
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.7;
+  letter-spacing: -0.011em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Improved Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 3vw, 1.875rem);
+}
+
+/* Improved readability for paragraphs */
+p {
+  line-height: 1.75;
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
+/* Better list styling */
+ul, ol {
+  line-height: 1.8;
 }
 
 /* Apple-esque smooth animations */
@@ -199,10 +271,17 @@ button, a, input, textarea, select {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Focus styles - Apple style */
-button:focus, a:focus, input:focus, textarea:focus, select:focus {
-  outline: 2px solid rgba(139, 92, 246, 0.5);
+/* Focus styles - Peaceful, accessible */
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Remove default focus for mouse users but keep for keyboard */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Loading shimmer effect */
@@ -398,4 +477,280 @@ button, .card-hover, .card-interactive {
   -moz-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== PEACEFUL DESIGN SYSTEM ===== */
+
+/* Peaceful Card Styles */
+.card-peaceful {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-peaceful:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.card-peaceful-lg {
+  border-radius: 2rem;
+  padding: 2rem;
+}
+
+/* Peaceful Gradients */
+.gradient-calm {
+  background: var(--gradient-calm);
+}
+
+.gradient-warm {
+  background: var(--gradient-warm);
+}
+
+.gradient-peaceful-purple {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+}
+
+.dark .gradient-peaceful-purple {
+  background: linear-gradient(135deg, #2d1b4e 0%, #3730a3 100%);
+}
+
+.gradient-peaceful-blue {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.dark .gradient-peaceful-blue {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+}
+
+.gradient-peaceful-green {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.dark .gradient-peaceful-green {
+  background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+}
+
+/* Peaceful Text Colors */
+.text-peaceful {
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+.text-peaceful-muted {
+  color: var(--foreground);
+  opacity: 0.6;
+}
+
+/* Peaceful Borders */
+.border-peaceful {
+  border-color: var(--border-color);
+}
+
+/* Breathing Room - Extra generous spacing */
+.space-breathe {
+  padding: 3rem;
+  gap: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .space-breathe {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* Peaceful Button Styles */
+.btn-peaceful {
+  padding: 0.75rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  background: var(--card-background);
+}
+
+.btn-peaceful:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-peaceful:active {
+  transform: translateY(0);
+}
+
+.btn-peaceful-primary {
+  background: var(--accent-primary);
+  color: white;
+  border-color: transparent;
+}
+
+.btn-peaceful-primary:hover {
+  opacity: 0.9;
+}
+
+/* Peaceful Badge/Tag */
+.badge-peaceful {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+}
+
+/* Peaceful Divider */
+.divider-peaceful {
+  height: 1px;
+  background: var(--border-color);
+  margin: 2rem 0;
+  opacity: 0.5;
+}
+
+/* Peaceful Glassmorphism */
+.glass-peaceful {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-peaceful {
+  background: rgba(38, 35, 32, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Peaceful Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+  opacity: 0.3;
+}
+
+/* Peaceful Loading State */
+.loading-peaceful {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-peaceful::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+.dark .loading-peaceful::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* Enhanced Transitions - Butter smooth */
+.transition-peaceful {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-peaceful-fast {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-peaceful-slow {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Peaceful Hover Effects */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-large);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+/* Peaceful Grid Layouts */
+.grid-peaceful {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-peaceful-lg {
+  gap: 2rem;
+}
+
+/* Status Indicators - Peaceful colors */
+.status-excellent {
+  color: var(--accent-success);
+  background: color-mix(in srgb, var(--accent-success) 10%, transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-good {
+  color: #06b6d4;
+  background: color-mix(in srgb, #06b6d4 10%, transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-moderate {
+  color: var(--accent-warning);
+  background: color-mix(in srgb, var(--accent-warning) 10%, transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-poor {
+  color: var(--accent-danger);
+  background: color-mix(in srgb, var(--accent-danger) 10%, transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
