@@ -28,7 +28,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return (
       <div className="flex h-screen bg-background">
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-muted border-t-violet-500"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-charcoal border-t-gold"></div>
         </div>
       </div>
     );
@@ -42,9 +42,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <ErrorBoundary>
       <div className="flex h-screen bg-background transition-colors duration-200">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto bg-muted/30">
+        <main className="flex-1 overflow-y-auto bg-gradient-to-b from-deep-purple/5 to-background">
           <ErrorBoundary>
-            <div className="container mx-auto px-6 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14 max-w-7xl">
+            <div className="container mx-auto px-8 py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 max-w-[1800px]">
               {children}
             </div>
           </ErrorBoundary>

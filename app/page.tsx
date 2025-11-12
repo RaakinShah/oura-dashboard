@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { useOuraData } from '@/hooks/useOura';
-import { Heart, Activity, Moon, TrendingUp, TrendingDown, Sparkles, RefreshCw, ArrowRight, Zap, Target, BarChart3, Settings, Brain, Clock } from 'lucide-react';
+import { Heart, Activity, Moon, TrendingUp, TrendingDown, Sparkles, RefreshCw, ArrowRight, Zap, Crown, Star } from 'lucide-react';
 import { EnhancedAIEngine as AdvancedAIEngine } from '@/lib/ai-engine/core';
 import { formatFullDate } from '@/lib/date-utils';
 import Link from 'next/link';
@@ -19,20 +19,20 @@ export default function Dashboard() {
 
   if (!hasToken) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4 mesh-gradient">
-        <div className="text-center max-w-lg animate-scale-in">
-          <div className="w-24 h-24 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-2xl animate-glow">
-            <Sparkles className="h-12 w-12 text-white" />
+      <div className="flex min-h-screen items-center justify-center p-4 hero-luxury grain">
+        <div className="text-center max-w-2xl animate-scale-luxury">
+          <div className="w-32 h-32 mx-auto mb-12 rounded-full bg-gradient-gold flex items-center justify-center shadow-dramatic animate-glow-pulse">
+            <Crown className="h-16 w-16 text-charcoal" />
           </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-transparent">
-            Welcome to Oura
+          <h1 className="text-7xl font-bold mb-6 animate-shimmer-gold">
+            Oura Luxury
           </h1>
-          <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
-            Connect your Oura Ring to unlock AI-powered health insights and personalized recommendations
+          <p className="text-2xl text-platinum mb-12 leading-relaxed">
+            Experience premium health insights with world-class AI
           </p>
-          <Link href="/settings" className="btn btn-primary text-lg px-8 py-4">
-            Get Started
-            <ArrowRight className="h-5 w-5" />
+          <Link href="/settings" className="btn-luxury btn-gold text-lg px-12 py-5">
+            Begin Your Journey
+            <ArrowRight className="h-6 w-6" />
           </Link>
         </div>
       </div>
@@ -42,9 +42,9 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-center animate-fade-up">
-          <div className="w-20 h-20 border-4 border-muted border-t-violet-500 rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="text-muted-foreground text-lg font-medium">Loading your health data...</p>
+        <div className="text-center animate-fade-luxury">
+          <div className="w-24 h-24 border-4 border-charcoal border-t-gold rounded-full animate-spin mx-auto mb-8"></div>
+          <p className="text-gold text-xl font-semibold uppercase tracking-widest">Loading Excellence</p>
         </div>
       </div>
     );
@@ -53,15 +53,15 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <div className="max-w-md animate-scale-in">
-          <div className="card-xl">
-            <div className="w-16 h-16 bg-rose-100 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center mb-6">
-              <span className="text-4xl">⚠️</span>
+        <div className="max-w-xl animate-scale-luxury">
+          <div className="card-luxury">
+            <div className="w-20 h-20 bg-gradient-bronze rounded-3xl flex items-center justify-center mb-8">
+              <span className="text-5xl">⚠️</span>
             </div>
-            <h2 className="text-3xl font-bold mb-4">Unable to Load Data</h2>
-            <p className="text-muted-foreground text-lg mb-8">{error}</p>
-            <Link href="/settings" className="btn btn-primary">
-              Update Settings
+            <h2 className="text-4xl font-bold mb-6">Connection Error</h2>
+            <p className="text-platinum text-xl mb-10 leading-relaxed">{error}</p>
+            <Link href="/settings" className="btn-luxury btn-gold">
+              Configure Settings
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
@@ -72,14 +72,14 @@ export default function Dashboard() {
 
   if (!sleep.length || !readiness.length || !activity.length) {
     return (
-      <div className="flex h-full items-center justify-center p-6">
-        <div className="text-center max-w-lg animate-scale-in">
-          <div className="w-24 h-24 bg-gradient-to-br from-violet-100 to-cyan-100 dark:from-violet-900/20 dark:to-cyan-900/20 rounded-3xl flex items-center justify-center mx-auto mb-8">
-            <Moon className="h-12 w-12 text-violet-600 dark:text-violet-400" />
+      <div className="flex h-full items-center justify-center p-6 grain">
+        <div className="text-center max-w-2xl animate-scale-luxury">
+          <div className="w-32 h-32 bg-gradient-royal rounded-full flex items-center justify-center mx-auto mb-12 shadow-dramatic">
+            <Moon className="h-16 w-16 text-gold" />
           </div>
-          <h2 className="text-3xl font-bold mb-4">No Data Available</h2>
-          <p className="text-muted-foreground text-lg">
-            Wear your Oura Ring and sync your data to see personalized insights
+          <h2 className="text-5xl font-bold mb-6">Awaiting Data</h2>
+          <p className="text-platinum text-xl leading-relaxed">
+            Synchronize your Oura Ring to unveil personalized insights
           </p>
         </div>
       </div>
@@ -93,9 +93,9 @@ export default function Dashboard() {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
   };
 
   // Calculate weekly stats
@@ -116,54 +116,65 @@ export default function Dashboard() {
   const readinessTrend = avg7Readiness - prevAvgReadiness;
 
   return (
-    <div className="space-y-8">
-      {/* Hero Header with Mesh Gradient */}
-      <div className="relative rounded-3xl overflow-hidden p-8 md:p-12 mesh-gradient animate-fade-up">
+    <div className="space-y-12 grain">
+      {/* Luxury Hero Section with Spotlight */}
+      <div className="hero-luxury rounded-[3rem] overflow-hidden p-12 md:p-20 animate-fade-luxury">
         <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-start justify-between mb-12">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">{getGreeting()}</h1>
-              <p className="text-muted-foreground text-lg">
+              <h1 className="text-7xl md:text-8xl font-bold mb-4 animate-shimmer-gold">
+                {getGreeting()}
+              </h1>
+              <p className="text-platinum text-2xl">
                 {latestSleep && formatFullDate(latestSleep.day)}
               </p>
             </div>
-            <button onClick={refetch} className="btn btn-secondary">
-              <RefreshCw className="h-5 w-5" />
-              <span className="hidden sm:inline">Refresh</span>
+            <button onClick={refetch} className="btn-luxury btn-ghost-luxury">
+              <RefreshCw className="h-6 w-6" />
+              <span>Refresh</span>
             </button>
           </div>
 
-          {/* Quick Stats Overview */}
-          <div className="grid grid-cols-3 gap-6 mt-8">
-            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-sm text-muted-foreground mb-2">Sleep Score</div>
-              <div className="text-4xl font-bold mb-1">{latestSleep.score}</div>
+          {/* Premium Quick Stats - Asymmetric Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="glass-luxury rounded-3xl p-8 transform hover:scale-105 transition-all duration-500">
+              <div className="flex items-center gap-3 mb-4">
+                <Moon className="h-8 w-8 text-gold" />
+                <span className="text-gold text-sm uppercase tracking-widest font-bold">Sleep</span>
+              </div>
+              <div className="text-6xl font-bold mb-3">{latestSleep.score}</div>
               {sleepTrend !== 0 && (
-                <div className={`flex items-center gap-1 text-sm ${sleepTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                  {sleepTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  <span>{Math.abs(sleepTrend)} from last week</span>
+                <div className={`flex items-center gap-2 ${sleepTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
+                  {sleepTrend > 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+                  <span className="font-semibold">{Math.abs(sleepTrend)} vs last week</span>
                 </div>
               )}
             </div>
 
-            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-sm text-muted-foreground mb-2">Activity Score</div>
-              <div className="text-4xl font-bold mb-1">{latestActivity.score}</div>
+            <div className="glass-luxury rounded-3xl p-8 transform hover:scale-105 transition-all duration-500">
+              <div className="flex items-center gap-3 mb-4">
+                <Activity className="h-8 w-8 text-gold" />
+                <span className="text-gold text-sm uppercase tracking-widest font-bold">Activity</span>
+              </div>
+              <div className="text-6xl font-bold mb-3">{latestActivity.score}</div>
               {activityTrend !== 0 && (
-                <div className={`flex items-center gap-1 text-sm ${activityTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                  {activityTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  <span>{Math.abs(activityTrend)} from last week</span>
+                <div className={`flex items-center gap-2 ${activityTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
+                  {activityTrend > 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+                  <span className="font-semibold">{Math.abs(activityTrend)} vs last week</span>
                 </div>
               )}
             </div>
 
-            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-sm text-muted-foreground mb-2">Readiness</div>
-              <div className="text-4xl font-bold mb-1">{latestReadiness.score}</div>
+            <div className="glass-luxury rounded-3xl p-8 transform hover:scale-105 transition-all duration-500">
+              <div className="flex items-center gap-3 mb-4">
+                <Heart className="h-8 w-8 text-gold" />
+                <span className="text-gold text-sm uppercase tracking-widest font-bold">Readiness</span>
+              </div>
+              <div className="text-6xl font-bold mb-3">{latestReadiness.score}</div>
               {readinessTrend !== 0 && (
-                <div className={`flex items-center gap-1 text-sm ${readinessTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                  {readinessTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  <span>{Math.abs(readinessTrend)} from last week</span>
+                <div className={`flex items-center gap-2 ${readinessTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
+                  {readinessTrend > 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+                  <span className="font-semibold">{Math.abs(readinessTrend)} vs last week</span>
                 </div>
               )}
             </div>
@@ -171,103 +182,103 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* AI Insight - Premium Design */}
+      {/* AI Insight - Dramatic Presentation */}
       {topInsight && (
-        <div className="animate-fade-up" style={{ animationDelay: '0.1s' }}>
-          <div className={`card-xl relative overflow-hidden ${getPriorityBg(topInsight.priority)}`}>
-            <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-white to-transparent"></div>
-            <div className="relative z-10">
-              <div className="flex items-start gap-6">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                  <Zap className="h-7 w-7 text-white" />
+        <div className="animate-fade-luxury" style={{ animationDelay: '0.2s' }}>
+          <div className="card-luxury grain">
+            <div className="flex items-start gap-8">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-gold flex items-center justify-center flex-shrink-0 animate-float-luxury shadow-dramatic">
+                <Zap className="h-10 w-10 text-charcoal" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-4 mb-6">
+                  <h2 className="text-5xl font-bold">{topInsight.title}</h2>
+                  <span className="badge-luxury badge-gold">
+                    <Star className="h-4 w-4" />
+                    {topInsight.priority}
+                  </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h2 className="text-3xl font-bold text-white">{topInsight.title}</h2>
-                    <span className="badge bg-white/20 text-white border-0 uppercase text-xs px-3 py-1.5">
-                      {topInsight.priority}
-                    </span>
-                  </div>
-                  <p className="text-white/90 text-lg leading-relaxed mb-6">
-                    {topInsight.narrative}
-                  </p>
+                <p className="text-platinum text-2xl leading-relaxed mb-10">
+                  {topInsight.narrative}
+                </p>
 
-                  {topInsight.actionPlan.immediate.length > 0 && (
-                    <div className="glass rounded-2xl p-6 mb-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Target className="h-5 w-5 text-white" />
-                        <p className="text-white font-semibold text-sm uppercase tracking-wide">Action Steps</p>
-                      </div>
-                      <ul className="space-y-3">
-                        {topInsight.actionPlan.immediate.slice(0, 3).map((action, i) => (
-                          <li key={i} className="flex items-start gap-4 text-white/90">
-                            <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-sm font-bold mt-0.5">
-                              {i + 1}
-                            </span>
-                            <span className="flex-1">{action}</span>
-                          </li>
-                        ))}
-                      </ul>
+                {topInsight.actionPlan.immediate.length > 0 && (
+                  <div className="glass-luxury rounded-3xl p-8 mb-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-3 h-3 rounded-full bg-gold"></div>
+                      <p className="text-gold font-bold text-sm uppercase tracking-widest">Recommended Actions</p>
                     </div>
-                  )}
+                    <ul className="space-y-5">
+                      {topInsight.actionPlan.immediate.slice(0, 3).map((action, i) => (
+                        <li key={i} className="flex items-start gap-6 text-platinum text-lg">
+                          <span className="w-10 h-10 rounded-2xl bg-gradient-gold flex items-center justify-center flex-shrink-0 text-charcoal font-bold text-sm">
+                            {i + 1}
+                          </span>
+                          <span className="flex-1 pt-2">{action}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                  <Link href="/insights" className="inline-flex items-center gap-2 text-white hover:text-white/80 font-semibold transition-colors">
-                    View All {insights.length} Insights
-                    <ArrowRight className="h-5 w-5" />
-                  </Link>
-                </div>
+                <Link href="/insights" className="btn-luxury btn-gold">
+                  View All {insights.length} Insights
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Detailed Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+      {/* Luxury Metric Cards - Editorial Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-elegant" style={{ animationDelay: '0.4s' }}>
         {/* Sleep Card */}
-        <Link href="/sleep" className="metric-card card-hover group">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-lg">
-                <Moon className="h-7 w-7 text-white" />
+        <Link href="/sleep" className="metric-luxury group cursor-pointer">
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-gold flex items-center justify-center shadow-luxury">
+                  <Moon className="h-8 w-8 text-charcoal" />
+                </div>
+                <div>
+                  <div className="text-sm text-gold font-bold uppercase tracking-widest">Sleep</div>
+                  <div className="text-xs text-platinum">Last Night</div>
+                </div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Sleep</div>
-                <div className="text-xs text-muted-foreground">Last night</div>
-              </div>
-            </div>
-            {getScoreBadge(latestSleep.score)}
-          </div>
-
-          <div className="mb-6">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-6xl font-bold">{latestSleep.score}</span>
-              <span className="text-3xl text-muted-foreground">/100</span>
+              {getLuxuryBadge(latestSleep.score)}
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Duration</span>
-                <span className="font-semibold">{(latestSleep.total_sleep_duration / 3600).toFixed(1)}h</span>
+            <div className="mb-8">
+              <div className="flex items-baseline gap-4 mb-6">
+                <span className="text-7xl font-bold text-gold">{latestSleep.score}</span>
+                <span className="text-4xl text-platinum opacity-50">/100</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Efficiency</span>
-                <span className="font-semibold">{latestSleep.efficiency}%</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">REM Sleep</span>
-                <span className="font-semibold">{Math.round(latestSleep.rem_sleep_duration / 60)}min</span>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-lg border-b border-gold border-opacity-20 pb-3">
+                  <span className="text-platinum">Duration</span>
+                  <span className="font-bold text-gold">{(latestSleep.total_sleep_duration / 3600).toFixed(1)}h</span>
+                </div>
+                <div className="flex items-center justify-between text-lg border-b border-gold border-opacity-20 pb-3">
+                  <span className="text-platinum">Efficiency</span>
+                  <span className="font-bold text-gold">{latestSleep.efficiency}%</span>
+                </div>
+                <div className="flex items-center justify-between text-lg">
+                  <span className="text-platinum">REM Sleep</span>
+                  <span className="font-bold text-gold">{Math.round(latestSleep.rem_sleep_duration / 60)}min</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="pt-4 border-t border-border">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">7-day average</span>
-              <div className="flex items-center gap-2">
-                <span className="font-bold">{avg7Sleep}</span>
+            <div className="divider-luxury"></div>
+
+            <div className="flex items-center justify-between text-lg pt-4">
+              <span className="text-platinum">7-Day Average</span>
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-2xl">{avg7Sleep}</span>
                 {sleepTrend !== 0 && (
-                  <span className={`flex items-center gap-1 font-semibold ${sleepTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  <span className={`font-bold ${sleepTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
                     {sleepTrend > 0 ? '+' : ''}{sleepTrend}
                   </span>
                 )}
@@ -277,49 +288,51 @@ export default function Dashboard() {
         </Link>
 
         {/* Activity Card */}
-        <Link href="/activity" className="metric-card card-hover group">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-lg">
-                <Activity className="h-7 w-7 text-white" />
+        <Link href="/activity" className="metric-luxury group cursor-pointer">
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-bronze flex items-center justify-center shadow-luxury">
+                  <Activity className="h-8 w-8 text-charcoal" />
+                </div>
+                <div>
+                  <div className="text-sm text-bronze font-bold uppercase tracking-widest">Activity</div>
+                  <div className="text-xs text-platinum">Yesterday</div>
+                </div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Activity</div>
-                <div className="text-xs text-muted-foreground">Yesterday</div>
-              </div>
-            </div>
-            {getScoreBadge(latestActivity.score)}
-          </div>
-
-          <div className="mb-6">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-6xl font-bold">{latestActivity.score}</span>
-              <span className="text-3xl text-muted-foreground">/100</span>
+              {getLuxuryBadge(latestActivity.score)}
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Steps</span>
-                <span className="font-semibold">{latestActivity.steps.toLocaleString()}</span>
+            <div className="mb-8">
+              <div className="flex items-baseline gap-4 mb-6">
+                <span className="text-7xl font-bold text-bronze">{latestActivity.score}</span>
+                <span className="text-4xl text-platinum opacity-50">/100</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Active calories</span>
-                <span className="font-semibold">{latestActivity.active_calories} cal</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">High activity</span>
-                <span className="font-semibold">{Math.round(latestActivity.high_activity_time / 60)}min</span>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-lg border-b border-bronze border-opacity-20 pb-3">
+                  <span className="text-platinum">Steps</span>
+                  <span className="font-bold text-bronze">{latestActivity.steps.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center justify-between text-lg border-b border-bronze border-opacity-20 pb-3">
+                  <span className="text-platinum">Active Calories</span>
+                  <span className="font-bold text-bronze">{latestActivity.active_calories} cal</span>
+                </div>
+                <div className="flex items-center justify-between text-lg">
+                  <span className="text-platinum">High Activity</span>
+                  <span className="font-bold text-bronze">{Math.round(latestActivity.high_activity_time / 60)}min</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="pt-4 border-t border-border">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">7-day average</span>
-              <div className="flex items-center gap-2">
-                <span className="font-bold">{avg7Activity}</span>
+            <div className="divider-luxury"></div>
+
+            <div className="flex items-center justify-between text-lg pt-4">
+              <span className="text-platinum">7-Day Average</span>
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-2xl">{avg7Activity}</span>
                 {activityTrend !== 0 && (
-                  <span className={`flex items-center gap-1 font-semibold ${activityTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  <span className={`font-bold ${activityTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
                     {activityTrend > 0 ? '+' : ''}{activityTrend}
                   </span>
                 )}
@@ -329,49 +342,51 @@ export default function Dashboard() {
         </Link>
 
         {/* Readiness Card */}
-        <Link href="/readiness" className="metric-card card-hover group">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
-                <Heart className="h-7 w-7 text-white" />
+        <Link href="/readiness" className="metric-luxury group cursor-pointer">
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-platinum flex items-center justify-center shadow-luxury">
+                  <Heart className="h-8 w-8 text-charcoal" />
+                </div>
+                <div>
+                  <div className="text-sm text-platinum font-bold uppercase tracking-widest">Readiness</div>
+                  <div className="text-xs text-platinum opacity-60">Today</div>
+                </div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Readiness</div>
-                <div className="text-xs text-muted-foreground">Today</div>
-              </div>
-            </div>
-            {getScoreBadge(latestReadiness.score)}
-          </div>
-
-          <div className="mb-6">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-6xl font-bold">{latestReadiness.score}</span>
-              <span className="text-3xl text-muted-foreground">/100</span>
+              {getLuxuryBadge(latestReadiness.score)}
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Resting HR</span>
-                <span className="font-semibold">{latestReadiness.resting_heart_rate} bpm</span>
+            <div className="mb-8">
+              <div className="flex items-baseline gap-4 mb-6">
+                <span className="text-7xl font-bold text-platinum">{latestReadiness.score}</span>
+                <span className="text-4xl text-platinum opacity-50">/100</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">HRV</span>
-                <span className="font-semibold">{latestReadiness.hrv_balance || 'N/A'}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Temp deviation</span>
-                <span className="font-semibold">{latestReadiness.temperature_deviation ? `${latestReadiness.temperature_deviation.toFixed(1)}°C` : 'Normal'}</span>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-lg border-b border-platinum border-opacity-20 pb-3">
+                  <span className="text-platinum">Resting HR</span>
+                  <span className="font-bold text-platinum">{latestReadiness.resting_heart_rate} bpm</span>
+                </div>
+                <div className="flex items-center justify-between text-lg border-b border-platinum border-opacity-20 pb-3">
+                  <span className="text-platinum">HRV Balance</span>
+                  <span className="font-bold text-platinum">{latestReadiness.hrv_balance || 'N/A'}</span>
+                </div>
+                <div className="flex items-center justify-between text-lg">
+                  <span className="text-platinum">Temp Deviation</span>
+                  <span className="font-bold text-platinum">{latestReadiness.temperature_deviation ? `${latestReadiness.temperature_deviation.toFixed(1)}°C` : 'Normal'}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="pt-4 border-t border-border">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">7-day average</span>
-              <div className="flex items-center gap-2">
-                <span className="font-bold">{avg7Readiness}</span>
+            <div className="divider-luxury"></div>
+
+            <div className="flex items-center justify-between text-lg pt-4">
+              <span className="text-platinum">7-Day Average</span>
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-2xl">{avg7Readiness}</span>
                 {readinessTrend !== 0 && (
-                  <span className={`flex items-center gap-1 font-semibold ${readinessTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  <span className={`font-bold ${readinessTrend > 0 ? 'text-gold' : 'text-bronze'}`}>
                     {readinessTrend > 0 ? '+' : ''}{readinessTrend}
                   </span>
                 )}
@@ -381,57 +396,47 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-        <Link href="/insights" className="card card-hover group text-center p-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float">
-            <Brain className="h-8 w-8 text-white" />
+      {/* Luxury CTA Section */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-luxury" style={{ animationDelay: '0.6s' }}>
+        <Link href="/insights" className="card-luxury group text-center p-10">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-gold mx-auto mb-6 flex items-center justify-center shadow-dramatic group-hover:shadow-luxury transition-shadow animate-float-luxury">
+            <Sparkles className="h-10 w-10 text-charcoal" />
           </div>
-          <p className="font-semibold">AI Insights</p>
-          <p className="text-xs text-muted-foreground mt-1">{insights.length} available</p>
+          <p className="font-bold text-xl text-gold">AI Insights</p>
+          <p className="text-sm text-platinum mt-2">{insights.length} Available</p>
         </Link>
 
-        <Link href="/analytics" className="card card-hover group text-center p-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '0.5s'}}>
-            <BarChart3 className="h-8 w-8 text-white" />
+        <Link href="/analytics" className="card-luxury group text-center p-10">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-bronze mx-auto mb-6 flex items-center justify-center shadow-dramatic group-hover:shadow-luxury transition-shadow animate-float-luxury" style={{animationDelay: '1s'}}>
+            <TrendingUp className="h-10 w-10 text-charcoal" />
           </div>
-          <p className="font-semibold">Analytics</p>
-          <p className="text-xs text-muted-foreground mt-1">Deep dive</p>
+          <p className="font-bold text-xl text-bronze">Analytics</p>
+          <p className="text-sm text-platinum mt-2">Deep Insights</p>
         </Link>
 
-        <Link href="/goals" className="card card-hover group text-center p-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '1s'}}>
-            <Target className="h-8 w-8 text-white" />
+        <Link href="/goals" className="card-luxury group text-center p-10">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-platinum mx-auto mb-6 flex items-center justify-center shadow-dramatic group-hover:shadow-luxury transition-shadow animate-float-luxury" style={{animationDelay: '1.5s'}}>
+            <Crown className="h-10 w-10 text-charcoal" />
           </div>
-          <p className="font-semibold">Goals</p>
-          <p className="text-xs text-muted-foreground mt-1">Track progress</p>
+          <p className="font-bold text-xl text-platinum">Goals</p>
+          <p className="text-sm text-platinum mt-2">Track Progress</p>
         </Link>
 
-        <Link href="/settings" className="card card-hover group text-center p-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '1.5s'}}>
-            <Settings className="h-8 w-8 text-white" />
+        <Link href="/settings" className="card-luxury group text-center p-10">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-royal mx-auto mb-6 flex items-center justify-center shadow-dramatic group-hover:shadow-luxury transition-shadow animate-float-luxury" style={{animationDelay: '2s'}}>
+            <Star className="h-10 w-10 text-gold" />
           </div>
-          <p className="font-semibold">Settings</p>
-          <p className="text-xs text-muted-foreground mt-1">Customize</p>
+          <p className="font-bold text-xl text-gold">Settings</p>
+          <p className="text-sm text-platinum mt-2">Customize</p>
         </Link>
       </div>
     </div>
   );
 }
 
-function getScoreBadge(score: number) {
-  if (score >= 85) return <span className="badge badge-success">Excellent</span>;
-  if (score >= 70) return <span className="badge badge-primary">Good</span>;
-  if (score >= 55) return <span className="badge badge-warning">Fair</span>;
-  return <span className="badge badge-error">Needs Attention</span>;
-}
-
-function getPriorityBg(priority: string) {
-  switch (priority) {
-    case 'critical': return 'bg-gradient-to-br from-rose-600 to-red-700 text-white';
-    case 'high': return 'bg-gradient-to-br from-orange-600 to-red-600 text-white';
-    case 'medium': return 'bg-gradient-to-br from-amber-500 to-orange-500 text-white';
-    case 'low': return 'bg-gradient-to-br from-emerald-600 to-green-600 text-white';
-    default: return 'bg-gradient-to-br from-violet-600 to-purple-600 text-white';
-  }
+function getLuxuryBadge(score: number) {
+  if (score >= 85) return <span className="badge-luxury badge-gold">Exceptional</span>;
+  if (score >= 70) return <span className="badge-luxury badge-platinum">Excellent</span>;
+  if (score >= 55) return <span className="badge-luxury badge-bronze">Good</span>;
+  return <span className="badge-luxury badge-bronze">Attention</span>;
 }
