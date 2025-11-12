@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { useOuraData } from '@/hooks/useOura';
-import { Heart, Activity, Moon, TrendingUp, TrendingDown, Sparkles, RefreshCw, ArrowRight, Zap, Target, BarChart3, Settings } from 'lucide-react';
+import { Heart, Activity, Moon, TrendingUp, TrendingDown, Sparkles, RefreshCw, ArrowRight, Zap, Target, BarChart3, Settings, Brain, Clock } from 'lucide-react';
 import { EnhancedAIEngine as AdvancedAIEngine } from '@/lib/ai-engine/core';
 import { formatFullDate } from '@/lib/date-utils';
 import Link from 'next/link';
@@ -10,8 +10,6 @@ import Link from 'next/link';
 export default function Dashboard() {
   const { sleep, activity, readiness, loading, hasToken, error, refetch } = useOuraData();
 
-  // Generate AI insights with memoization for performance
-  // Must be called before any conditional returns (Rules of Hooks)
   const insights = useMemo(() => {
     if (sleep.length > 0 && activity.length > 0 && readiness.length > 0) {
       return AdvancedAIEngine.generateDeepInsights(sleep, activity, readiness);
@@ -21,21 +19,18 @@ export default function Dashboard() {
 
   if (!hasToken) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-            <Sparkles className="h-10 w-10 text-white" />
+      <div className="flex min-h-screen items-center justify-center p-4 mesh-gradient">
+        <div className="text-center max-w-lg animate-scale-in">
+          <div className="w-24 h-24 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-2xl animate-glow">
+            <Sparkles className="h-12 w-12 text-white" />
           </div>
-          <h1 className="text-3xl font-bold mb-3">
-            Welcome to Oura Dashboard
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-transparent">
+            Welcome to Oura
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-            Connect your Oura Ring to unlock AI-powered health insights
+          <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+            Connect your Oura Ring to unlock AI-powered health insights and personalized recommendations
           </p>
-          <Link
-            href="/settings"
-            className="btn btn-primary"
-          >
+          <Link href="/settings" className="btn btn-primary text-lg px-8 py-4">
             Get Started
             <ArrowRight className="h-5 w-5" />
           </Link>
@@ -47,9 +42,9 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">Loading health data...</p>
+        <div className="text-center animate-fade-up">
+          <div className="w-20 h-20 border-4 border-muted border-t-violet-500 rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="text-muted-foreground text-lg font-medium">Loading your health data...</p>
         </div>
       </div>
     );
@@ -58,16 +53,16 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <div className="max-w-md animate-fade-in-up">
-          <div className="card-lg">
-            <div className="w-14 h-14 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mb-4">
-              <span className="text-2xl">⚠️</span>
+        <div className="max-w-md animate-scale-in">
+          <div className="card-xl">
+            <div className="w-16 h-16 bg-rose-100 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center mb-6">
+              <span className="text-4xl">⚠️</span>
             </div>
-            <h2 className="text-2xl font-bold mb-3">Unable to Load Data</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
+            <h2 className="text-3xl font-bold mb-4">Unable to Load Data</h2>
+            <p className="text-muted-foreground text-lg mb-8">{error}</p>
             <Link href="/settings" className="btn btn-primary">
               Update Settings
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
@@ -78,13 +73,13 @@ export default function Dashboard() {
   if (!sleep.length || !readiness.length || !activity.length) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <div className="text-center max-w-md animate-fade-in-up">
-          <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <Moon className="h-10 w-10 text-gray-600 dark:text-gray-400" />
+        <div className="text-center max-w-lg animate-scale-in">
+          <div className="w-24 h-24 bg-gradient-to-br from-violet-100 to-cyan-100 dark:from-violet-900/20 dark:to-cyan-900/20 rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <Moon className="h-12 w-12 text-violet-600 dark:text-violet-400" />
           </div>
-          <h2 className="text-2xl font-bold mb-3">No Data Available</h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Wear your Oura Ring and sync your data to see insights
+          <h2 className="text-3xl font-bold mb-4">No Data Available</h2>
+          <p className="text-muted-foreground text-lg">
+            Wear your Oura Ring and sync your data to see personalized insights
           </p>
         </div>
       </div>
@@ -94,7 +89,6 @@ export default function Dashboard() {
   const latestSleep = sleep[sleep.length - 1];
   const latestActivity = activity[activity.length - 1];
   const latestReadiness = readiness[readiness.length - 1];
-
   const topInsight = insights[0];
 
   const getGreeting = () => {
@@ -104,7 +98,7 @@ export default function Dashboard() {
     return 'Good evening';
   };
 
-  // Calculate weekly averages
+  // Calculate weekly stats
   const last7Sleep = sleep.slice(-7);
   const last7Activity = activity.slice(-7);
   const last7Readiness = readiness.slice(-7);
@@ -117,296 +111,308 @@ export default function Dashboard() {
   const prevAvgActivity = activity.length >= 14 ? Math.round(activity.slice(-14, -7).reduce((sum, a) => sum + a.score, 0) / 7) : avg7Activity;
   const prevAvgReadiness = readiness.length >= 14 ? Math.round(readiness.slice(-14, -7).reduce((sum, r) => sum + r.score, 0) / 7) : avg7Readiness;
 
-  const sleepChange = avg7Sleep - prevAvgSleep;
-  const activityChange = avg7Activity - prevAvgActivity;
-  const readinessChange = avg7Readiness - prevAvgReadiness;
+  const sleepTrend = avg7Sleep - prevAvgSleep;
+  const activityTrend = avg7Activity - prevAvgActivity;
+  const readinessTrend = avg7Readiness - prevAvgReadiness;
 
   return (
-    <div className="space-y-6">
-      {/* Professional Header */}
-      <div className="flex items-center justify-between animate-fade-in">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{getGreeting()}</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-            {latestSleep && formatFullDate(latestSleep.day)}
-          </p>
-        </div>
-        <button
-          onClick={refetch}
-          className="btn btn-secondary"
-        >
-          <RefreshCw className="h-4 w-4" />
-          <span className="hidden sm:inline">Refresh</span>
-        </button>
-      </div>
-
-      {/* Hero Metrics - Data First */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
-        {/* Sleep Metric */}
-        <Link href="/sleep" className="metric-card metric-card-sleep card-interactive group">
+    <div className="space-y-8">
+      {/* Hero Header with Mesh Gradient */}
+      <div className="relative rounded-3xl overflow-hidden p-8 md:p-12 mesh-gradient animate-fade-up">
+        <div className="relative z-10">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-                <Moon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Sleep</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">Last night</p>
-              </div>
-            </div>
-            {getScoreBadge(latestSleep.score)}
-          </div>
-
-          <div className="mb-4">
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="text-6xl font-bold">{latestSleep.score}</span>
-              <span className="text-3xl text-gray-400 dark:text-gray-600">/100</span>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                <span>{(latestSleep.total_sleep_duration / 3600).toFixed(1)}h duration</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
-                <span>{latestSleep.efficiency}% efficiency</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Trend indicator */}
-          {sleepChange !== 0 && (
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${sleepChange > 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-              {sleepChange > 0 ? (
-                <TrendingUp className={`h-4 w-4 text-green-600 dark:text-green-400`} />
-              ) : (
-                <TrendingDown className={`h-4 w-4 text-red-600 dark:text-red-400`} />
-              )}
-              <span className={`text-sm font-semibold ${sleepChange > 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                {Math.abs(sleepChange)} vs last week
-              </span>
-            </div>
-          )}
-        </Link>
-
-        {/* Activity Metric */}
-        <Link href="/activity" className="metric-card metric-card-activity card-interactive group">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                <Activity className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Activity</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">Yesterday</p>
-              </div>
-            </div>
-            {getScoreBadge(latestActivity.score)}
-          </div>
-
-          <div className="mb-4">
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="text-6xl font-bold">{latestActivity.score}</span>
-              <span className="text-3xl text-gray-400 dark:text-gray-600">/100</span>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span>{latestActivity.steps.toLocaleString()} steps</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                <span>{latestActivity.active_calories} cal</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Trend indicator */}
-          {activityChange !== 0 && (
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${activityChange > 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-              {activityChange > 0 ? (
-                <TrendingUp className={`h-4 w-4 text-green-600 dark:text-green-400`} />
-              ) : (
-                <TrendingDown className={`h-4 w-4 text-red-600 dark:text-red-400`} />
-              )}
-              <span className={`text-sm font-semibold ${activityChange > 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                {Math.abs(activityChange)} vs last week
-              </span>
-            </div>
-          )}
-        </Link>
-
-        {/* Readiness Metric */}
-        <Link href="/readiness" className="metric-card metric-card-readiness card-interactive group">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-md">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Readiness</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">Today</p>
-              </div>
-            </div>
-            {getScoreBadge(latestReadiness.score)}
-          </div>
-
-          <div className="mb-4">
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="text-6xl font-bold">{latestReadiness.score}</span>
-              <span className="text-3xl text-gray-400 dark:text-gray-600">/100</span>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
-                <span>{latestReadiness.resting_heart_rate} bpm</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
-                <span>resting HR</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Trend indicator */}
-          {readinessChange !== 0 && (
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${readinessChange > 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-              {readinessChange > 0 ? (
-                <TrendingUp className={`h-4 w-4 text-green-600 dark:text-green-400`} />
-              ) : (
-                <TrendingDown className={`h-4 w-4 text-red-600 dark:text-red-400`} />
-              )}
-              <span className={`text-sm font-semibold ${readinessChange > 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                {Math.abs(readinessChange)} vs last week
-              </span>
-            </div>
-          )}
-        </Link>
-      </div>
-
-      {/* AI Insight - Priority Alert */}
-      {topInsight && (
-        <div className={`card-xl ${getPriorityStyle(topInsight.priority)} animate-fade-in-up`}>
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <h2 className="text-2xl font-bold text-white">{topInsight.title}</h2>
-                <span className="badge bg-white/20 text-white border-white/30 uppercase text-xs">
-                  {topInsight.priority}
-                </span>
-              </div>
-              <p className="text-white/90 leading-relaxed mb-4">
-                {topInsight.narrative.split('.')[0]}.
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2">{getGreeting()}</h1>
+              <p className="text-muted-foreground text-lg">
+                {latestSleep && formatFullDate(latestSleep.day)}
               </p>
+            </div>
+            <button onClick={refetch} className="btn btn-secondary">
+              <RefreshCw className="h-5 w-5" />
+              <span className="hidden sm:inline">Refresh</span>
+            </button>
+          </div>
 
-              {topInsight.actionPlan.immediate.length > 0 && (
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
-                  <p className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Recommended Actions</p>
-                  <ul className="space-y-2">
-                    {topInsight.actionPlan.immediate.slice(0, 2).map((action, i) => (
-                      <li key={i} className="text-white/90 flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">
-                          {i + 1}
-                        </span>
-                        <span>{action}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {/* Quick Stats Overview */}
+          <div className="grid grid-cols-3 gap-6 mt-8">
+            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
+              <div className="text-sm text-muted-foreground mb-2">Sleep Score</div>
+              <div className="text-4xl font-bold mb-1">{latestSleep.score}</div>
+              {sleepTrend !== 0 && (
+                <div className={`flex items-center gap-1 text-sm ${sleepTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  {sleepTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                  <span>{Math.abs(sleepTrend)} from last week</span>
                 </div>
               )}
+            </div>
 
-              <Link
-                href="/insights"
-                className="inline-flex items-center gap-2 text-white hover:text-white/80 font-medium transition-colors"
-              >
-                View All Insights
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
+              <div className="text-sm text-muted-foreground mb-2">Activity Score</div>
+              <div className="text-4xl font-bold mb-1">{latestActivity.score}</div>
+              {activityTrend !== 0 && (
+                <div className={`flex items-center gap-1 text-sm ${activityTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  {activityTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                  <span>{Math.abs(activityTrend)} from last week</span>
+                </div>
+              )}
+            </div>
+
+            <div className="glass rounded-2xl p-6 backdrop-blur-xl">
+              <div className="text-sm text-muted-foreground mb-2">Readiness</div>
+              <div className="text-4xl font-bold mb-1">{latestReadiness.score}</div>
+              {readinessTrend !== 0 && (
+                <div className={`flex items-center gap-1 text-sm ${readinessTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  {readinessTrend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                  <span>{Math.abs(readinessTrend)} from last week</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Insight - Premium Design */}
+      {topInsight && (
+        <div className="animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <div className={`card-xl relative overflow-hidden ${getPriorityBg(topInsight.priority)}`}>
+            <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-white to-transparent"></div>
+            <div className="relative z-10">
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <Zap className="h-7 w-7 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h2 className="text-3xl font-bold text-white">{topInsight.title}</h2>
+                    <span className="badge bg-white/20 text-white border-0 uppercase text-xs px-3 py-1.5">
+                      {topInsight.priority}
+                    </span>
+                  </div>
+                  <p className="text-white/90 text-lg leading-relaxed mb-6">
+                    {topInsight.narrative}
+                  </p>
+
+                  {topInsight.actionPlan.immediate.length > 0 && (
+                    <div className="glass rounded-2xl p-6 mb-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Target className="h-5 w-5 text-white" />
+                        <p className="text-white font-semibold text-sm uppercase tracking-wide">Action Steps</p>
+                      </div>
+                      <ul className="space-y-3">
+                        {topInsight.actionPlan.immediate.slice(0, 3).map((action, i) => (
+                          <li key={i} className="flex items-start gap-4 text-white/90">
+                            <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-sm font-bold mt-0.5">
+                              {i + 1}
+                            </span>
+                            <span className="flex-1">{action}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <Link href="/insights" className="inline-flex items-center gap-2 text-white hover:text-white/80 font-semibold transition-colors">
+                    View All {insights.length} Insights
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Weekly Overview */}
-      <div className="card-lg animate-fade-in-up">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold">7-Day Average</h3>
-          <Link href="/analytics" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1">
-            View Analytics
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-4xl font-bold">{avg7Sleep}</span>
-              {sleepChange !== 0 && (
-                <span className={`text-lg font-bold ${sleepChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {sleepChange > 0 ? '+' : ''}{sleepChange}
-                </span>
-              )}
+      {/* Detailed Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+        {/* Sleep Card */}
+        <Link href="/sleep" className="metric-card card-hover group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-lg">
+                <Moon className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Sleep</div>
+                <div className="text-xs text-muted-foreground">Last night</div>
+              </div>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Sleep Score</p>
+            {getScoreBadge(latestSleep.score)}
           </div>
 
-          <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-4xl font-bold">{avg7Activity}</span>
-              {activityChange !== 0 && (
-                <span className={`text-lg font-bold ${activityChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {activityChange > 0 ? '+' : ''}{activityChange}
-                </span>
-              )}
+          <div className="mb-6">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-6xl font-bold">{latestSleep.score}</span>
+              <span className="text-3xl text-muted-foreground">/100</span>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Activity Score</p>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Duration</span>
+                <span className="font-semibold">{(latestSleep.total_sleep_duration / 3600).toFixed(1)}h</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Efficiency</span>
+                <span className="font-semibold">{latestSleep.efficiency}%</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">REM Sleep</span>
+                <span className="font-semibold">{Math.round(latestSleep.rem_sleep_duration / 60)}min</span>
+              </div>
+            </div>
           </div>
 
-          <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-4xl font-bold">{avg7Readiness}</span>
-              {readinessChange !== 0 && (
-                <span className={`text-lg font-bold ${readinessChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                  {readinessChange > 0 ? '+' : ''}{readinessChange}
-                </span>
-              )}
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">7-day average</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold">{avg7Sleep}</span>
+                {sleepTrend !== 0 && (
+                  <span className={`flex items-center gap-1 font-semibold ${sleepTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                    {sleepTrend > 0 ? '+' : ''}{sleepTrend}
+                  </span>
+                )}
+              </div>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Readiness Score</p>
           </div>
-        </div>
+        </Link>
+
+        {/* Activity Card */}
+        <Link href="/activity" className="metric-card card-hover group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-lg">
+                <Activity className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Activity</div>
+                <div className="text-xs text-muted-foreground">Yesterday</div>
+              </div>
+            </div>
+            {getScoreBadge(latestActivity.score)}
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-6xl font-bold">{latestActivity.score}</span>
+              <span className="text-3xl text-muted-foreground">/100</span>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Steps</span>
+                <span className="font-semibold">{latestActivity.steps.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Active calories</span>
+                <span className="font-semibold">{latestActivity.active_calories} cal</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">High activity</span>
+                <span className="font-semibold">{Math.round(latestActivity.high_activity_time / 60)}min</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">7-day average</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold">{avg7Activity}</span>
+                {activityTrend !== 0 && (
+                  <span className={`flex items-center gap-1 font-semibold ${activityTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                    {activityTrend > 0 ? '+' : ''}{activityTrend}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </Link>
+
+        {/* Readiness Card */}
+        <Link href="/readiness" className="metric-card card-hover group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg">
+                <Heart className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-wide">Readiness</div>
+                <div className="text-xs text-muted-foreground">Today</div>
+              </div>
+            </div>
+            {getScoreBadge(latestReadiness.score)}
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-6xl font-bold">{latestReadiness.score}</span>
+              <span className="text-3xl text-muted-foreground">/100</span>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Resting HR</span>
+                <span className="font-semibold">{latestReadiness.resting_heart_rate} bpm</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">HRV</span>
+                <span className="font-semibold">{latestReadiness.hrv_balance || 'N/A'}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Temp deviation</span>
+                <span className="font-semibold">{latestReadiness.temperature_deviation ? `${latestReadiness.temperature_deviation.toFixed(1)}°C` : 'Normal'}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">7-day average</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold">{avg7Readiness}</span>
+                {readinessTrend !== 0 && (
+                  <span className={`flex items-center gap-1 font-semibold ${readinessTrend > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                    {readinessTrend > 0 ? '+' : ''}{readinessTrend}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in-up">
-        <Link href="/insights" className="card card-interactive text-center p-6 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 mx-auto mb-3 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <Sparkles className="h-6 w-6 text-white" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+        <Link href="/insights" className="card card-hover group text-center p-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float">
+            <Brain className="h-8 w-8 text-white" />
           </div>
-          <p className="font-semibold text-sm">AI Insights</p>
+          <p className="font-semibold">AI Insights</p>
+          <p className="text-xs text-muted-foreground mt-1">{insights.length} available</p>
         </Link>
 
-        <Link href="/analytics" className="card card-interactive text-center p-6 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 mx-auto mb-3 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <BarChart3 className="h-6 w-6 text-white" />
+        <Link href="/analytics" className="card card-hover group text-center p-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '0.5s'}}>
+            <BarChart3 className="h-8 w-8 text-white" />
           </div>
-          <p className="font-semibold text-sm">Analytics</p>
+          <p className="font-semibold">Analytics</p>
+          <p className="text-xs text-muted-foreground mt-1">Deep dive</p>
         </Link>
 
-        <Link href="/goals" className="card card-interactive text-center p-6 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 mx-auto mb-3 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <Target className="h-6 w-6 text-white" />
+        <Link href="/goals" className="card card-hover group text-center p-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '1s'}}>
+            <Target className="h-8 w-8 text-white" />
           </div>
-          <p className="font-semibold text-sm">Goals</p>
+          <p className="font-semibold">Goals</p>
+          <p className="text-xs text-muted-foreground mt-1">Track progress</p>
         </Link>
 
-        <Link href="/settings" className="card card-interactive text-center p-6 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-500 to-gray-600 mx-auto mb-3 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <Settings className="h-6 w-6 text-white" />
+        <Link href="/settings" className="card card-hover group text-center p-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow animate-float" style={{animationDelay: '1.5s'}}>
+            <Settings className="h-8 w-8 text-white" />
           </div>
-          <p className="font-semibold text-sm">Settings</p>
+          <p className="font-semibold">Settings</p>
+          <p className="text-xs text-muted-foreground mt-1">Customize</p>
         </Link>
       </div>
     </div>
@@ -414,28 +420,18 @@ export default function Dashboard() {
 }
 
 function getScoreBadge(score: number) {
-  if (score >= 85) {
-    return <span className="badge badge-excellent">Excellent</span>;
-  } else if (score >= 70) {
-    return <span className="badge badge-good">Good</span>;
-  } else if (score >= 55) {
-    return <span className="badge badge-moderate">Fair</span>;
-  } else {
-    return <span className="badge badge-poor">Needs Attention</span>;
-  }
+  if (score >= 85) return <span className="badge badge-success">Excellent</span>;
+  if (score >= 70) return <span className="badge badge-primary">Good</span>;
+  if (score >= 55) return <span className="badge badge-warning">Fair</span>;
+  return <span className="badge badge-error">Needs Attention</span>;
 }
 
-function getPriorityStyle(priority: string) {
+function getPriorityBg(priority: string) {
   switch (priority) {
-    case 'critical':
-      return 'bg-gradient-to-br from-red-600 to-red-700 text-white border-0';
-    case 'high':
-      return 'bg-gradient-to-br from-orange-600 to-red-600 text-white border-0';
-    case 'medium':
-      return 'bg-gradient-to-br from-amber-500 to-orange-500 text-white border-0';
-    case 'low':
-      return 'bg-gradient-to-br from-green-600 to-emerald-600 text-white border-0';
-    default:
-      return 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-0';
+    case 'critical': return 'bg-gradient-to-br from-rose-600 to-red-700 text-white';
+    case 'high': return 'bg-gradient-to-br from-orange-600 to-red-600 text-white';
+    case 'medium': return 'bg-gradient-to-br from-amber-500 to-orange-500 text-white';
+    case 'low': return 'bg-gradient-to-br from-emerald-600 to-green-600 text-white';
+    default: return 'bg-gradient-to-br from-violet-600 to-purple-600 text-white';
   }
 }
