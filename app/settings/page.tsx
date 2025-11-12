@@ -16,7 +16,6 @@ export default function Settings() {
     if (typeof window !== 'undefined') {
       const oldToken = localStorage.getItem('oura_api_token');
       if (oldToken && !storage.getToken()) {
-        console.log('Migrating token from old key to new key');
         storage.setToken(oldToken);
         localStorage.removeItem('oura_api_token');
       }

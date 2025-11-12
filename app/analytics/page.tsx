@@ -9,13 +9,27 @@ import {
 import HeatmapCalendar from '@/components/HeatmapCalendar';
 import { formatShortDate } from '@/lib/date-utils';
 
+// Types for Recharts Tooltip
+interface TooltipPayloadEntry {
+  name: string;
+  value: number;
+  color: string;
+  dataKey: string;
+}
+
+interface TooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: string;
+}
+
 // Custom Tooltip Component
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass rounded-2xl p-4 shadow-xl border border-white/20">
         <p className="font-semibold text-gray-900 mb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry, index: number) => (
           <div key={index} className="flex items-center gap-2 text-sm">
             <div
               className="w-3 h-3 rounded-full"

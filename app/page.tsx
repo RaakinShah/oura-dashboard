@@ -1,18 +1,16 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useOuraData } from '@/hooks/useOura';
 import { Heart, Activity, Moon, TrendingUp, TrendingDown, Minus, Sparkles, RefreshCw, ArrowRight, Zap, Target } from 'lucide-react';
-import { AdvancedAIEngine } from '@/lib/advanced-ai-engine';
+import { EnhancedAIEngine as AdvancedAIEngine } from '@/lib/ai-engine/core';
 import { formatFullDate } from '@/lib/date-utils';
 import Link from 'next/link';
 
 export default function Dashboard() {
-  console.log('Dashboard component mounting...');
   const { sleep, activity, readiness, loading, hasToken, error, refetch } = useOuraData();
-  console.log('useOuraData returned:', { loading, hasToken, error, sleepCount: sleep.length, activityCount: activity.length, readinessCount: readiness.length });
 
   if (!hasToken) {
-    console.log('No token found, showing welcome screen');
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <div className="text-center max-w-md">
@@ -91,8 +89,11 @@ export default function Dashboard() {
   const latestActivity = activity[activity.length - 1];
   const latestReadiness = readiness[readiness.length - 1];
 
-  // Generate AI insights
-  const insights = AdvancedAIEngine.generateDeepInsights(sleep, activity, readiness);
+  // Generate AI insights with memoization for performance
+  const insights = useMemo(() => {
+    return AdvancedAIEngine.generateDeepInsights(sleep, activity, readiness);
+  }, [sleep, activity, readiness]);
+
   const topInsight = insights[0];
 
   const getGreeting = () => {
@@ -171,14 +172,14 @@ export default function Dashboard() {
 
       {/* AI Insight */}
       {topInsight && (
-        <div className={`bg-gradient-to-br ${getSeverityGradient(topInsight.severity)} rounded-3xl p-6 text-white shadow-lg animate-fade-in-up`}>
+        <div className={`bg-gradient-to-br ${getPriorityGradient(topInsight.priority)} rounded-3xl p-6 text-white shadow-lg animate-fade-in-up`}>
           <div className="flex items-start gap-3 mb-4">
             <Zap className="h-7 w-7 flex-shrink-0 mt-1" />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <h2 className="text-2xl font-bold">{topInsight.title}</h2>
                 <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-bold uppercase">
-                  {topInsight.severity}
+                  {topInsight.priority}
                 </span>
               </div>
               <p className="text-white/90 leading-relaxed text-base">
@@ -348,12 +349,12 @@ export default function Dashboard() {
   );
 }
 
-function getSeverityGradient(severity: string) {
-  switch (severity) {
+function getPriorityGradient(priority: string) {
+  switch (priority) {
     case 'critical': return 'from-red-500 to-rose-600';
-    case 'important': return 'from-orange-500 to-red-500';
-    case 'moderate': return 'from-yellow-500 to-orange-500';
-    case 'positive': return 'from-green-500 to-emerald-600';
+    case 'high': return 'from-orange-500 to-red-500';
+    case 'medium': return 'from-yellow-500 to-orange-500';
+    case 'low': return 'from-green-500 to-emerald-600';
     default: return 'from-blue-500 to-cyan-500';
   }
 }

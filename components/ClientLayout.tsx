@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import WelcomePage from '@/components/WelcomePage';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
@@ -38,13 +39,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-6 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14 max-w-7xl">
-          {children}
-        </div>
-      </main>
-    </div>
+    <ErrorBoundary>
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <ErrorBoundary>
+            <div className="container mx-auto px-6 py-10 md:px-10 md:py-12 lg:px-12 lg:py-14 max-w-7xl">
+              {children}
+            </div>
+          </ErrorBoundary>
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 }
