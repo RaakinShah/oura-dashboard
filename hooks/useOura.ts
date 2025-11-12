@@ -3,21 +3,18 @@
 import { useState, useEffect } from 'react';
 import { OuraAPIClient, SleepData, ActivityData, ReadinessData } from '@/lib/oura-api';
 import { storage } from '@/lib/storage';
-import { mockSleepData, mockActivityData, mockReadinessData } from '@/lib/mock-data';
 
 export function useOuraData() {
-  console.log('useOuraData hook called');
   const [sleep, setSleep] = useState<SleepData[]>([]);
   const [activity, setActivity] = useState<ActivityData[]>([]);
   const [readiness, setReadiness] = useState<ReadinessData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasToken, setHasToken] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   useEffect(() => {
-    console.log('useOuraData useEffect running');
     const token = storage.getToken();
-    console.log('Token from storage:', token ? 'Found' : 'Not found');
     setHasToken(!!token);
 
     if (!token) {
@@ -27,7 +24,6 @@ export function useOuraData() {
 
     const fetchData = async () => {
       try {
-        console.log('Starting to fetch data...');
         setLoading(true);
         setError(null);
 
@@ -41,23 +37,14 @@ export function useOuraData() {
           .toISOString()
           .split('T')[0];
 
-        console.log('Date range:', startDate, 'to', endDate);
-
         // Clear any cached data before fetching
         storage.clearCache();
 
-        console.log('Fetching from API...');
         const [sleepResponse, activityResponse, readinessResponse] = await Promise.all([
           client.getSleep(startDate, endDate),
           client.getActivity(startDate, endDate),
           client.getReadiness(startDate, endDate),
         ]);
-
-        console.log('API responses:', {
-          sleep: sleepResponse.data.length,
-          activity: activityResponse.data.length,
-          readiness: readinessResponse.data.length
-        });
 
         // Filter out days with no actual data (score must exist and be valid)
         // Keep days even if some secondary metrics are 0
@@ -79,32 +66,22 @@ export function useOuraData() {
           !isNaN(r.score)
         );
 
-        console.log('Valid data:', {
-          sleep: validSleep.length,
-          activity: validActivity.length,
-          readiness: validReadiness.length
-        });
-
         setSleep(validSleep);
         setActivity(validActivity);
         setReadiness(validReadiness);
-        console.log('Data set successfully, setting loading to false');
       } catch (err) {
-        console.error('Error fetching Oura data:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch data');
       } finally {
-        console.log('Finally block - setting loading to false');
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [refetchTrigger]);
 
   const refetch = () => {
-    setLoading(true);
-    // Trigger re-fetch by updating a dependency
-    window.location.reload();
+    // Trigger re-fetch by incrementing the trigger
+    setRefetchTrigger(prev => prev + 1);
   };
 
   return {

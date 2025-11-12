@@ -28,7 +28,6 @@ export default function ThemeToggle() {
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
-    console.log('Toggle theme from', theme, 'to', newTheme);
 
     setTheme(newTheme);
 
@@ -36,20 +35,12 @@ export default function ThemeToggle() {
     const htmlElement = document.documentElement;
     if (newTheme === 'dark') {
       htmlElement.classList.add('dark');
-      console.log('Added dark class');
     } else {
       htmlElement.classList.remove('dark');
-      console.log('Removed dark class');
     }
 
     // Save to localStorage
     localStorage.setItem('theme', newTheme);
-    console.log('Theme saved to localStorage:', newTheme);
-
-    // Force a re-render by ensuring state updates
-    setTimeout(() => {
-      console.log('Current classes:', htmlElement.className);
-    }, 100);
   };
 
   // Don't render until mounted to prevent hydration mismatch

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useOuraData } from '@/hooks/useOura';
 import { Goal, getGoals, deleteGoal, updateGoalProgress } from '@/lib/notes-storage';
 import AddGoalModal from '@/components/AddGoalModal';
@@ -13,17 +13,24 @@ export default function GoalsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | undefined>(undefined);
   const [filter, setFilter] = useState<'all' | 'active' | 'completed' | 'overdue'>('all');
+  const hasUpdatedGoals = useRef(false);
+
+  const loadGoals = useCallback(() => {
+    setGoals(getGoals());
+  }, []);
 
   useEffect(() => {
     loadGoals();
-  }, []);
+  }, [loadGoals]);
 
   // Auto-update goal progress based on Oura data
   useEffect(() => {
-    if (sleep.length > 0 && activity.length > 0 && readiness.length > 0) {
+    if (sleep.length > 0 && activity.length > 0 && readiness.length > 0 && goals.length > 0 && !hasUpdatedGoals.current) {
       const latestSleep = sleep[sleep.length - 1];
       const latestActivity = activity[activity.length - 1];
       const latestReadiness = readiness[readiness.length - 1];
+
+      let hasChanges = false;
 
       goals.forEach(goal => {
         if (goal.completed) return;
@@ -41,17 +48,17 @@ export default function GoalsPage() {
 
         if (currentValue !== goal.current) {
           updateGoalProgress(goal.id, currentValue);
+          hasChanges = true;
         }
       });
 
-      // Reload goals after updates
-      loadGoals();
+      // Reload goals after updates only if there were changes
+      if (hasChanges) {
+        loadGoals();
+        hasUpdatedGoals.current = true;
+      }
     }
-  }, [sleep, activity, readiness]);
-
-  const loadGoals = () => {
-    setGoals(getGoals());
-  };
+  }, [sleep, activity, readiness, goals, loadGoals]);
 
   const handleDeleteGoal = (id: string) => {
     if (confirm('Are you sure you want to delete this goal?')) {
