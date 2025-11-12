@@ -11,18 +11,16 @@ import {
   BarChart3,
   Target,
   Settings,
-  Crown,
   Clock,
   TrendingDown,
   Shield,
   Coffee,
-  Star,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'AI Insights', href: '/insights', icon: Brain, luxury: true },
+  { name: 'AI Insights', href: '/insights', icon: Brain },
   { name: 'Sleep', href: '/sleep', icon: Moon },
   { name: 'Activity', href: '/activity', icon: Activity },
   { name: 'Readiness', href: '/readiness', icon: Heart },
@@ -39,23 +37,22 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-80 flex-col bg-gradient-to-b from-charcoal via-deep-purple to-charcoal border-r border-gold border-opacity-20">
-      {/* Luxury Logo */}
-      <div className="flex h-28 items-center px-10 border-b border-gold border-opacity-20">
-        <div className="flex items-center gap-5">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-gold shadow-dramatic animate-glow-pulse">
-            <Crown className="h-8 w-8 text-charcoal" />
+    <div className="flex h-screen w-80 flex-col bg-white border-r border-stone-200">
+      {/* Logo */}
+      <div className="flex h-20 items-center px-8 border-b border-stone-200">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-900">
+            <div className="h-5 w-5 rounded-full border-2 border-white"></div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gold animate-shimmer-gold">Oura</h1>
-            <p className="text-xs text-platinum uppercase tracking-widest">Luxury Edition</p>
+            <h1 className="text-xl font-light tracking-tight">Oura</h1>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-6 py-10 overflow-y-auto space-y-2">
-        {navigation.map((item, index) => {
+      <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-1">
+        {navigation.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
 
@@ -64,72 +61,35 @@ export default function Sidebar() {
               key={item.name}
               href={item.href}
               className={`
-                group relative flex items-center gap-4 rounded-2xl px-5 py-4 text-base font-medium
-                transition-all duration-300 animate-slide-elegant
+                group flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium
+                transition-all
                 ${isActive
-                  ? 'bg-gradient-to-r from-gold/20 to-gold/10 text-gold shadow-luxury'
-                  : 'text-platinum hover:bg-smoke hover:text-gold'
+                  ? 'bg-stone-100 text-stone-900'
+                  : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                 }
               `}
-              style={{ animationDelay: `${index * 0.03}s` }}
             >
-              {/* Active indicator - gold accent */}
-              {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-gradient-to-b from-gold-light to-gold-dark rounded-r-full shadow-luxury" />
-              )}
-
               {/* Icon */}
-              <div className={`${isActive ? 'text-gold' : ''} transition-all group-hover:scale-110`}>
-                <Icon className="h-6 w-6" strokeWidth={2.5} />
+              <div className={`${isActive ? 'text-stone-900' : 'text-stone-400'} transition-colors`}>
+                <Icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
 
               {/* Label */}
               <span className="flex-1">{item.name}</span>
-
-              {/* Luxury Badge */}
-              {item.luxury && (
-                <span className="px-2.5 py-1 text-[9px] font-bold bg-gradient-gold text-charcoal rounded-full shadow-sm uppercase tracking-wider">
-                  Premium
-                </span>
-              )}
-
-              {/* Hover glow effect */}
-              {isActive && (
-                <div className="absolute inset-0 rounded-2xl bg-gold opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none" />
-              )}
             </Link>
           );
         })}
       </nav>
 
-      {/* Luxury Footer */}
-      <div className="border-t border-gold border-opacity-20 p-8 space-y-6">
-        {/* Premium Status */}
-        <div className="rounded-2xl bg-gradient-to-br from-gold/10 to-bronze/10 p-5 border border-gold border-opacity-30">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-gold uppercase tracking-widest">Elite Status</span>
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <div className="h-2.5 w-2.5 rounded-full bg-gold"></div>
-                <div className="absolute inset-0 h-2.5 w-2.5 rounded-full bg-gold animate-ping opacity-75"></div>
-              </div>
-              <span className="text-xs font-bold text-gold-light">Active</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-[10px] text-platinum">
-            <Star className="h-3 w-3 text-gold" />
-            <span>All premium features enabled</span>
-          </div>
-        </div>
-
+      {/* Footer */}
+      <div className="border-t border-stone-200 p-6 space-y-4">
         {/* Theme Toggle */}
         <ThemeToggle />
 
-        {/* Footer Branding */}
-        <div className="text-center pt-3 border-t border-gold border-opacity-10">
-          <p className="text-[10px] text-platinum uppercase tracking-widest">
-            Powered by{' '}
-            <span className="font-bold text-gold">Elite AI</span>
+        {/* Footer Text */}
+        <div className="text-center pt-2">
+          <p className="text-xs text-stone-400">
+            Powered by AI
           </p>
         </div>
       </div>
