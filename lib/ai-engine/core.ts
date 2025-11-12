@@ -9,6 +9,8 @@ import {
 import { AdvancedStatistics } from './statistics';
 import { PersonalizationEngine } from './personalization';
 import { PredictiveAnalytics } from './predictions';
+import { PatternRecognition } from './patterns';
+import { ContextualIntelligence } from './context';
 
 /**
  * Next-Generation AI Health Engine
@@ -60,6 +62,18 @@ export class EnhancedAIEngine {
       // 4. Performance Optimization Insights
       const optimizationInsights = this.generateOptimizationInsights(sleep, activity, readiness, baselines);
       insights.push(...optimizationInsights);
+
+      // 5. Pattern-Based Insights (NEW!)
+      const patternInsights = this.generatePatternInsights(sleep, activity, readiness);
+      insights.push(...patternInsights);
+
+      // 6. Correlation-Based Insights (NEW!)
+      const correlationInsights = this.generateCorrelationInsights(sleep, activity, readiness);
+      insights.push(...correlationInsights);
+
+      // 7. Contextual Intelligence Insights (NEW!)
+      const contextInsights = this.generateContextualInsights(sleep, readiness, baselines);
+      insights.push(...contextInsights);
 
       // Sort by priority
       insights.sort((a, b) => {
@@ -432,6 +446,184 @@ export class EnhancedAIEngine {
         priority: 1,
       };
     }
+  }
+
+  /**
+   * Generate pattern-based insights using advanced pattern recognition
+   */
+  private static generatePatternInsights(
+    sleep: SleepData[],
+    activity: ActivityData[],
+    readiness: ReadinessData[]
+  ): AdvancedInsight[] {
+    const insights: AdvancedInsight[] = [];
+
+    try {
+      const patterns = PatternRecognition.detectComplexPatterns(sleep, activity, readiness);
+
+      for (const pattern of patterns.slice(0, 2)) {
+        insights.push({
+          id: `pattern-${Date.now()}-${Math.random()}`,
+          timestamp: new Date().toISOString(),
+          category: 'performance',
+          priority: pattern.type === 'deteriorating' || pattern.type === 'cascading' ? 'high' : 'medium',
+          title: pattern.description,
+          summary: pattern.implications[0] || '',
+          narrative: pattern.implications.join(' ') + '\n\n' + pattern.evidence.map(e => `${e.metric}: ${e.observation}`).join('. '),
+          confidence: pattern.confidence,
+          evidenceStrength: pattern.confidence > 0.8 ? 'strong' : 'moderate',
+          dataPoints: pattern.evidence.map(e => ({
+            metric: e.metric,
+            value: e.significance * 100,
+          })),
+          patterns: [pattern],
+          actionPlan: {
+            immediate: pattern.recommendations.slice(0, 2),
+            shortTerm: pattern.recommendations.slice(2, 4),
+            longTerm: pattern.recommendations.slice(4),
+            priority: pattern.type === 'deteriorating' ? 1 : 2,
+          },
+          expectedOutcome: 'Pattern-aware adjustments typically show results within 1-2 weeks',
+          timeframeToImprovement: '1-2 weeks',
+        });
+      }
+    } catch (error) {
+      // Silently handle pattern recognition errors
+    }
+
+    return insights;
+  }
+
+  /**
+   * Generate correlation-based insights
+   */
+  private static generateCorrelationInsights(
+    sleep: SleepData[],
+    activity: ActivityData[],
+    readiness: ReadinessData[]
+  ): AdvancedInsight[] {
+    const insights: AdvancedInsight[] = [];
+
+    try {
+      const correlations = PatternRecognition.discoverCorrelations(sleep, activity, readiness);
+
+      // Take the strongest correlation
+      if (correlations.length > 0) {
+        const top = correlations[0];
+        insights.push({
+          id: `correlation-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          category: 'performance',
+          priority: 'medium',
+          title: `${top.metric1}-${top.metric2} Connection Discovered`,
+          summary: top.insight,
+          narrative: `Statistical analysis reveals a ${top.correlation.strength} ${top.correlation.coefficient > 0 ? 'positive' : 'negative'} correlation between ${top.metric1} and ${top.metric2}. This relationship is statistically significant (p < ${top.correlation.pValue.toFixed(3)}) with correlation coefficient of ${top.correlation.coefficient.toFixed(2)}.\n\n${top.insight}\n\nUnderstanding this relationship can help you make more targeted improvements to your recovery and performance.`,
+          confidence: 0.85,
+          evidenceStrength: top.correlation.strength === 'very_strong' || top.correlation.strength === 'strong' ? 'strong' : 'moderate',
+          dataPoints: [
+            { metric: 'Correlation Coefficient', value: Math.abs(top.correlation.coefficient * 100) },
+            { metric: 'P-value', value: (1 - top.correlation.pValue) * 100 },
+          ],
+          patterns: [],
+          actionPlan: {
+            immediate: [`Focus on improving ${top.metric1} to positively impact ${top.metric2}`],
+            shortTerm: [`Track daily ${top.metric1} and ${top.metric2} to observe the relationship firsthand`],
+            longTerm: ['Leverage this insight for long-term optimization'],
+            priority: 2,
+          },
+          expectedOutcome: 'Understanding correlations enables more efficient optimization',
+          timeframeToImprovement: 'Ongoing',
+        });
+      }
+    } catch (error) {
+      // Silently handle correlation errors
+    }
+
+    return insights;
+  }
+
+  /**
+   * Generate contextual intelligence insights
+   */
+  private static generateContextualInsights(
+    sleep: SleepData[],
+    readiness: ReadinessData[],
+    baselines: PersonalBaselines
+  ): AdvancedInsight[] {
+    const insights: AdvancedInsight[] = [];
+
+    try {
+      // Circadian misalignment detection
+      const circadian = PatternRecognition.detectCircadianMisalignment(sleep);
+      if (circadian && circadian.misaligned) {
+        insights.push({
+          id: `circadian-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          category: 'sleep',
+          priority: circadian.severity === 'severe' ? 'high' : 'medium',
+          title: 'Circadian Rhythm Misalignment Detected',
+          summary: circadian.details,
+          narrative: `Your sleep timing shows significant variability that indicates circadian misalignment. ${circadian.details}\n\nCircadian rhythm consistency is crucial for optimal health, performance, and recovery. Misalignment can lead to reduced sleep quality, impaired cognitive function, and decreased readiness even with adequate sleep duration.\n\nAligning your sleep-wake cycle with your natural circadian rhythm can yield substantial improvements in energy, mood, and performance.`,
+          confidence: 0.82,
+          evidenceStrength: 'strong',
+          dataPoints: [
+            { metric: 'Circadian Misalignment Severity', value: circadian.severity === 'severe' ? 90 : circadian.severity === 'moderate' ? 70 : 50 },
+          ],
+          patterns: [],
+          actionPlan: {
+            immediate: [
+              'Set a consistent wake time (within 30 minutes, 7 days/week)',
+              'Get bright light exposure within 30 minutes of waking',
+            ],
+            shortTerm: [
+              'Maintain sleep schedule on weekends within 1 hour of weekdays',
+              'Dim lights 2-3 hours before bedtime',
+              'Avoid bright screens after 9 PM',
+            ],
+            longTerm: [
+              'Build strong circadian anchors with consistent meal times',
+              'Consider chronotype-aligned schedule adjustments',
+            ],
+            priority: 1,
+          },
+          expectedOutcome: 'Circadian alignment typically improves sleep quality within 1-2 weeks',
+          timeframeToImprovement: '1-2 weeks',
+        });
+      }
+
+      // Day-of-week patterns
+      const dayPatterns = ContextualIntelligence.analyzeDayOfWeekPatterns(readiness);
+      if (dayPatterns.patterns.length > 0) {
+        insights.push({
+          id: `day-pattern-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          category: 'performance',
+          priority: 'low',
+          title: 'Weekly Performance Rhythm Identified',
+          summary: dayPatterns.patterns[0],
+          narrative: `Analysis of your readiness patterns reveals distinct weekly rhythms:\n\n${dayPatterns.patterns.join('\n')}\n\nBest performance days: ${dayPatterns.bestDays.join(', ')}\nLowest readiness days: ${dayPatterns.worstDays.join(', ')}\n\nUnderstanding your weekly rhythm allows you to strategically schedule important activities, workouts, and recovery days for optimal results.`,
+          confidence: 0.75,
+          evidenceStrength: 'moderate',
+          dataPoints: [],
+          patterns: [],
+          actionPlan: {
+            immediate: [`Plan this week's important tasks around ${dayPatterns.bestDays[0]}`],
+            shortTerm: [
+              `Schedule challenging workouts on ${dayPatterns.bestDays.join(' or ')}`,
+              `Use ${dayPatterns.worstDays.join(' and ')} for recovery or lighter activities`,
+            ],
+            longTerm: ['Design weekly schedule that honors your natural performance rhythm'],
+            priority: 3,
+          },
+          expectedOutcome: 'Aligning activities with natural rhythms enhances performance and reduces stress',
+          timeframeToImprovement: 'Immediate',
+        });
+      }
+    } catch (error) {
+      // Silently handle contextual insight errors
+    }
+
+    return insights;
   }
 }
 
