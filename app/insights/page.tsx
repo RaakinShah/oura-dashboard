@@ -71,21 +71,21 @@ export default function Insights() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'border-red-200 bg-red-50';
-      case 'important': return 'border-orange-200 bg-orange-50';
-      case 'moderate': return 'border-yellow-200 bg-yellow-50';
-      case 'positive': return 'border-green-200 bg-green-50';
-      default: return 'border-blue-200 bg-blue-50';
+      case 'critical': return 'border-rose-200/60 bg-rose-50/50';
+      case 'important': return 'border-amber-200/60 bg-amber-50/50';
+      case 'moderate': return 'border-stone-300 bg-stone-100';
+      case 'positive': return 'border-emerald-200/60 bg-emerald-50/50';
+      default: return 'border-slate-200/60 bg-slate-50/50';
     }
   };
 
   const getSeverityBadgeColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'important': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'moderate': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'positive': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'critical': return 'bg-rose-100/80 text-rose-900 border-rose-200/60';
+      case 'important': return 'bg-amber-100/80 text-amber-900 border-amber-200/60';
+      case 'moderate': return 'bg-stone-200 text-stone-800 border-stone-300';
+      case 'positive': return 'bg-emerald-100/80 text-emerald-900 border-emerald-200/60';
+      default: return 'bg-slate-100/80 text-slate-900 border-slate-200/60';
     }
   };
 

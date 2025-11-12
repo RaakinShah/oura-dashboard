@@ -41,11 +41,11 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="flex h-20 items-center px-8 border-b border-stone-200">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-900">
-            <div className="h-5 w-5 rounded-full border-2 border-white"></div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-sage-800 to-sage-900 shadow-sm">
+            <div className="h-5 w-5 rounded-full border-2 border-sage-100"></div>
           </div>
           <div>
-            <h1 className="text-xl font-light tracking-tight">Oura</h1>
+            <h1 className="text-xl font-light tracking-tight text-stone-900">Oura</h1>
           </div>
         </div>
       </div>
@@ -62,15 +62,15 @@ export default function Sidebar() {
               href={item.href}
               className={`
                 group flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium
-                transition-all
+                transition-all duration-200 ease-out
                 ${isActive
-                  ? 'bg-stone-100 text-stone-900'
-                  : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
+                  ? 'bg-gradient-to-r from-sage-100/80 to-sage-50/50 text-sage-900 border border-sage-200/50'
+                  : 'text-stone-600 hover:bg-sage-50/30 hover:text-sage-800 border border-transparent'
                 }
               `}
             >
               {/* Icon */}
-              <div className={`${isActive ? 'text-stone-900' : 'text-stone-400'} transition-colors`}>
+              <div className={`${isActive ? 'text-sage-700' : 'text-stone-400 group-hover:text-sage-600'} transition-colors duration-200`}>
                 <Icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
 

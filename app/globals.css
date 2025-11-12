@@ -17,10 +17,62 @@
   --stone-800: #292524;
   --stone-900: #1c1917;
 
-  /* Single Accent - Refined Sage */
-  --accent: #8b9a8a;
-  --accent-light: #a5b4a4;
-  --accent-dark: #6f7e6e;
+  /* Refined Accent Colors */
+  --sage-50: #f6f7f6;
+  --sage-100: #e8ebe8;
+  --sage-200: #d1d8d1;
+  --sage-300: #b0bdb0;
+  --sage-400: #8a9a8a;
+  --sage-500: #6b7c6b;
+  --sage-600: #556555;
+  --sage-700: #455245;
+  --sage-800: #384338;
+  --sage-900: #2d372d;
+
+  /* Status Colors - Muted & Sophisticated */
+  --success-50: #f0f7f4;
+  --success-100: #d6ebe0;
+  --success-200: #acd8c1;
+  --success-300: #7dbf9d;
+  --success-400: #519d75;
+  --success-500: #3a8160;
+  --success-600: #2d674c;
+  --success-700: #25523e;
+  --success-800: #204233;
+  --success-900: #1c372c;
+
+  --warning-50: #faf8f3;
+  --warning-100: #f5eee0;
+  --warning-200: #e8d9b8;
+  --warning-300: #d4ba85;
+  --warning-400: #b8954e;
+  --warning-500: #9e7835;
+  --warning-600: #85622a;
+  --warning-700: #6d4e25;
+  --warning-800: #5c4323;
+  --warning-900: #4f3920;
+
+  --error-50: #faf5f5;
+  --error-100: #f5e6e6;
+  --error-200: #e8c8c8;
+  --error-300: #d4a0a0;
+  --error-400: #b86d6d;
+  --error-500: #9e4747;
+  --error-600: #853636;
+  --error-700: #6d2d2d;
+  --error-800: #5c2727;
+  --error-900: #4f2323;
+
+  --info-50: #f5f8fa;
+  --info-100: #e6eef5;
+  --info-200: #c8dae8;
+  --info-300: #a0bad4;
+  --info-400: #6d91b8;
+  --info-500: #47709e;
+  --info-600: #365985;
+  --info-700: #2d496d;
+  --info-800: #273d5c;
+  --info-900: #23344f;
 
   /* Elegant Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -156,12 +208,13 @@ h3 {
   border-radius: 0.5rem;
   padding: 2rem;
   box-shadow: var(--shadow);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-refined:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--stone-300);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--sage-300);
+  transform: translateY(-1px);
 }
 
 /* Metric Card */
@@ -171,12 +224,13 @@ h3 {
   border-radius: 0.5rem;
   padding: 2.5rem;
   box-shadow: var(--shadow);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .metric-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--sage-300);
 }
 
 /* Refined Divider */
@@ -196,7 +250,7 @@ h3 {
   font-weight: 500;
   font-size: 0.875rem;
   letter-spacing: 0.01em;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: 1px solid transparent;
 }
@@ -205,11 +259,19 @@ h3 {
   background: var(--stone-900);
   color: white;
   border-color: var(--stone-900);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: var(--stone-800);
-  border-color: var(--stone-800);
+  background: var(--sage-800);
+  border-color: var(--sage-800);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary {
@@ -219,8 +281,15 @@ h3 {
 }
 
 .btn-secondary:hover {
-  border-color: var(--stone-400);
-  background: var(--stone-50);
+  border-color: var(--sage-400);
+  background: var(--sage-50);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 /* Refined Badges */
@@ -237,21 +306,21 @@ h3 {
 }
 
 .badge-excellent {
-  background: #f0fdf4;
-  color: #166534;
-  border-color: #bbf7d0;
+  background: var(--success-50);
+  color: var(--success-800);
+  border-color: var(--success-200);
 }
 
 .badge-good {
-  background: #fffbeb;
-  color: #92400e;
-  border-color: #fde68a;
+  background: var(--info-50);
+  color: var(--info-800);
+  border-color: var(--info-200);
 }
 
 .badge-fair {
-  background: #fef2f2;
-  color: #991b1b;
-  border-color: #fecaca;
+  background: var(--warning-50);
+  color: var(--warning-800);
+  border-color: var(--warning-200);
 }
 
 /* Focus States */
@@ -264,14 +333,59 @@ button:focus-visible, a:focus-visible {
 @media (max-width: 768px) {
   .card-refined {
     padding: 1.5rem;
+    border-width: 1px;
+  }
+
+  .card-refined:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
   }
 
   .metric-card {
     padding: 1.5rem;
+    border-width: 1px;
+  }
+
+  .metric-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-lg);
   }
 
   h1 {
     font-size: 2.5rem;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .btn-refined {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.813rem;
+  }
+
+  .badge {
+    padding: 0.125rem 0.625rem;
+    font-size: 0.688rem;
+  }
+
+  /* Enhanced mobile touch targets */
+  button, a {
+    min-height: 44px;
+  }
+
+  /* Improve mobile card spacing */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+
+  .space-y-12 > * + * {
+    margin-top: 2rem;
   }
 }
 
