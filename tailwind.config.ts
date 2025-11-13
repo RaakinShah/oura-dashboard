@@ -9,6 +9,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        sage: {
+          50: '#f6f7f6',
+          100: '#e8ebe8',
+          200: '#d1d8d1',
+          300: '#b0bdb0',
+          400: '#8a9a8a',
+          500: '#6b7c6b',
+          600: '#556555',
+          700: '#455245',
+          800: '#384338',
+          900: '#2d372d',
+        },
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'fade-in-up': 'fadeInUp 0.6s ease-out',
