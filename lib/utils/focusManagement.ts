@@ -1,131 +1,64 @@
 /**
- * Focus management utilities for better accessibility
+ * Focus management utilities for accessibility
  */
 
-/**
- * Trap focus within an element (useful for modals)
- */
-export function trapFocus(element: HTMLElement) {
-  const focusableElements = element.querySelectorAll<HTMLElement>(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
+export class FocusManager {
+  private previouslyFocusedElement: HTMLElement | null = null;
 
-  const firstFocusable = focusableElements[0];
-  const lastFocusable = focusableElements[focusableElements.length - 1];
+  save(): void {
+    this.previouslyFocusedElement = document.activeElement as HTMLElement;
+  }
 
-  function handleTabKey(e: KeyboardEvent) {
+  restore(): void {
+    if (this.previouslyFocusedElement && this.previouslyFocusedElement.focus) {
+      this.previouslyFocusedElement.focus();
+      this.previouslyFocusedElement = null;
+    }
+  }
+}
+
+export function trapFocus(element: HTMLElement): () => void {
+  const focusableElements = getFocusableElements(element);
+  if (focusableElements.length === 0) return () => {};
+
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Tab') return;
 
     if (e.shiftKey) {
-      // Shift + Tab
-      if (document.activeElement === firstFocusable) {
+      if (document.activeElement === firstElement) {
         e.preventDefault();
-        lastFocusable?.focus();
+        lastElement.focus();
       }
     } else {
-      // Tab
-      if (document.activeElement === lastFocusable) {
+      if (document.activeElement === lastElement) {
         e.preventDefault();
-        firstFocusable?.focus();
+        firstElement.focus();
       }
     }
-  }
+  };
 
-  element.addEventListener('keydown', handleTabKey);
+  element.addEventListener('keydown', handleKeyDown);
+  firstElement.focus();
 
-  // Focus first element
-  firstFocusable?.focus();
-
-  // Return cleanup function
   return () => {
-    element.removeEventListener('keydown', handleTabKey);
+    element.removeEventListener('keydown', handleKeyDown);
   };
 }
 
-/**
- * Announce message to screen readers
- */
-export function announce(message: string, priority: 'polite' | 'assertive' = 'polite') {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', priority);
-  announcement.setAttribute('aria-atomic', 'true');
-  announcement.className = 'sr-only';
-  announcement.textContent = message;
-
-  document.body.appendChild(announcement);
-
-  setTimeout(() => {
-    document.body.removeChild(announcement);
-  }, 1000);
-}
-
-/**
- * Get all focusable elements within a container
- */
 export function getFocusableElements(container: HTMLElement = document.body): HTMLElement[] {
-  const elements = container.querySelectorAll<HTMLElement>(
-    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  const selector = [
+    'a[href]',
+    'button:not([disabled])',
+    'textarea:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(', ');
+
+  return Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(
+    (el) => !el.hasAttribute('disabled') && el.offsetParent !== null
   );
-
-  return Array.from(elements).filter((el) => {
-    return (
-      el.offsetWidth > 0 &&
-      el.offsetHeight > 0 &&
-      window.getComputedStyle(el).visibility !== 'hidden'
-    );
-  });
-}
-
-/**
- * Move focus to element and scroll into view
- */
-export function focusElement(selector: string | HTMLElement, smooth = true) {
-  const element = typeof selector === 'string'
-    ? document.querySelector<HTMLElement>(selector)
-    : selector;
-
-  if (!element) return false;
-
-  element.focus();
-  element.scrollIntoView({
-    behavior: smooth ? 'smooth' : 'auto',
-    block: 'center',
-  });
-
-  return true;
-}
-
-/**
- * Save and restore focus (useful for dialogs)
- */
-export class FocusManager {
-  private previousFocus: HTMLElement | null = null;
-
-  save() {
-    this.previousFocus = document.activeElement as HTMLElement;
-  }
-
-  restore() {
-    if (this.previousFocus && typeof this.previousFocus.focus === 'function') {
-      this.previousFocus.focus();
-      this.previousFocus = null;
-    }
-  }
-}
-
-/**
- * Check if element is focusable
- */
-export function isFocusable(element: HTMLElement): boolean {
-  if (element.hasAttribute('disabled')) return false;
-  if (element.getAttribute('tabindex') === '-1') return false;
-
-  const tagName = element.tagName.toLowerCase();
-  const focusableTags = ['a', 'button', 'input', 'select', 'textarea'];
-
-  if (focusableTags.includes(tagName)) return true;
-  if (element.hasAttribute('tabindex')) return true;
-
-  return false;
 }
