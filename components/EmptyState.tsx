@@ -1,36 +1,69 @@
-import { LucideIcon } from 'lucide-react';
-import Link from 'next/link';
+import { ReactNode } from 'react';
+import { Inbox, Search, AlertCircle, FileQuestion } from 'lucide-react';
 
-interface EmptyStateProps {
-  icon: LucideIcon;
+export interface EmptyStateProps {
   title: string;
-  description: string;
+  description?: string;
+  icon?: ReactNode;
   action?: {
     label: string;
-    href: string;
+    onClick: () => void;
   };
+  variant?: 'default' | 'search' | 'error' | 'info';
+  className?: string;
 }
 
-export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
+/**
+ * Empty state component for no data scenarios
+ */
+export function EmptyState({
+  title,
+  description,
+  icon,
+  action,
+  variant = 'default',
+  className = '',
+}: EmptyStateProps) {
+  const variantIcons = {
+    default: <Inbox className="h-16 w-16" />,
+    search: <Search className="h-16 w-16" />,
+    error: <AlertCircle className="h-16 w-16" />,
+    info: <FileQuestion className="h-16 w-16" />,
+  };
+
+  const variantColors = {
+    default: 'text-stone-400',
+    search: 'text-blue-400',
+    error: 'text-red-400',
+    info: 'text-amber-400',
+  };
+
+  const displayIcon = icon || variantIcons[variant];
+
   return (
-    <div className="flex items-center justify-center p-12 sm:p-16">
-      <div className="max-w-md text-center animate-scale-in">
-        <div className="w-20 h-20 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center border border-stone-200">
-          <Icon className="w-10 h-10 text-stone-400" strokeWidth={1.5} />
-        </div>
-
-        <h3 className="text-2xl font-light mb-4 text-stone-900">{title}</h3>
-        <p className="text-stone-600 leading-relaxed mb-8">{description}</p>
-
-        {action && (
-          <Link
-            href={action.href}
-            className="btn-refined btn-primary inline-flex"
-          >
-            {action.label}
-          </Link>
-        )}
+    <div className={`flex flex-col items-center justify-center text-center py-12 px-4 ${className}`}>
+      <div className={`mb-4 ${variantColors[variant]}`}>
+        {displayIcon}
       </div>
+
+      <h3 className="text-lg font-semibold text-stone-900 mb-2">
+        {title}
+      </h3>
+
+      {description && (
+        <p className="text-stone-600 max-w-md mb-6">
+          {description}
+        </p>
+      )}
+
+      {action && (
+        <button
+          onClick={action.onClick}
+          className="btn-refined btn-primary"
+        >
+          {action.label}
+        </button>
+      )}
     </div>
   );
 }
