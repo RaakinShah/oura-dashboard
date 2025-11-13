@@ -1,52 +1,32 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, RefObject } from 'react';
 
-interface UseIntersectionObserverOptions extends IntersectionObserverInit {
+export interface UseIntersectionObserverOptions extends IntersectionObserverInit {
   freezeOnceVisible?: boolean;
 }
 
-/**
- * Hook for detecting when element is visible in viewport
- */
 export function useIntersectionObserver(
+  elementRef: RefObject<Element>,
   options: UseIntersectionObserverOptions = {}
-): [React.RefObject<HTMLElement | null>, boolean] {
-  const { threshold = 0, root = null, rootMargin = '0px', freezeOnceVisible = false } = options;
+): IntersectionObserverEntry | undefined {
+  const { threshold = 0, root = null, rootMargin = '0%', freezeOnceVisible = false } = options;
 
-  const elementRef = useRef<HTMLElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [entry, setEntry] = useState<IntersectionObserverEntry>();
+
+  const frozen = entry?.isIntersecting && freezeOnceVisible;
 
   useEffect(() => {
-    const element = elementRef.current;
-    if (!element) return;
+    const node = elementRef?.current;
+    const hasIOSupport = !!window.IntersectionObserver;
 
-    // If already visible and freeze option is enabled, don't observe
-    if (freezeOnceVisible && isVisible) return;
+    if (!hasIOSupport || frozen || !node) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold, root, rootMargin }
-    );
+    const observerParams = { threshold, root, rootMargin };
+    const observer = new IntersectionObserver(([entry]) => setEntry(entry), observerParams);
 
-    observer.observe(element);
+    observer.observe(node);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [threshold, root, rootMargin, freezeOnceVisible, isVisible]);
+    return () => observer.disconnect();
+  }, [elementRef, threshold, root, rootMargin, frozen]);
 
-  return [elementRef, isVisible];
-}
-
-/**
- * Hook for lazy loading with intersection observer
- */
-export function useLazyLoad(threshold = 0.1) {
-  const [ref, isVisible] = useIntersectionObserver({
-    threshold,
-    freezeOnceVisible: true,
-  });
-
-  return { ref, shouldLoad: isVisible };
+  return entry;
 }

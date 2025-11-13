@@ -1,85 +1,63 @@
 import { ReactNode } from 'react';
-import { AlertCircle, CheckCircle, Info, AlertTriangle, X } from 'lucide-react';
+import { AlertCircle, CheckCircle, Info, XCircle, X } from 'lucide-react';
 
 export interface AlertProps {
-  variant?: 'info' | 'success' | 'warning' | 'error';
-  title?: string;
   children: ReactNode;
-  dismissible?: boolean;
-  onDismiss?: () => void;
-  icon?: ReactNode;
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  title?: string;
+  onClose?: () => void;
   className?: string;
 }
 
-/**
- * Alert/Banner component for important messages
- */
 export function Alert({
-  variant = 'info',
-  title,
   children,
-  dismissible = false,
-  onDismiss,
-  icon,
+  variant = 'default',
+  title,
+  onClose,
   className = '',
 }: AlertProps) {
-  const variantStyles = {
-    info: {
-      bg: 'bg-blue-50 border-blue-200',
-      text: 'text-blue-900',
-      icon: 'text-blue-500',
-      IconComponent: Info,
+  const variants = {
+    default: {
+      container: 'bg-stone-50 border-stone-200 text-stone-900',
+      icon: <Info className="w-5 h-5 text-stone-600" />,
     },
     success: {
-      bg: 'bg-emerald-50 border-emerald-200',
-      text: 'text-emerald-900',
-      icon: 'text-emerald-500',
-      IconComponent: CheckCircle,
+      container: 'bg-green-50 border-green-200 text-green-900',
+      icon: <CheckCircle className="w-5 h-5 text-green-600" />,
     },
     warning: {
-      bg: 'bg-amber-50 border-amber-200',
-      text: 'text-amber-900',
-      icon: 'text-amber-500',
-      IconComponent: AlertTriangle,
+      container: 'bg-yellow-50 border-yellow-200 text-yellow-900',
+      icon: <AlertCircle className="w-5 h-5 text-yellow-600" />,
     },
-    error: {
-      bg: 'bg-red-50 border-red-200',
-      text: 'text-red-900',
-      icon: 'text-red-500',
-      IconComponent: AlertCircle,
+    danger: {
+      container: 'bg-red-50 border-red-200 text-red-900',
+      icon: <XCircle className="w-5 h-5 text-red-600" />,
+    },
+    info: {
+      container: 'bg-blue-50 border-blue-200 text-blue-900',
+      icon: <Info className="w-5 h-5 text-blue-600" />,
     },
   };
 
-  const styles = variantStyles[variant];
-  const IconComponent = icon || <styles.IconComponent className="h-5 w-5" />;
+  const { container, icon } = variants[variant];
 
   return (
     <div
-      className={`
-        ${styles.bg} ${styles.text}
-        border rounded-lg p-4 flex gap-3
-        ${className}
-      `}
+      className={`relative flex gap-3 p-4 border rounded-lg ${container} ${className}`}
       role="alert"
     >
-      <div className={`flex-shrink-0 ${styles.icon}`}>
-        {IconComponent}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        {title && (
-          <h4 className="font-semibold mb-1">{title}</h4>
-        )}
+      <div className="flex-shrink-0">{icon}</div>
+      <div className="flex-1">
+        {title && <div className="font-semibold mb-1">{title}</div>}
         <div className="text-sm">{children}</div>
       </div>
-
-      {dismissible && (
+      {onClose && (
         <button
-          onClick={onDismiss}
-          className={`flex-shrink-0 ${styles.icon} hover:opacity-70 transition-opacity`}
-          aria-label="Dismiss alert"
+          onClick={onClose}
+          className="flex-shrink-0 p-1 rounded hover:bg-black/5 transition-colors"
+          aria-label="Close alert"
         >
-          <X className="h-5 w-5" />
+          <X className="w-4 h-4" />
         </button>
       )}
     </div>

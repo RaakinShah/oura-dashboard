@@ -1,107 +1,126 @@
+import { useMemo } from 'react';
+
 export interface ProgressProps {
   value: number;
   max?: number;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'linear' | 'circular';
+  variant?: 'default' | 'success' | 'warning' | 'danger';
   showLabel?: boolean;
-  color?: 'sage' | 'blue' | 'emerald' | 'amber' | 'red';
+  label?: string;
   className?: string;
 }
 
-/**
- * Progress component with linear and circular variants
- */
 export function Progress({
   value,
   max = 100,
   size = 'md',
-  variant = 'linear',
+  variant = 'default',
   showLabel = false,
-  color = 'sage',
+  label,
   className = '',
 }: ProgressProps) {
-  const percentage = Math.min(100, Math.max(0, (value / max) * 100));
+  const percentage = useMemo(() => {
+    const pct = Math.min(Math.max((value / max) * 100, 0), 100);
+    return pct;
+  }, [value, max]);
 
-  const colorClasses = {
-    sage: 'bg-sage-600',
-    blue: 'bg-blue-600',
-    emerald: 'bg-emerald-600',
-    amber: 'bg-amber-600',
-    red: 'bg-red-600',
-  };
-
-  if (variant === 'circular') {
-    const sizeMap = { sm: 48, md: 64, lg: 96 };
-    const strokeWidthMap = { sm: 4, md: 6, lg: 8 };
-    const circleSize = sizeMap[size];
-    const strokeWidth = strokeWidthMap[size];
-    const radius = (circleSize - strokeWidth) / 2;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percentage / 100) * circumference;
-
-    return (
-      <div className={`relative inline-flex items-center justify-center ${className}`}>
-        <svg width={circleSize} height={circleSize} className="transform -rotate-90">
-          {/* Background circle */}
-          <circle
-            cx={circleSize / 2}
-            cy={circleSize / 2}
-            r={radius}
-            stroke="currentColor"
-            strokeWidth={strokeWidth}
-            fill="none"
-            className="text-stone-200"
-          />
-          {/* Progress circle */}
-          <circle
-            cx={circleSize / 2}
-            cy={circleSize / 2}
-            r={radius}
-            stroke="currentColor"
-            strokeWidth={strokeWidth}
-            fill="none"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            className={`transition-all duration-500 ${
-              color === 'sage' ? 'text-sage-600' :
-              color === 'blue' ? 'text-blue-600' :
-              color === 'emerald' ? 'text-emerald-600' :
-              color === 'amber' ? 'text-amber-600' :
-              'text-red-600'
-            }`}
-          />
-        </svg>
-        {showLabel && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-sm font-semibold text-stone-700">
-              {Math.round(percentage)}%
-            </span>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  const heightClasses = {
+  const sizes = {
     sm: 'h-1',
     md: 'h-2',
     lg: 'h-3',
   };
 
+  const variants = {
+    default: 'bg-sage-600',
+    success: 'bg-green-600',
+    warning: 'bg-yellow-600',
+    danger: 'bg-red-600',
+  };
+
   return (
     <div className={className}>
-      {showLabel && (
-        <div className="flex justify-between mb-1">
-          <span className="text-sm font-medium text-stone-700">{Math.round(percentage)}%</span>
+      {(showLabel || label) && (
+        <div className="flex justify-between mb-2 text-sm text-stone-600">
+          {label && <span>{label}</span>}
+          {showLabel && <span>{percentage.toFixed(0)}%</span>}
         </div>
       )}
-      <div className={`w-full bg-stone-200 rounded-full overflow-hidden ${heightClasses[size]}`}>
+      <div className={`w-full bg-stone-200 rounded-full overflow-hidden ${sizes[size]}`}>
         <div
-          className={`h-full ${colorClasses[color]} transition-all duration-500 rounded-full`}
+          className={`h-full transition-all duration-300 ${variants[variant]}`}
           style={{ width: `${percentage}%` }}
+          role="progressbar"
+          aria-valuenow={value}
+          aria-valuemin={0}
+          aria-valuemax={max}
         />
       </div>
+    </div>
+  );
+}
+
+export interface CircularProgressProps {
+  value: number;
+  max?: number;
+  size?: number;
+  strokeWidth?: number;
+  variant?: 'default' | 'success' | 'warning' | 'danger';
+  showLabel?: boolean;
+  className?: string;
+}
+
+export function CircularProgress({
+  value,
+  max = 100,
+  size = 100,
+  strokeWidth = 8,
+  variant = 'default',
+  showLabel = true,
+  className = '',
+}: CircularProgressProps) {
+  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (percentage / 100) * circumference;
+
+  const colors = {
+    default: '#16a34a',
+    success: '#16a34a',
+    warning: '#ca8a04',
+    danger: '#dc2626',
+  };
+
+  return (
+    <div className={`relative inline-flex items-center justify-center ${className}`}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#e5e7eb"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={colors[variant]}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-300"
+        />
+      </svg>
+      {showLabel && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-sm font-semibold text-stone-900">
+            {percentage.toFixed(0)}%
+          </span>
+        </div>
+      )}
     </div>
   );
 }

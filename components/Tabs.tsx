@@ -1,99 +1,96 @@
-'use client';
+import { ReactNode, useState, createContext, useContext } from 'react';
 
-import { ReactNode, useState } from 'react';
-
-export interface Tab {
-  id: string;
-  label: string;
-  content: ReactNode;
-  icon?: ReactNode;
-  disabled?: boolean;
+interface TabsContextValue {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
+const TabsContext = createContext<TabsContextValue | undefined>(undefined);
+
 export interface TabsProps {
-  tabs: Tab[];
-  defaultTab?: string;
-  onChange?: (tabId: string) => void;
-  variant?: 'line' | 'pills' | 'enclosed';
+  children: ReactNode;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
   className?: string;
 }
 
-/**
- * Tabs component with multiple variants
- */
-export function Tabs({
-  tabs,
-  defaultTab,
-  onChange,
-  variant = 'line',
-  className = '',
-}: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+export function Tabs({ children, defaultValue, value, onChange, className = '' }: TabsProps) {
+  const [internalValue, setInternalValue] = useState(defaultValue || '');
+  const activeTab = value !== undefined ? value : internalValue;
 
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    onChange?.(tabId);
+  const handleChange = (newValue: string) => {
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange?.(newValue);
   };
-
-  const activeContent = tabs.find((tab) => tab.id === activeTab)?.content;
-
-  const variantStyles = {
-    line: {
-      container: 'border-b border-stone-200',
-      tab: 'px-4 py-3 border-b-2 transition-all',
-      active: 'border-sage-600 text-sage-900 font-medium',
-      inactive: 'border-transparent text-stone-600 hover:text-stone-900 hover:border-stone-300',
-    },
-    pills: {
-      container: 'bg-stone-100 p-1 rounded-lg inline-flex gap-1',
-      tab: 'px-4 py-2 rounded-md transition-all',
-      active: 'bg-white text-sage-900 font-medium shadow-sm',
-      inactive: 'text-stone-600 hover:text-stone-900',
-    },
-    enclosed: {
-      container: 'border-b border-stone-200',
-      tab: 'px-4 py-3 border border-b-0 rounded-t-lg transition-all',
-      active: 'bg-white text-sage-900 font-medium border-stone-200 border-b-white',
-      inactive: 'bg-stone-50 text-stone-600 border-transparent hover:border-stone-200',
-    },
-  };
-
-  const styles = variantStyles[variant];
 
   return (
-    <div className={className}>
-      {/* Tab List */}
-      <div className={styles.container} role="tablist">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            aria-controls={`panel-${tab.id}`}
-            disabled={tab.disabled}
-            onClick={() => !tab.disabled && handleTabChange(tab.id)}
-            className={`
-              ${styles.tab}
-              ${activeTab === tab.id ? styles.active : styles.inactive}
-              ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-              inline-flex items-center gap-2
-            `}
-          >
-            {tab.icon && <span>{tab.icon}</span>}
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </div>
+    <TabsContext.Provider value={{ activeTab, setActiveTab: handleChange }}>
+      <div className={className}>{children}</div>
+    </TabsContext.Provider>
+  );
+}
 
-      {/* Tab Panel */}
-      <div
-        role="tabpanel"
-        id={`panel-${activeTab}`}
-        aria-labelledby={activeTab}
-        className="py-4"
-      >
-        {activeContent}
-      </div>
+export interface TabsListProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export function TabsList({ children, className = '' }: TabsListProps) {
+  return (
+    <div className={`flex border-b border-stone-200 ${className}`} role="tablist">
+      {children}
+    </div>
+  );
+}
+
+export interface TabsTriggerProps {
+  children: ReactNode;
+  value: string;
+  className?: string;
+}
+
+export function TabsTrigger({ children, value, className = '' }: TabsTriggerProps) {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error('TabsTrigger must be used within Tabs');
+
+  const { activeTab, setActiveTab } = context;
+  const isActive = activeTab === value;
+
+  return (
+    <button
+      role="tab"
+      aria-selected={isActive}
+      onClick={() => setActiveTab(value)}
+      className={`px-4 py-2 font-medium transition-colors ${
+        isActive
+          ? 'text-sage-600 border-b-2 border-sage-600'
+          : 'text-stone-600 hover:text-stone-900'
+      } ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export interface TabsContentProps {
+  children: ReactNode;
+  value: string;
+  className?: string;
+}
+
+export function TabsContent({ children, value, className = '' }: TabsContentProps) {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error('TabsContent must be used within Tabs');
+
+  const { activeTab } = context;
+  if (activeTab !== value) return null;
+
+  return (
+    <div role="tabpanel" className={className}>
+      {children}
     </div>
   );
 }
