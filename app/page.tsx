@@ -121,15 +121,15 @@ export default function Dashboard() {
   const readinessTrend = avg7Readiness - prevAvgReadiness;
 
   return (
-    <div className="space-y-16 page-transition">
+    <div className="space-y-20 page-transition">
       {/* Hero Section - Clean & Spacious */}
       <header className="animate-fade-in">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-12">
-          <div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-light mb-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-16">
+          <div className="space-y-3">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-light">
               {getGreeting()}
             </h1>
-            <time className="text-stone-500 text-base sm:text-lg">
+            <time className="text-stone-500 text-base sm:text-lg block">
               {latestSleep && formatFullDate(latestSleep.day)}
             </time>
           </div>
@@ -140,7 +140,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Stats - Minimal Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6" role="list" aria-label="Quick health metrics">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6" role="list" aria-label="Quick health metrics">
           <QuickStatCard icon={Moon} label="Sleep" score={latestSleep.score} trend={sleepTrend} />
           <QuickStatCard icon={Activity} label="Activity" score={latestActivity.score} trend={activityTrend} />
           <QuickStatCard icon={Heart} label="Readiness" score={latestReadiness.score} trend={readinessTrend} />
@@ -149,40 +149,40 @@ export default function Dashboard() {
 
       {/* AI Insight - Elegant Presentation */}
       {topInsight && (
-        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <div className="bg-white border border-stone-200 rounded-lg p-12">
-            <div className="flex items-start gap-6 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Zap className="h-6 w-6 text-stone-700" />
+        <section className="animate-fade-in" style={{ animationDelay: '0.2s' }} aria-label="Top AI insight">
+          <div className="bg-white border border-stone-200 rounded-xl p-10 sm:p-14">
+            <div className="flex items-start gap-8 mb-10">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center flex-shrink-0 border border-stone-200">
+                <Zap className="h-7 w-7 text-stone-700" />
               </div>
-              <div className="flex-1">
-                <h2 className="text-3xl font-light mb-4">{topInsight.title}</h2>
+              <div className="flex-1 space-y-6">
+                <h2 className="text-3xl sm:text-4xl font-light leading-tight">{topInsight.title}</h2>
                 <InsightNarrative narrative={topInsight.narrative} />
               </div>
             </div>
 
             {topInsight.actionPlan.immediate.length > 0 && (
-              <div className="bg-stone-50 border border-stone-200 rounded-lg p-8 mb-8">
-                <p className="text-stone-700 font-medium text-sm uppercase tracking-wide mb-6">Recommended Actions</p>
-                <ul className="space-y-4">
+              <div className="bg-gradient-to-br from-stone-50 to-stone-50/50 border border-stone-200/60 rounded-xl p-8 sm:p-10 mb-10">
+                <p className="text-stone-700 font-medium text-xs uppercase tracking-wider mb-7">Recommended Actions</p>
+                <ul className="space-y-5">
                   {topInsight.actionPlan.immediate.slice(0, 3).map((action, i) => (
-                    <li key={i} className="flex items-start gap-4 text-stone-600">
-                      <span className="w-6 h-6 rounded-full bg-stone-200 flex items-center justify-center flex-shrink-0 text-xs font-medium text-stone-700">
+                    <li key={i} className="flex items-start gap-5 text-stone-700">
+                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white flex items-center justify-center flex-shrink-0 text-sm font-medium">
                         {i + 1}
                       </span>
-                      <span className="flex-1 pt-0.5">{action}</span>
+                      <span className="flex-1 pt-1 leading-relaxed">{action}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <Link href="/insights" className="btn-refined btn-primary">
+            <Link href="/insights" className="btn-refined btn-primary inline-flex">
               View All {insights.length} Insights
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </section>
       )}
 
       {/* Metric Cards - Clean Layout */}
@@ -235,28 +235,28 @@ export default function Dashboard() {
       </section>
 
       {/* Navigation Links */}
-      <nav className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }} aria-label="Quick navigation">
-        <Link href="/insights" className="card-refined text-center p-8 group">
-          <Sparkles className="h-8 w-8 text-stone-400 mx-auto mb-4 group-hover:text-stone-700 transition-colors" />
-          <p className="font-medium text-sm mb-1">Insights</p>
+      <nav className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 animate-fade-in" style={{ animationDelay: '0.4s' }} aria-label="Quick navigation">
+        <Link href="/insights" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
+          <Sparkles className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
+          <p className="font-medium text-base mb-2 text-stone-900">Insights</p>
           <p className="text-xs text-stone-500">{insights.length} available</p>
         </Link>
 
-        <Link href="/analytics" className="card-refined text-center p-8 group">
-          <TrendingUp className="h-8 w-8 text-stone-400 mx-auto mb-4 group-hover:text-stone-700 transition-colors" />
-          <p className="font-medium text-sm mb-1">Analytics</p>
+        <Link href="/analytics" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
+          <TrendingUp className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
+          <p className="font-medium text-base mb-2 text-stone-900">Analytics</p>
           <p className="text-xs text-stone-500">View trends</p>
         </Link>
 
-        <Link href="/goals" className="card-refined text-center p-8 group">
-          <Heart className="h-8 w-8 text-stone-400 mx-auto mb-4 group-hover:text-stone-700 transition-colors" />
-          <p className="font-medium text-sm mb-1">Goals</p>
+        <Link href="/goals" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
+          <Heart className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
+          <p className="font-medium text-base mb-2 text-stone-900">Goals</p>
           <p className="text-xs text-stone-500">Track progress</p>
         </Link>
 
-        <Link href="/settings" className="card-refined text-center p-8 group" aria-label="Go to settings">
-          <RefreshCw className="h-8 w-8 text-stone-400 mx-auto mb-4 group-hover:text-stone-700 transition-colors" />
-          <p className="font-medium text-sm mb-1">Settings</p>
+        <Link href="/settings" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300" aria-label="Go to settings">
+          <RefreshCw className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
+          <p className="font-medium text-base mb-2 text-stone-900">Settings</p>
           <p className="text-xs text-stone-500">Customize</p>
         </Link>
       </nav>
@@ -285,16 +285,16 @@ const QuickStatCard = memo(({
   score: number;
   trend: number;
 }) => (
-  <div className="bg-white border border-stone-200 rounded-lg p-8 hover:border-stone-300 transition-all duration-300">
-    <div className="flex items-center gap-2 mb-4">
+  <div className="bg-white border border-stone-200 rounded-xl p-9 hover:border-sage-300 hover:shadow-md transition-all duration-300">
+    <div className="flex items-center gap-3 mb-6">
       <Icon className="h-5 w-5 text-stone-400" />
-      <span className="text-stone-500 text-xs uppercase tracking-wide font-medium">{label}</span>
+      <span className="text-stone-500 text-xs uppercase tracking-wider font-medium">{label}</span>
     </div>
-    <div className="text-4xl font-light mb-3">{score}</div>
+    <div className="text-5xl font-light mb-4 tracking-tight">{score}</div>
     {trend !== 0 && (
       <div className="flex items-center gap-2 text-sm text-stone-600">
-        {trend > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-        <span>{trend > 0 ? '+' : ''}{trend} from last week</span>
+        {trend > 0 ? <TrendingUp className="h-4 w-4 text-emerald-600" /> : <TrendingDown className="h-4 w-4 text-rose-600" />}
+        <span className="leading-relaxed">{trend > 0 ? '+' : ''}{trend} from last week</span>
       </div>
     )}
   </div>
@@ -324,46 +324,46 @@ const MetricCard = memo(({
   trend: number;
 }) => (
   <Link href={href} className="metric-card group cursor-pointer">
-    <div className="flex items-center justify-between mb-6">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-stone-100 flex items-center justify-center">
-          <Icon className="h-5 w-5 text-stone-700" />
+    <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center border border-stone-200">
+          <Icon className="h-6 w-6 text-stone-700" />
         </div>
         <div>
-          <div className="text-xs uppercase tracking-wide font-medium text-stone-500">{label}</div>
+          <div className="text-xs uppercase tracking-wider font-medium text-stone-500 mb-1">{label}</div>
           <div className="text-xs text-stone-400">{timeLabel}</div>
         </div>
       </div>
       {badge}
     </div>
 
-    <div className="mb-6">
-      <div className="flex items-baseline gap-2 mb-4">
-        <span className="text-5xl font-light">{score}</span>
-        <span className="text-2xl text-stone-400">/100</span>
+    <div className="mb-8">
+      <div className="flex items-baseline gap-3 mb-6">
+        <span className="text-5xl font-light tracking-tight">{score}</span>
+        <span className="text-2xl text-stone-400 font-light">/100</span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {details.map((detail, i) => (
-          <div key={i} className={`flex items-center justify-between text-sm ${i < details.length - 1 ? 'border-b border-stone-100 pb-2' : ''}`}>
+          <div key={i} className={`flex items-center justify-between text-sm py-2 ${i < details.length - 1 ? 'border-b border-stone-100' : ''}`}>
             <span className="text-stone-500">{detail.label}</span>
-            <span className="font-medium">{detail.value}</span>
+            <span className="font-medium text-stone-900">{detail.value}</span>
           </div>
         ))}
       </div>
     </div>
 
-    <div className="divider"></div>
-
-    <div className="flex items-center justify-between pt-4">
-      <span className="text-sm text-stone-500">7-Day Average</span>
-      <div className="flex items-center gap-2">
-        <span className="font-medium text-lg">{weeklyAvg}</span>
-        {trend !== 0 && (
-          <span className={`text-sm font-medium ${trend > 0 ? 'text-green-700' : 'text-red-700'}`}>
-            {trend > 0 ? '+' : ''}{trend}
-          </span>
-        )}
+    <div className="border-t border-stone-200 pt-6">
+      <div className="flex items-center justify-between">
+        <span className="text-xs uppercase tracking-wider font-medium text-stone-500">7-Day Average</span>
+        <div className="flex items-center gap-3">
+          <span className="font-medium text-xl text-stone-900">{weeklyAvg}</span>
+          {trend !== 0 && (
+            <span className={`text-sm font-medium px-2 py-1 rounded-md ${trend > 0 ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
+              {trend > 0 ? '+' : ''}{trend}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   </Link>
