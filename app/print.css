@@ -1,0 +1,118 @@
+/**
+ * Print-friendly styles
+ */
+
+@media print {
+  /* Hide non-essential elements */
+  nav,
+  aside,
+  button,
+  .no-print,
+  [role="navigation"],
+  .btn-refined {
+    display: none !important;
+  }
+
+  /* Layout adjustments */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Cards and sections */
+  .card-refined,
+  .metric-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border: 1px solid #000 !important;
+    background: white !important;
+    box-shadow: none !important;
+    margin-bottom: 1rem;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 24pt;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 18pt;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 14pt;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  a[href^="/"]:after,
+  a[href^="#"]:after {
+    content: "";
+  }
+
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  /* Page breaks */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  /* Hide decorative elements */
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-slide-in {
+    animation: none !important;
+  }
+
+  /* Ensure important content is visible */
+  .print-show {
+    display: block !important;
+  }
+
+  /* Footer for each page */
+  @page {
+    margin: 2cm;
+  }
+
+  @page :first {
+    margin-top: 1cm;
+  }
+}
