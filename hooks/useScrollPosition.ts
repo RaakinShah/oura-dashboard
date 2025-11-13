@@ -35,13 +35,13 @@ export function useScrollDirection(): 'up' | 'down' | null {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       if (currentScrollY > lastScrollY) {
         setScrollDirection('down');
       } else if (currentScrollY < lastScrollY) {
         setScrollDirection('up');
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
@@ -51,4 +51,22 @@ export function useScrollDirection(): 'up' | 'down' | null {
   }, [lastScrollY]);
 
   return scrollDirection;
+}
+
+export function useScrollThreshold(threshold: number = 300): boolean {
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setHasScrolled(scrollY > threshold);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [threshold]);
+
+  return hasScrolled;
 }

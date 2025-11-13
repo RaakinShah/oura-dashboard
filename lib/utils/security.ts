@@ -107,7 +107,7 @@ export function detectSQLInjection(input: string): boolean {
     /UPDATE.*?SET/i,
     /DROP.*?TABLE/i,
     /--/,
-    /;.*?(/i,
+    /;/i,
   ];
 
   return sqlPatterns.some((pattern) => pattern.test(input));

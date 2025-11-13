@@ -95,20 +95,33 @@ export function mockFetch(
   const originalFetch = global.fetch;
   const { delay = 0, status = 200 } = options || {};
 
-  global.fetch = jest.fn((input) => {
-    if (input === url) {
-      return new Promise((resolve) => {
+  global.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    const inputUrl = typeof input === 'string' ? input : input.toString();
+    if (inputUrl === url) {
+      return new Promise<Response>((resolve) => {
         setTimeout(() => {
           resolve({
             ok: status >= 200 && status < 300,
             status,
             json: () => Promise.resolve(response),
+            text: () => Promise.resolve(JSON.stringify(response)),
+            headers: new Headers(),
+            redirected: false,
+            statusText: 'OK',
+            type: 'basic' as ResponseType,
+            url: inputUrl,
+            clone: function() { return this; },
+            body: null,
+            bodyUsed: false,
+            arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+            blob: () => Promise.resolve(new Blob()),
+            formData: () => Promise.resolve(new FormData()),
           } as Response);
         }, delay);
       });
     }
-    return originalFetch(input);
-  }) as any;
+    return originalFetch(input, init);
+  }) as typeof fetch;
 
   return () => {
     global.fetch = originalFetch;

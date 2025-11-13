@@ -160,11 +160,11 @@ export function deepMerge<T extends Record<string, any>>(target: T, ...sources: 
     Object.keys(source).forEach((key) => {
       if (isObject(source[key])) {
         if (!target[key]) {
-          target[key] = {} as any;
+          (target as any)[key] = {};
         }
-        deepMerge(target[key], source[key]);
+        deepMerge(target[key], source[key] as any);
       } else {
-        target[key] = source[key] as any;
+        (target as any)[key] = source[key];
       }
     });
   }

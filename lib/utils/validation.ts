@@ -125,7 +125,13 @@ export function sanitizeData<T extends Record<string, any>>(
         sanitized[key] = Boolean(value);
         break;
       case 'date':
-        sanitized[key] = value instanceof Date ? value : new Date(value);
+        if (value && typeof value === 'object' && (value as any) instanceof Date) {
+          sanitized[key] = value;
+        } else if (typeof value === 'string' || typeof value === 'number') {
+          sanitized[key] = new Date(value);
+        } else {
+          sanitized[key] = new Date();
+        }
         break;
     }
   }
