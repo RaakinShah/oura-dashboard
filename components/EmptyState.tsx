@@ -1,13 +1,15 @@
-import { ReactNode } from 'react';
-import { Inbox, Search, AlertCircle, FileQuestion } from 'lucide-react';
+import { ReactNode, ComponentType } from 'react';
+import Link from 'next/link';
+import { Inbox, Search, AlertCircle, FileQuestion, LucideProps } from 'lucide-react';
 
 export interface EmptyStateProps {
   title: string;
   description?: string;
-  icon?: ReactNode;
+  icon?: ReactNode | ComponentType<LucideProps>;
   action?: {
     label: string;
-    onClick: () => void;
+    onClick?: () => void;
+    href?: string;
   };
   variant?: 'default' | 'search' | 'error' | 'info';
   className?: string;
@@ -38,7 +40,13 @@ export function EmptyState({
     info: 'text-amber-400',
   };
 
-  const displayIcon = icon || variantIcons[variant];
+  // Handle icon as either a ReactNode or a component type
+  const displayIcon = icon
+    ? (typeof icon === 'function' ? (() => {
+        const IconComponent = icon as ComponentType<LucideProps>;
+        return <IconComponent className="h-16 w-16" />;
+      })() : icon)
+    : variantIcons[variant];
 
   return (
     <div className={`flex flex-col items-center justify-center text-center py-12 px-4 ${className}`}>
@@ -57,12 +65,21 @@ export function EmptyState({
       )}
 
       {action && (
-        <button
-          onClick={action.onClick}
-          className="btn-refined btn-primary"
-        >
-          {action.label}
-        </button>
+        action.href ? (
+          <Link
+            href={action.href}
+            className="btn-refined btn-primary"
+          >
+            {action.label}
+          </Link>
+        ) : (
+          <button
+            onClick={action.onClick}
+            className="btn-refined btn-primary"
+          >
+            {action.label}
+          </button>
+        )
       )}
     </div>
   );
