@@ -4,10 +4,18 @@ import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import WelcomePage from '@/components/WelcomePage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useDashboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { KeyboardShortcutsModal, useKeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
   const [isClient, setIsClient] = useState(false);
+
+  // Enable keyboard shortcuts
+  useDashboardShortcuts();
+
+  // Keyboard shortcuts modal
+  const shortcutsModal = useKeyboardShortcutsModal();
 
   useEffect(() => {
     setIsClient(true);
@@ -50,6 +58,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </ErrorBoundary>
         </main>
       </div>
+
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcutsModal isOpen={shortcutsModal.isOpen} onClose={shortcutsModal.close} />
     </ErrorBoundary>
   );
 }

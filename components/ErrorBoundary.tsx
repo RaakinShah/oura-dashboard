@@ -65,31 +65,31 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-stone-50">
           <div className="max-w-2xl w-full">
-            <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-200">
+            <div className="bg-white rounded-xl p-10 shadow-lg border border-stone-200 animate-scale-in">
               {/* Icon */}
-              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <AlertTriangle className="h-8 w-8 text-red-600" />
+              <div className="w-16 h-16 bg-rose-50 rounded-xl flex items-center justify-center mx-auto mb-6 border border-rose-200">
+                <AlertTriangle className="h-8 w-8 text-rose-600" />
               </div>
 
               {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-900 text-center mb-3">
+              <h1 className="text-3xl font-light text-stone-900 text-center mb-3">
                 Something went wrong
               </h1>
 
               {/* Description */}
-              <p className="text-gray-600 text-center mb-6">
+              <p className="text-stone-600 text-center mb-6 leading-relaxed">
                 We encountered an unexpected error. This has been logged and we'll look into it.
               </p>
 
               {/* Error Details (Development Only) */}
               {process.env.NODE_ENV === 'development' && this.state.error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <p className="text-sm font-semibold text-red-900 mb-2">
+                <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+                  <p className="text-sm font-semibold text-rose-900 mb-2">
                     Error Details (Development Only):
                   </p>
-                  <pre className="text-xs text-red-800 overflow-auto max-h-40 font-mono">
+                  <pre className="text-xs text-rose-800 overflow-auto max-h-40 font-mono leading-relaxed">
                     {this.state.error.toString()}
                     {this.state.errorInfo?.componentStack}
                   </pre>
@@ -100,23 +100,23 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={this.handleReset}
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-semibold"
+                  className="btn-refined btn-primary inline-flex"
                 >
-                  <RefreshCw className="h-5 w-5" />
+                  <RefreshCw className="h-4 w-4" />
                   Try Again
                 </button>
 
                 <Link
                   href="/"
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 text-gray-900 rounded-xl hover:bg-gray-300 transition-colors font-semibold"
+                  className="btn-refined btn-secondary inline-flex"
                 >
-                  <Home className="h-5 w-5" />
+                  <Home className="h-4 w-4" />
                   Go Home
                 </Link>
               </div>
 
               {/* Help Text */}
-              <p className="text-sm text-gray-500 text-center mt-6">
+              <p className="text-sm text-stone-500 text-center mt-6">
                 If this problem persists, try refreshing the page or clearing your browser cache.
               </p>
             </div>
