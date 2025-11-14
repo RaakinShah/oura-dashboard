@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Sidebar from '@/components/Sidebar';
+import ModernSidebar from '@/components/ModernSidebar';
+import TopNavbar from '@/components/TopNavbar';
 import WelcomePage from '@/components/WelcomePage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useDashboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -37,9 +38,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   // Prevent hydration mismatch by not rendering until client-side
   if (!isClient) {
     return (
-      <div className="flex h-screen bg-background">
+      <div className="flex h-screen bg-stone-100">
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-stone-200 border-t-stone-900"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-stone-200 border-t-blue-600"></div>
         </div>
       </div>
     );
@@ -54,15 +55,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <ErrorBoundary>
         <LoadingBar />
 
-        <div className="flex h-screen bg-background transition-colors duration-200">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-stone-50">
-            <ErrorBoundary>
-              <div className="container mx-auto px-8 py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 max-w-[1800px]">
-                {children}
-              </div>
-            </ErrorBoundary>
-          </main>
+        <div className="flex h-screen bg-gradient-to-br from-stone-50 via-slate-50 to-stone-100">
+          {/* Modern Sidebar */}
+          <ModernSidebar />
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Top Navbar */}
+            <TopNavbar />
+
+            {/* Page Content */}
+            <main className="flex-1 overflow-y-auto">
+              <ErrorBoundary>
+                <div className="container mx-auto px-6 py-8 max-w-[1800px]">
+                  {children}
+                </div>
+              </ErrorBoundary>
+            </main>
+          </div>
         </div>
 
         <BackToTop />
