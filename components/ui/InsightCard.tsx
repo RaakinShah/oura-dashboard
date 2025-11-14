@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle, Info, CheckCircle, TrendingUp, Lightbulb } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export interface InsightCardProps {
   className?: string;
 }
 
-export function InsightCard({
+export const InsightCard = memo(function InsightCard({
   type,
   severity = 'low',
   title,
@@ -151,4 +151,4 @@ export function InsightCard({
       </div>
     </motion.div>
   );
-}
+});

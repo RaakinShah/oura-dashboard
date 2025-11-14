@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 
 interface ActivityRingProps {
@@ -10,7 +11,7 @@ interface ActivityRingProps {
   delay?: number;
 }
 
-export function ActivityRing({ label, value, max, color, delay = 0 }: ActivityRingProps) {
+export const ActivityRing = memo(function ActivityRing({ label, value, max, color, delay = 0 }: ActivityRingProps) {
   const percentage = Math.min((value / max) * 100, 100);
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
@@ -84,4 +85,4 @@ export function ActivityRing({ label, value, max, color, delay = 0 }: ActivityRi
       </span>
     </motion.div>
   );
-}
+});

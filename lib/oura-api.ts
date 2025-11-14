@@ -217,3 +217,72 @@ export async function fetchOuraData(token: string) {
     readiness: readinessResponse.data,
   };
 }
+
+/**
+ * Validation utilities
+ */
+
+export interface ValidationResult {
+  isValid: boolean;
+  error?: string;
+  data?: any;
+}
+
+/**
+ * Validate an Oura API token by making a test request
+ * This is a centralized validation function used across WelcomePage and Settings
+ */
+export async function validateOuraToken(token: string): Promise<ValidationResult> {
+  // Basic format validation
+  if (!token || token.trim().length < 20) {
+    return {
+      isValid: false,
+      error: VALIDATION_ERRORS.TOKEN_TOO_SHORT,
+    };
+  }
+
+  try {
+    const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
+      headers: {
+        'Authorization': `Bearer ${token.trim()}`,
+      },
+    });
+
+    if (response.status === 401) {
+      return {
+        isValid: false,
+        error: VALIDATION_ERRORS.INVALID_TOKEN,
+      };
+    }
+
+    if (!response.ok) {
+      return {
+        isValid: false,
+        error: VALIDATION_ERRORS.CONNECTION_ERROR,
+      };
+    }
+
+    const data = await response.json();
+
+    return {
+      isValid: true,
+      data,
+    };
+  } catch (err) {
+    return {
+      isValid: false,
+      error: VALIDATION_ERRORS.NETWORK_ERROR,
+    };
+  }
+}
+
+/**
+ * Error messages for common validation scenarios
+ */
+export const VALIDATION_ERRORS = {
+  TOKEN_TOO_SHORT: 'API token appears to be too short. Please verify you copied the complete token.',
+  INVALID_TOKEN: 'Invalid API token. Please check your token and try again.',
+  NETWORK_ERROR: 'Network error. Please check your internet connection and try again.',
+  CONNECTION_ERROR: 'Unable to validate token. Please check your internet connection.',
+  EMPTY_TOKEN: 'Please enter a token',
+} as const;

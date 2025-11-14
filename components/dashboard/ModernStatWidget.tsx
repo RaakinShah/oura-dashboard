@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 
@@ -62,7 +63,7 @@ const colorClasses = {
   },
 };
 
-export function ModernStatWidget({
+export const ModernStatWidget = memo(function ModernStatWidget({
   title,
   value,
   subtitle,
@@ -134,4 +135,4 @@ export function ModernStatWidget({
       </div>
     </motion.div>
   );
-}
+});

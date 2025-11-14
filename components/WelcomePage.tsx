@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Activity, Moon, Heart, Sparkles, Key, ArrowRight, Check, ExternalLink, Eye, EyeOff, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
+import { validateOuraToken, VALIDATION_ERRORS } from '@/lib/oura-api';
 
 interface WelcomePageProps {
   onComplete: () => void;
@@ -15,47 +16,19 @@ export default function WelcomePage({ onComplete }: WelcomePageProps) {
   const [error, setError] = useState<string | null>(null);
   const [validationSuccess, setValidationSuccess] = useState(false);
 
-  const validateApiKey = async (token: string): Promise<boolean> => {
-    try {
-      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 401) {
-        setError('Invalid API token. Please check your token and try again.');
-        return false;
-      }
-
-      if (!response.ok) {
-        setError('Unable to validate token. Please check your internet connection.');
-        return false;
-      }
-
-      return true;
-    } catch (err) {
-      setError('Network error. Please check your internet connection and try again.');
-      return false;
-    }
-  };
-
   const handleSaveApiKey = async () => {
-    if (!apiKey.trim()) return;
-
-    // Basic format validation
-    if (apiKey.trim().length < 20) {
-      setError('API token appears to be too short. Please verify you copied the complete token.');
+    if (!apiKey.trim()) {
+      setError(VALIDATION_ERRORS.EMPTY_TOKEN);
       return;
     }
 
     setValidating(true);
     setError(null);
 
-    // Validate token with Oura API
-    const isValid = await validateApiKey(apiKey.trim());
+    // Validate token with Oura API using centralized validation
+    const result = await validateOuraToken(apiKey.trim());
 
-    if (isValid) {
+    if (result.isValid) {
       // Save to localStorage
       localStorage.setItem('oura_api_token', apiKey.trim());
 
@@ -68,6 +41,7 @@ export default function WelcomePage({ onComplete }: WelcomePageProps) {
         onComplete();
       }, 1500);
     } else {
+      setError(result.error || VALIDATION_ERRORS.NETWORK_ERROR);
       setValidating(false);
     }
   };

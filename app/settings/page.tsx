@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Key, CheckCircle, XCircle, RefreshCw, AlertCircle, Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import { storage } from '@/lib/storage';
+import { validateOuraToken, VALIDATION_ERRORS } from '@/lib/oura-api';
 
 export default function Settings() {
   const [apiKey, setApiKey] = useState('');
@@ -39,118 +40,59 @@ export default function Settings() {
     }
   };
 
-  const validateToken = async (token: string): Promise<boolean> => {
-    try {
-      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 401) {
-        setError('Invalid API token. Please check your token and try again.');
-        return false;
-      }
-
-      if (!response.ok) {
-        setError('Unable to validate token. Please check your internet connection.');
-        return false;
-      }
-
-      return true;
-    } catch (err) {
-      setError('Network error. Please check your internet connection and try again.');
-      return false;
-    }
-  };
-
   const testToken = async (token: string) => {
     setTesting(true);
     setTestResult(null);
     setError(null);
 
-    // Basic format validation
-    if (token.trim().length < 20) {
-      setError('API token appears to be too short. Please verify you copied the complete token.');
+    // Use centralized validation
+    const result = await validateOuraToken(token);
+
+    if (result.isValid) {
+      setTestResult({
+        success: true,
+        message: '✓ Token is valid and working!',
+        details: result.data,
+      });
+      setError(null);
+    } else {
+      setError(result.error || VALIDATION_ERRORS.NETWORK_ERROR);
       setTestResult({
         success: false,
-        message: 'Token validation failed - token too short',
+        message: result.error || VALIDATION_ERRORS.NETWORK_ERROR,
       });
-      setTesting(false);
-      return;
     }
 
-    try {
-      // Test via direct Oura API
-      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setTestResult({
-          success: true,
-          message: '✓ Token is valid and working!',
-          details: data,
-        });
-        setError(null);
-      } else {
-        const errorMsg = response.status === 401
-          ? 'Invalid API token. Please check your token and try again.'
-          : 'Unable to validate token. Please check your internet connection.';
-        setError(errorMsg);
-        setTestResult({
-          success: false,
-          message: errorMsg,
-          details: data,
-        });
-      }
-    } catch (error) {
-      const errorMsg = 'Network error. Please check your internet connection and try again.';
-      setError(errorMsg);
-      setTestResult({
-        success: false,
-        message: errorMsg,
-        details: error instanceof Error ? error.message : 'Unknown error',
-      });
-    } finally {
-      setTesting(false);
-    }
+    setTesting(false);
   };
 
   const saveToken = async () => {
     if (!apiKey.trim()) {
-      setError('Please enter a token');
-      return;
-    }
-
-    // Basic format validation
-    if (apiKey.trim().length < 20) {
-      setError('API token appears to be too short. Please verify you copied the complete token.');
+      setError(VALIDATION_ERRORS.EMPTY_TOKEN);
       return;
     }
 
     setTesting(true);
     setError(null);
 
-    // Validate token before saving
-    const isValid = await validateToken(apiKey.trim());
+    // Use centralized validation before saving
+    const result = await validateOuraToken(apiKey.trim());
 
-    if (isValid) {
+    if (result.isValid) {
       storage.setToken(apiKey.trim());
       loadCurrentKey();
       setSaved(true);
       setTestResult({
         success: true,
         message: '✓ Token validated and saved successfully!',
+        details: result.data,
       });
       setTimeout(() => {
         setSaved(false);
         setTestResult(null);
       }, 3000);
+    } else {
+      setError(result.error || VALIDATION_ERRORS.NETWORK_ERROR);
     }
 
     setTesting(false);

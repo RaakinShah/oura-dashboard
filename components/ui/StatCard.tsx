@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export interface StatCardProps {
   className?: string;
 }
 
-export function StatCard({
+export const StatCard = memo(function StatCard({
   label,
   value,
   unit,
@@ -102,4 +102,4 @@ export function StatCard({
       )}
     </motion.div>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import { motion } from 'framer-motion';
 
 export interface MetricData {
@@ -17,7 +17,7 @@ export interface MetricCardProps {
   className?: string;
 }
 
-export function MetricCard({
+export const MetricCard = memo(function MetricCard({
   title,
   metrics,
   icon,
@@ -61,4 +61,4 @@ export function MetricCard({
       </div>
     </motion.div>
   );
-}
+});
