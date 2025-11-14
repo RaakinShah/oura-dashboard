@@ -31,14 +31,19 @@ export const storage = {
   // Cache management
   setCache<T>(key: string, data: T, ttlMinutes: number = 60): void {
     if (typeof window !== 'undefined') {
-      const item = {
-        data,
-        expiry: Date.now() + ttlMinutes * 60 * 1000,
-      };
-      localStorage.setItem(
-        `${STORAGE_KEYS.CACHE_PREFIX}${key}`,
-        JSON.stringify(item)
-      );
+      try {
+        const item = {
+          data,
+          expiry: Date.now() + ttlMinutes * 60 * 1000,
+        };
+        localStorage.setItem(
+          `${STORAGE_KEYS.CACHE_PREFIX}${key}`,
+          JSON.stringify(item)
+        );
+      } catch (error) {
+        // Handle QuotaExceededError or other localStorage errors
+        console.warn('Failed to set cache:', error);
+      }
     }
   },
 
