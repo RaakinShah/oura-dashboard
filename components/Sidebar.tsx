@@ -15,6 +15,7 @@ import {
   TrendingDown,
   Shield,
   Coffee,
+  LineChart,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -25,6 +26,7 @@ const navigation = [
   { name: 'Activity', href: '/activity', icon: Activity },
   { name: 'Readiness', href: '/readiness', icon: Heart },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Statistics Lab', href: '/statistics', icon: LineChart },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Chronotype', href: '/chronotype', icon: Clock },
   { name: 'Sleep Debt', href: '/sleep-debt', icon: TrendingDown },
