@@ -84,23 +84,23 @@ export function InsightCard({
 
   return (
     <motion.div
-      className={`rounded-lg border ${config.borderColor} ${config.bgColor} p-5 ${className}`}
+      className={`rounded-2xl border-2 ${config.borderColor} ${config.bgColor} p-8 shadow-xl hover:shadow-2xl transition-all duration-300 ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.02, y: -4 }}
     >
-      <div className="flex items-start gap-3">
-        <div className={`${config.iconColor} mt-0.5`}>
-          <Icon className="h-5 w-5" />
+      <div className="flex items-start gap-4">
+        <div className={`${config.iconColor} mt-1`}>
+          <Icon className="h-6 w-6" strokeWidth={2.5} />
         </div>
 
         <div className="flex-1">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h4 className={`font-semibold ${config.textColor}`}>{title}</h4>
+              <h4 className={`text-lg font-bold ${config.textColor} tracking-tight`}>{title}</h4>
               {type !== 'info' && (
-                <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${severityBadge[severity].bg} ${severityBadge[severity].text}`}>
+                <span className={`inline-block mt-2 px-3 py-1 rounded-xl text-xs font-bold ${severityBadge[severity].bg} ${severityBadge[severity].text} uppercase tracking-wide shadow-sm`}>
                   {severityBadge[severity].label} Priority
                 </span>
               )}
@@ -108,7 +108,7 @@ export function InsightCard({
             {dismissible && onDismiss && (
               <button
                 onClick={onDismiss}
-                className={`${config.iconColor} hover:opacity-70 transition-opacity`}
+                className={`${config.iconColor} hover:opacity-70 transition-opacity p-2 rounded-lg hover:bg-white/50`}
                 aria-label="Dismiss"
               >
                 ✕
@@ -116,21 +116,21 @@ export function InsightCard({
             )}
           </div>
 
-          <p className={`mt-2 text-sm ${config.textColor} opacity-90`}>
+          <p className={`mt-3 text-sm font-medium ${config.textColor} opacity-90 leading-relaxed`}>
             {description}
           </p>
 
           {confidence !== undefined && (
-            <div className="mt-3">
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className={config.textColor}>Confidence</span>
-                <span className={`font-semibold ${config.textColor}`}>
+            <div className="mt-5">
+              <div className="flex items-center justify-between text-xs mb-2">
+                <span className={`${config.textColor} font-semibold uppercase tracking-wide`}>Confidence</span>
+                <span className={`font-black ${config.textColor}`}>
                   {(confidence * 100).toFixed(0)}%
                 </span>
               </div>
-              <div className="h-2 bg-white/50 rounded-full overflow-hidden">
+              <div className="h-2.5 bg-white/50 rounded-full overflow-hidden shadow-inner">
                 <motion.div
-                  className={`h-full bg-gradient-to-r from-${config.color}-400 to-${config.color}-600`}
+                  className={`h-full bg-gradient-to-r from-${config.color}-400 to-${config.color}-600 shadow-lg`}
                   initial={{ width: 0 }}
                   animate={{ width: `${confidence * 100}%` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -142,7 +142,7 @@ export function InsightCard({
           {action && (
             <button
               onClick={action.onClick}
-              className={`mt-3 px-4 py-2 rounded-lg bg-${config.color}-600 text-white text-sm font-medium hover:bg-${config.color}-700 transition-colors`}
+              className={`mt-4 px-5 py-2.5 rounded-xl bg-${config.color}-600 text-white text-sm font-bold hover:bg-${config.color}-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105`}
             >
               {action.label}
             </button>
