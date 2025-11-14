@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import { InteractiveLineChart } from '@/components/charts/InteractiveLineChart';
 import { DistributionPlot } from '@/components/charts/DistributionPlot';
 import { CorrelationMatrix } from '@/components/charts/CorrelationMatrix';
+import { ScatterPlot } from '@/components/charts/ScatterPlot';
+import { ViolinPlot } from '@/components/charts/ViolinPlot';
 import { StatCard } from '@/components/ui/StatCard';
 import { DataCard } from '@/components/ui/DataCard';
 import { InsightCard } from '@/components/ui/InsightCard';
@@ -12,7 +14,7 @@ import { ResponsiveGrid } from '@/components/layouts/ResponsiveGrid';
 import { BayesianInference } from '@/lib/stats/BayesianInference';
 import { MonteCarloSimulation } from '@/lib/stats/MonteCarloSimulation';
 import { HypothesisTesting } from '@/lib/stats/HypothesisTesting';
-import { TrendingUp, Brain, Target, Zap, LineChart } from 'lucide-react';
+import { TrendingUp, Brain, Target, Zap, LineChart, ScatterChart } from 'lucide-react';
 
 export default function StatisticsLabPage() {
   // Generate sample health data
@@ -96,6 +98,51 @@ export default function StatisticsLabPage() {
     const group2 = Array.from({ length: 50 }, () => 75 + Math.random() * 20);
 
     return ht.twoSampleTTest(group1, group2, 0.05, true);
+  }, []);
+
+  // Scatter Plot Data (Sleep vs Readiness correlation)
+  const scatterData = useMemo(() => {
+    const groups = ['Week 1', 'Week 2', 'Week 3'];
+    const data = [];
+
+    for (let i = 0; i < 120; i++) {
+      const group = groups[Math.floor(i / 40)];
+      const sleep = 5 + Math.random() * 4; // 5-9 hours
+      const readiness = 50 + sleep * 6 + Math.random() * 15; // Correlated with sleep
+
+      data.push({
+        x: sleep,
+        y: readiness,
+        group,
+        label: `Day ${i + 1}`,
+        size: 1 + Math.random() * 0.5,
+      });
+    }
+
+    return data;
+  }, []);
+
+  // Violin Plot Data (Readiness scores by day of week)
+  const violinData = useMemo(() => {
+    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const data = daysOfWeek.map((_, dayIndex) => {
+      const samples = [];
+      for (let i = 0; i < 100; i++) {
+        // Weekend days (Sat=5, Sun=6) have higher readiness
+        const isWeekend = dayIndex >= 5;
+        const mean = isWeekend ? 78 : 72;
+        const stdDev = 8;
+
+        // Box-Muller transform for normal distribution
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        samples.push(mean + z * stdDev);
+      }
+      return samples;
+    });
+
+    return data;
   }, []);
 
   return (
@@ -520,6 +567,91 @@ export default function StatisticsLabPage() {
                         <div className="flex items-start gap-3">
                           <span className="text-xl">✓</span>
                           <span>Effect size calculations (Cohen's d, Cramér's V, eta-squared)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                id: 'advanced',
+                label: 'Advanced Charts',
+                icon: <ScatterChart className="h-4 w-4" />,
+                content: (
+                  <div className="space-y-10 p-8">
+                    {/* Scatter Plot Section */}
+                    <div>
+                      <div className="mb-6">
+                        <h3 className="text-2xl font-bold text-stone-900 mb-2">Sleep vs Readiness Correlation</h3>
+                        <p className="text-stone-600">
+                          Explore relationships between variables with regression analysis, R² metrics, and group comparisons
+                        </p>
+                      </div>
+                      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-8 border border-emerald-100">
+                        <ScatterPlot
+                          data={scatterData}
+                          width={1000}
+                          height={500}
+                          showRegression={true}
+                          showTrendline={true}
+                          colorByGroup={true}
+                          enableBrushing={true}
+                          xLabel="Sleep Duration (hours)"
+                          yLabel="Readiness Score"
+                          title=""
+                        />
+                      </div>
+                    </div>
+
+                    {/* Violin Plot Section */}
+                    <div>
+                      <div className="mb-6">
+                        <h3 className="text-2xl font-bold text-stone-900 mb-2">Readiness by Day of Week</h3>
+                        <p className="text-stone-600">
+                          Visualize distributions across groups with violin plots, box plots, and statistical summaries
+                        </p>
+                      </div>
+                      <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-xl p-8 border border-rose-100">
+                        <ViolinPlot
+                          data={violinData}
+                          labels={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
+                          width={1200}
+                          height={500}
+                          showBoxPlot={true}
+                          showMedian={true}
+                          showMean={true}
+                          title=""
+                        />
+                      </div>
+                    </div>
+
+                    {/* Feature Highlights */}
+                    <div className="bg-gradient-to-br from-violet-500 via-fuchsia-600 to-pink-600 rounded-xl p-8 text-white shadow-xl">
+                      <h3 className="text-2xl font-bold mb-6">Advanced Visualization Features</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Scatter plots with linear regression and R² calculation</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Violin plots with Kernel Density Estimation (KDE)</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Interactive brushing and point selection</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Group-based color coding and legends</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Box plot overlays with quartiles and outliers</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl">✓</span>
+                          <span>Automated statistical summaries and metrics</span>
                         </div>
                       </div>
                     </div>
