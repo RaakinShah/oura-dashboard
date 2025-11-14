@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Activity, Moon, Heart, Sparkles, Key, ArrowRight, Check, ExternalLink } from 'lucide-react';
+import { Activity, Moon, Heart, Sparkles, Key, ArrowRight, Check, ExternalLink, Eye, EyeOff, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 
 interface WelcomePageProps {
   onComplete: () => void;
@@ -10,18 +10,66 @@ interface WelcomePageProps {
 export default function WelcomePage({ onComplete }: WelcomePageProps) {
   const [apiKey, setApiKey] = useState('');
   const [step, setStep] = useState(1);
-  const [saving, setSaving] = useState(false);
+  const [validating, setValidating] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [validationSuccess, setValidationSuccess] = useState(false);
 
-  const handleSaveApiKey = () => {
+  const validateApiKey = async (token: string): Promise<boolean> => {
+    try {
+      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401) {
+        setError('Invalid API token. Please check your token and try again.');
+        return false;
+      }
+
+      if (!response.ok) {
+        setError('Unable to validate token. Please check your internet connection.');
+        return false;
+      }
+
+      return true;
+    } catch (err) {
+      setError('Network error. Please check your internet connection and try again.');
+      return false;
+    }
+  };
+
+  const handleSaveApiKey = async () => {
     if (!apiKey.trim()) return;
 
-    setSaving(true);
-    localStorage.setItem('oura_api_token', apiKey.trim());
+    // Basic format validation
+    if (apiKey.trim().length < 20) {
+      setError('API token appears to be too short. Please verify you copied the complete token.');
+      return;
+    }
 
-    setTimeout(() => {
-      setSaving(false);
-      onComplete();
-    }, 500);
+    setValidating(true);
+    setError(null);
+
+    // Validate token with Oura API
+    const isValid = await validateApiKey(apiKey.trim());
+
+    if (isValid) {
+      // Save to localStorage
+      localStorage.setItem('oura_api_token', apiKey.trim());
+
+      // Show success state
+      setValidationSuccess(true);
+
+      // Wait a moment to show success, then complete
+      setTimeout(() => {
+        setValidating(false);
+        onComplete();
+      }, 1500);
+    } else {
+      setValidating(false);
+    }
   };
 
   return (
@@ -195,29 +243,78 @@ export default function WelcomePage({ onComplete }: WelcomePageProps) {
                     <label className="block text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">
                       Oura Personal Access Token
                     </label>
-                    <input
-                      type="password"
-                      value={apiKey}
-                      onChange={(e) => setApiKey(e.target.value)}
-                      placeholder="Paste your API key here..."
-                      className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:border-purple-600 focus:ring-4 focus:ring-purple-100 focus:outline-none text-base font-medium shadow-sm hover:border-gray-300 transition-all duration-200"
-                      autoFocus
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={apiKey}
+                        onChange={(e) => {
+                          setApiKey(e.target.value);
+                          setError(null); // Clear error on input change
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && apiKey.trim() && !validating) {
+                            handleSaveApiKey();
+                          }
+                        }}
+                        placeholder="Paste your API key here..."
+                        className={`w-full pl-5 pr-14 py-4 border-2 rounded-2xl focus:ring-4 focus:outline-none text-base font-medium shadow-sm transition-all duration-200 ${
+                          error
+                            ? 'border-red-300 focus:border-red-500 focus:ring-red-100 bg-red-50/50'
+                            : 'border-gray-200 focus:border-purple-600 focus:ring-purple-100 hover:border-gray-300'
+                        }`}
+                        autoFocus
+                        disabled={validating}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
+                        aria-label={showPassword ? 'Hide token' : 'Show token'}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" strokeWidth={2.5} />
+                        ) : (
+                          <Eye className="h-5 w-5" strokeWidth={2.5} />
+                        )}
+                      </button>
+                    </div>
+                    {error && (
+                      <div className="mt-3 flex items-start gap-2 text-red-600">
+                        <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+                        <p className="text-sm font-semibold">{error}</p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex gap-4 pt-2">
                     <button
-                      onClick={() => setStep(1)}
-                      className="flex-1 py-4 border-2 border-gray-200 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+                      onClick={() => {
+                        setStep(1);
+                        setError(null);
+                      }}
+                      disabled={validating}
+                      className="flex-1 py-4 border-2 border-gray-200 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Back
                     </button>
                     <button
                       onClick={handleSaveApiKey}
-                      disabled={!apiKey.trim() || saving}
+                      disabled={!apiKey.trim() || validating}
                       className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-2xl hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 text-lg"
                     >
-                      {saving ? 'Saving...' : (
+                      {validating ? (
+                        validationSuccess ? (
+                          <>
+                            <CheckCircle className="h-6 w-6" strokeWidth={2.5} />
+                            <span>Validated!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Loader2 className="h-6 w-6 animate-spin" strokeWidth={2.5} />
+                            <span>Validating...</span>
+                          </>
+                        )
+                      ) : (
                         <>
                           Continue <ArrowRight className="h-6 w-6" strokeWidth={2.5} />
                         </>
@@ -226,18 +323,36 @@ export default function WelcomePage({ onComplete }: WelcomePageProps) {
                   </div>
                 </div>
 
-                <div className="p-6 bg-green-50 rounded-2xl border-2 border-green-100">
-                  <div className="flex items-start gap-4">
-                    <Check className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                    <div>
-                      <p className="text-sm font-bold text-green-900 mb-2">You're Almost There!</p>
-                      <p className="text-sm text-green-800 font-medium leading-relaxed">
-                        Once you enter your API key, you'll have access to all features including chronotype analysis,
-                        sleep debt tracking, illness prediction, and personalized insights.
-                      </p>
+                {!error && (
+                  <div className="p-6 bg-green-50 rounded-2xl border-2 border-green-100">
+                    <div className="flex items-start gap-4">
+                      <Check className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <div>
+                        <p className="text-sm font-bold text-green-900 mb-2">You're Almost There!</p>
+                        <p className="text-sm text-green-800 font-medium leading-relaxed">
+                          Once you enter your API key, we'll validate it with Oura's servers and grant you access to all features including chronotype analysis, sleep debt tracking, illness prediction, and personalized insights.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {error && (
+                  <div className="p-6 bg-amber-50 rounded-2xl border-2 border-amber-100">
+                    <div className="flex items-start gap-4">
+                      <Sparkles className="h-6 w-6 text-amber-600 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <div>
+                        <p className="text-sm font-bold text-amber-900 mb-2">Troubleshooting Tips</p>
+                        <ul className="text-sm text-amber-800 font-medium leading-relaxed space-y-1.5 list-disc list-inside">
+                          <li>Make sure you copied the entire token from Oura Cloud</li>
+                          <li>Check that the token hasn't expired or been revoked</li>
+                          <li>Verify you have an active internet connection</li>
+                          <li>Try generating a new token if the issue persists</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
