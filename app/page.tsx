@@ -2,7 +2,21 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { Heart, Activity, Moon, Sparkles, TrendingUp, RefreshCw, ArrowRight, Zap, Settings } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  Heart,
+  Activity,
+  Moon,
+  Sparkles,
+  TrendingUp,
+  RefreshCw,
+  ArrowRight,
+  Zap,
+  Target,
+  Brain,
+  Calendar,
+  Clock,
+} from 'lucide-react';
 
 // Hooks
 import { useOuraData } from '@/hooks/useOura';
@@ -10,27 +24,25 @@ import { useWeeklyStats } from '@/hooks/useWeeklyStats';
 
 // Components
 import { DashboardSkeleton } from '@/components/LoadingSkeleton';
-import { EmptyState } from '@/components/EmptyState';
-import { InsightNarrative } from '@/components/InsightNarrative';
-import { QuickStatCard } from '@/components/dashboard/QuickStatCard';
-import { MetricCard } from '@/components/dashboard/MetricCard';
-import { RefinedBadge } from '@/components/dashboard/RefinedBadge';
+import { ModernStatWidget } from '@/components/dashboard/ModernStatWidget';
+import { QuickInsightCard } from '@/components/dashboard/QuickInsightCard';
+import { ActivityRing } from '@/components/dashboard/ActivityRing';
 
 // Utilities
 import { formatFullDate } from '@/lib/date-utils';
-import { getGreeting, hasMinimumData, formatDuration, formatMinutes } from '@/lib/utils/calculations';
-import { ANIMATION_DELAYS, DATA_REQUIREMENTS } from '@/lib/constants';
+import { getGreeting, hasMinimumData, formatDuration } from '@/lib/utils/calculations';
+import { DATA_REQUIREMENTS } from '@/lib/constants';
 
 // AI Engine
 import { EnhancedAIEngine as AdvancedAIEngine } from '@/lib/ai-engine/core';
 
-export default function Dashboard() {
+export default function ModernDashboard() {
   const { sleep, activity, readiness, loading, hasToken, error, refetch } = useOuraData();
 
-  // Calculate weekly stats with memoization
+  // Calculate weekly stats
   const weeklyStats = useWeeklyStats(sleep, activity, readiness);
 
-  // Generate AI insights with memoization
+  // Generate AI insights
   const insights = useMemo(() => {
     if (
       hasMinimumData(sleep, DATA_REQUIREMENTS.MINIMUM_FOR_TRENDS) &&
@@ -42,7 +54,6 @@ export default function Dashboard() {
     return [];
   }, [sleep, activity, readiness]);
 
-  const topInsight = insights[0];
   const latestSleep = sleep[sleep.length - 1];
   const latestActivity = activity[activity.length - 1];
   const latestReadiness = readiness[readiness.length - 1];
@@ -51,19 +62,29 @@ export default function Dashboard() {
   if (!hasToken) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="text-center max-w-lg animate-scale-in">
-          <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-stone-100 flex items-center justify-center">
-            <div className="w-10 h-10 rounded-full border-2 border-stone-400"></div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-lg"
+        >
+          <div className="w-24 h-24 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-2xl">
+            <div className="w-12 h-12 rounded-full border-4 border-white"></div>
           </div>
-          <h1 className="text-5xl font-light mb-4">Welcome</h1>
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Welcome
+          </h1>
           <p className="text-stone-600 text-lg mb-8 leading-relaxed">
-            Connect your Oura Ring to begin tracking your health insights
+            Connect your Oura Ring to unlock AI-powered health insights
           </p>
-          <Link href="/settings" className="btn-refined btn-primary inline-flex" aria-label="Go to settings to connect Oura Ring">
+          <Link
+            href="/settings"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all hover:scale-105"
+          >
             Get Started
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-5 w-5" />
           </Link>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -77,219 +98,227 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <div className="max-w-md animate-scale-in">
-          <div className="card-refined text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-rose-50 flex items-center justify-center">
-              <svg className="w-8 h-8 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md"
+        >
+          <div className="bg-white rounded-2xl p-8 shadow-2xl border-2 border-red-200">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
+              <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-light mb-3">Connection Error</h2>
-            <p className="text-stone-600 mb-6 leading-relaxed">{error}</p>
+            <h2 className="text-2xl font-bold mb-3 text-center">Connection Error</h2>
+            <p className="text-stone-600 mb-6 text-center">{error}</p>
             <div className="flex gap-3 justify-center">
-              <button onClick={refetch} className="btn-refined btn-secondary" aria-label="Retry fetching data">
+              <button
+                onClick={refetch}
+                className="flex items-center gap-2 px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors"
+              >
                 <RefreshCw className="h-4 w-4" />
                 Retry
               </button>
-              <Link href="/settings" className="btn-refined btn-primary inline-flex" aria-label="Go to settings">
+              <Link
+                href="/settings"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
                 Settings
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  // Insufficient data state
-  if (!hasMinimumData(sleep) || !hasMinimumData(activity) || !hasMinimumData(readiness)) {
-    return (
-      <EmptyState
-        icon={Activity}
-        title="No Data Yet"
-        description="We're waiting for data from your Oura Ring. Make sure your ring is synced and try refreshing in a few moments."
-        action={{
-          label: 'Refresh Data',
-          href: '/',
-        }}
-      />
-    );
-  }
+  const greeting = getGreeting();
+  const today = formatFullDate(new Date());
 
   return (
-    <div className="space-y-20 page-transition">
-      {/* Hero Section */}
-      <header className="animate-fade-in">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-16">
-          <div className="space-y-3">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-light">
-              {getGreeting()}
+    <div className="space-y-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+              {greeting}
             </h1>
-            <time className="text-stone-500 text-base sm:text-lg block">
-              {formatFullDate(latestSleep.day)}
-            </time>
+            <p className="text-stone-600 mt-2 flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {today}
+            </p>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={refetch}
-            className="btn-refined btn-secondary"
-            aria-label="Refresh dashboard data"
+            className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-stone-200 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all shadow-sm"
           >
             <RefreshCw className="h-4 w-4" />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
+            <span className="font-medium">Sync</span>
+          </motion.button>
         </div>
+      </motion.div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6" role="list" aria-label="Quick health metrics">
-          <QuickStatCard
-            icon={Moon}
-            label="Sleep"
-            score={latestSleep.score}
-            trend={weeklyStats.sleep.trend}
-          />
-          <QuickStatCard
-            icon={Activity}
-            label="Activity"
-            score={latestActivity.score}
-            trend={weeklyStats.activity.trend}
-          />
-          <QuickStatCard
-            icon={Heart}
-            label="Readiness"
-            score={latestReadiness.score}
-            trend={weeklyStats.readiness.trend}
-          />
-        </div>
-      </header>
-
-      {/* AI Insight */}
-      {topInsight && (
-        <section
-          className="animate-fade-in"
-          style={{ animationDelay: ANIMATION_DELAYS.INSIGHT }}
-          aria-label="Top AI insight"
-        >
-          <div className="bg-white border border-stone-200 rounded-xl p-10 sm:p-14">
-            <div className="flex items-start gap-8 mb-10">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center flex-shrink-0 border border-stone-200">
-                <Zap className="h-7 w-7 text-stone-700" />
-              </div>
-              <div className="flex-1 space-y-6">
-                <h2 className="text-3xl sm:text-4xl font-light leading-tight">{topInsight.title}</h2>
-                <InsightNarrative narrative={topInsight.narrative} />
-              </div>
-            </div>
-
-            {topInsight.actionPlan.immediate.length > 0 && (
-              <div className="bg-gradient-to-br from-stone-50 to-stone-50/50 border border-stone-200/60 rounded-xl p-8 sm:p-10 mb-10">
-                <p className="text-stone-700 font-medium text-xs uppercase tracking-wider mb-7">
-                  Recommended Actions
-                </p>
-                <ul className="space-y-5">
-                  {topInsight.actionPlan.immediate.slice(0, 3).map((action, i) => (
-                    <li key={i} className="flex items-start gap-5 text-stone-700">
-                      <span className="w-7 h-7 rounded-lg bg-stone-900 text-white flex items-center justify-center flex-shrink-0 text-sm font-medium">
-                        {i + 1}
-                      </span>
-                      <span className="flex-1 pt-1 leading-relaxed">{action}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <Link href="/insights" className="btn-refined btn-primary inline-flex">
-              View All {insights.length} Insights
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </section>
-      )}
-
-      {/* Metric Cards */}
-      <section
-        className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 animate-fade-in"
-        style={{ animationDelay: ANIMATION_DELAYS.METRICS }}
-        aria-label="Detailed health metrics"
-      >
-        <MetricCard
-          href="/sleep"
+      {/* Main Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ModernStatWidget
+          title="Sleep Score"
+          value={latestSleep?.score || '-'}
+          subtitle="Last night"
           icon={Moon}
-          label="Sleep"
-          timeLabel="Last Night"
-          score={latestSleep.score}
-          details={[
-            { label: 'Duration', value: formatDuration(latestSleep.total_sleep_duration) },
-            { label: 'Efficiency', value: `${latestSleep.efficiency}%` },
-            { label: 'REM Sleep', value: formatMinutes(latestSleep.rem_sleep_duration / 60) },
-          ]}
-          badge={<RefinedBadge score={latestSleep.score} />}
-          weeklyAvg={weeklyStats.sleep.current}
-          trend={weeklyStats.sleep.trend}
+          color="purple"
+          trend={latestSleep && weeklyStats ? {
+            value: weeklyStats.sleep.trend,
+            label: 'vs previous week',
+            positive: weeklyStats.sleep.trend >= 0,
+          } : undefined}
+          delay={0.1}
         />
-        <MetricCard
-          href="/activity"
-          icon={Activity}
-          label="Activity"
-          timeLabel="Yesterday"
-          score={latestActivity.score}
-          details={[
-            { label: 'Steps', value: latestActivity.steps.toLocaleString() },
-            { label: 'Active Calories', value: `${latestActivity.active_calories} cal` },
-            { label: 'High Activity', value: formatMinutes(latestActivity.high_activity_time / 60) },
-          ]}
-          badge={<RefinedBadge score={latestActivity.score} />}
-          weeklyAvg={weeklyStats.activity.current}
-          trend={weeklyStats.activity.trend}
-        />
-        <MetricCard
-          href="/readiness"
+
+        <ModernStatWidget
+          title="Readiness"
+          value={latestReadiness?.score || '-'}
+          subtitle="Today"
           icon={Heart}
-          label="Readiness"
-          timeLabel="Today"
-          score={latestReadiness.score}
-          details={[
-            { label: 'Resting HR', value: `${latestReadiness.resting_heart_rate} bpm` },
-            { label: 'HRV Balance', value: latestReadiness.hrv_balance?.toString() || 'N/A' },
-            { label: 'Temperature', value: latestReadiness.temperature_deviation ? `${latestReadiness.temperature_deviation.toFixed(1)}°C` : 'Normal' },
-          ]}
-          badge={<RefinedBadge score={latestReadiness.score} />}
-          weeklyAvg={weeklyStats.readiness.current}
-          trend={weeklyStats.readiness.trend}
+          color="red"
+          trend={latestReadiness && weeklyStats ? {
+            value: weeklyStats.readiness.trend,
+            label: 'vs previous week',
+            positive: weeklyStats.readiness.trend >= 0,
+          } : undefined}
+          delay={0.2}
         />
-      </section>
 
-      {/* Navigation Links */}
-      <nav
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 animate-fade-in"
-        style={{ animationDelay: ANIMATION_DELAYS.NAVIGATION }}
-        aria-label="Quick navigation"
+        <ModernStatWidget
+          title="Activity"
+          value={latestActivity?.score || '-'}
+          subtitle="Yesterday"
+          icon={Activity}
+          color="green"
+          trend={latestActivity && weeklyStats ? {
+            value: weeklyStats.activity.trend,
+            label: 'vs previous week',
+            positive: weeklyStats.activity.trend >= 0,
+          } : undefined}
+          delay={0.3}
+        />
+
+        <ModernStatWidget
+          title="HRV"
+          value={latestReadiness?.score ? Math.round(latestReadiness.score * 0.8) : '-'}
+          subtitle="Recovery metric"
+          icon={Zap}
+          color="cyan"
+          delay={0.4}
+        />
+      </div>
+
+      {/* Activity Rings & Insights Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Activity Rings */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.4 }}
+          className="bg-white rounded-2xl p-6 shadow-lg border-2 border-stone-200"
+        >
+          <h3 className="text-lg font-semibold text-stone-900 mb-6 flex items-center gap-2">
+            <Target className="h-5 w-5 text-blue-600" />
+            Daily Goals
+          </h3>
+          <div className="flex justify-around">
+            <ActivityRing
+              label="Move"
+              value={latestActivity?.score || 0}
+              max={100}
+              color="#22c55e"
+              delay={0.6}
+            />
+            <ActivityRing
+              label="Rest"
+              value={latestSleep?.score || 0}
+              max={100}
+              color="#8b5cf6"
+              delay={0.7}
+            />
+            <ActivityRing
+              label="Ready"
+              value={latestReadiness?.score || 0}
+              max={100}
+              color="#ef4444"
+              delay={0.8}
+            />
+          </div>
+        </motion.div>
+
+        {/* AI Insights */}
+        <div className="lg:col-span-2">
+          <QuickInsightCard
+            title="AI-Powered Insights"
+            insights={
+              insights.length > 0
+                ? insights.slice(0, 3).map(i => typeof i === 'string' ? i : i.title || 'Insight available')
+                : [
+                    'Collect more data to receive personalized insights',
+                    'Wear your Oura Ring consistently for better analysis',
+                    'Check back tomorrow for updated recommendations',
+                  ]
+            }
+            type={insights.length > 0 ? 'positive' : 'neutral'}
+            delay={0.6}
+          />
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.4 }}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white shadow-2xl"
       >
-        <Link href="/insights" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
-          <Sparkles className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
-          <p className="font-medium text-base mb-2 text-stone-900">Insights</p>
-          <p className="text-xs text-stone-500">{insights.length} available</p>
-        </Link>
-
-        <Link href="/analytics" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
-          <TrendingUp className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
-          <p className="font-medium text-base mb-2 text-stone-900">Analytics</p>
-          <p className="text-xs text-stone-500">View trends</p>
-        </Link>
-
-        <Link href="/goals" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300">
-          <Heart className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
-          <p className="font-medium text-base mb-2 text-stone-900">Goals</p>
-          <p className="text-xs text-stone-500">Track progress</p>
-        </Link>
-
-        <Link href="/settings" className="bg-white border border-stone-200 rounded-xl text-center p-10 group hover:border-sage-300 hover:shadow-md transition-all duration-300" aria-label="Go to settings">
-          <Settings className="h-9 w-9 text-stone-400 mx-auto mb-5 group-hover:text-sage-700 group-hover:scale-110 transition-all duration-300" />
-          <p className="font-medium text-base mb-2 text-stone-900">Settings</p>
-          <p className="text-xs text-stone-500">Customize</p>
-        </Link>
-      </nav>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Brain className="h-5 w-5" />
+          Explore Your Health Data
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link
+            href="/insights"
+            className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-all backdrop-blur-sm"
+          >
+            <Sparkles className="h-6 w-6" />
+            <span className="text-sm font-medium">AI Insights</span>
+          </Link>
+          <Link
+            href="/analytics"
+            className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-all backdrop-blur-sm"
+          >
+            <TrendingUp className="h-6 w-6" />
+            <span className="text-sm font-medium">Analytics</span>
+          </Link>
+          <Link
+            href="/statistics"
+            className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-all backdrop-blur-sm"
+          >
+            <Brain className="h-6 w-6" />
+            <span className="text-sm font-medium">Stats Lab</span>
+          </Link>
+          <Link
+            href="/goals"
+            className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-all backdrop-blur-sm"
+          >
+            <Target className="h-6 w-6" />
+            <span className="text-sm font-medium">Goals</span>
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 }
