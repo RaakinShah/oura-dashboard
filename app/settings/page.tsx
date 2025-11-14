@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Key, CheckCircle, XCircle, RefreshCw, AlertCircle } from 'lucide-react';
+import { Key, CheckCircle, XCircle, RefreshCw, AlertCircle, Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import { storage } from '@/lib/storage';
 
 export default function Settings() {
@@ -10,6 +10,8 @@ export default function Settings() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
   const [saved, setSaved] = useState(false);
+  const [showToken, setShowToken] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Migrate old token key to new one
@@ -37,13 +39,50 @@ export default function Settings() {
     }
   };
 
+  const validateToken = async (token: string): Promise<boolean> => {
+    try {
+      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401) {
+        setError('Invalid API token. Please check your token and try again.');
+        return false;
+      }
+
+      if (!response.ok) {
+        setError('Unable to validate token. Please check your internet connection.');
+        return false;
+      }
+
+      return true;
+    } catch (err) {
+      setError('Network error. Please check your internet connection and try again.');
+      return false;
+    }
+  };
+
   const testToken = async (token: string) => {
     setTesting(true);
     setTestResult(null);
+    setError(null);
+
+    // Basic format validation
+    if (token.trim().length < 20) {
+      setError('API token appears to be too short. Please verify you copied the complete token.');
+      setTestResult({
+        success: false,
+        message: 'Token validation failed - token too short',
+      });
+      setTesting(false);
+      return;
+    }
 
     try {
-      // Test via our API route (which calls Oura API)
-      const response = await fetch('/api/oura/test', {
+      // Test via direct Oura API
+      const response = await fetch('https://api.ouraring.com/v2/usercollection/personal_info', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -54,20 +93,27 @@ export default function Settings() {
       if (response.ok) {
         setTestResult({
           success: true,
-          message: 'Token is valid!',
+          message: '✓ Token is valid and working!',
           details: data,
         });
+        setError(null);
       } else {
+        const errorMsg = response.status === 401
+          ? 'Invalid API token. Please check your token and try again.'
+          : 'Unable to validate token. Please check your internet connection.';
+        setError(errorMsg);
         setTestResult({
           success: false,
-          message: data.error || `Token validation failed: ${response.status} ${response.statusText}`,
-          details: data.details || 'No additional details',
+          message: errorMsg,
+          details: data,
         });
       }
     } catch (error) {
+      const errorMsg = 'Network error. Please check your internet connection and try again.';
+      setError(errorMsg);
       setTestResult({
         success: false,
-        message: 'Failed to test token',
+        message: errorMsg,
         details: error instanceof Error ? error.message : 'Unknown error',
       });
     } finally {
@@ -75,15 +121,39 @@ export default function Settings() {
     }
   };
 
-  const saveToken = () => {
+  const saveToken = async () => {
     if (!apiKey.trim()) {
-      alert('Please enter a token');
+      setError('Please enter a token');
       return;
     }
-    storage.setToken(apiKey.trim());
-    loadCurrentKey();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+
+    // Basic format validation
+    if (apiKey.trim().length < 20) {
+      setError('API token appears to be too short. Please verify you copied the complete token.');
+      return;
+    }
+
+    setTesting(true);
+    setError(null);
+
+    // Validate token before saving
+    const isValid = await validateToken(apiKey.trim());
+
+    if (isValid) {
+      storage.setToken(apiKey.trim());
+      loadCurrentKey();
+      setSaved(true);
+      setTestResult({
+        success: true,
+        message: '✓ Token validated and saved successfully!',
+      });
+      setTimeout(() => {
+        setSaved(false);
+        setTestResult(null);
+      }, 3000);
+    }
+
+    setTesting(false);
   };
 
   const testCurrentToken = () => {
@@ -201,25 +271,67 @@ export default function Settings() {
 
         <div className="space-y-6">
           <div>
-            <label className="block text-xs uppercase tracking-wide font-medium text-stone-500 mb-3">
+            <label className="block text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">
               Oura Personal Access Token
             </label>
-            <textarea
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Paste your Oura API token here..."
-              rows={3}
-              className="w-full px-4 py-3 rounded-lg border border-stone-300 bg-white text-stone-900 placeholder:text-stone-400 focus:border-sage-400 focus:ring-2 focus:ring-sage-200/50 focus:outline-none font-mono text-sm resize-none transition-all"
-            />
+            <div className="relative">
+              <textarea
+                value={showToken ? apiKey : apiKey.replace(/./g, '•')}
+                onChange={(e) => {
+                  const newValue = showToken ? e.target.value : apiKey + e.target.value.slice(apiKey.length);
+                  setApiKey(newValue);
+                  setError(null);
+                }}
+                placeholder="Paste your Oura API token here..."
+                rows={3}
+                className={`w-full pl-5 pr-14 py-4 border-2 rounded-2xl focus:ring-4 focus:outline-none text-sm resize-none transition-all duration-200 shadow-sm ${
+                  showToken ? 'font-mono' : 'font-sans tracking-wider'
+                } ${
+                  error
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100 bg-red-50/50'
+                    : 'border-gray-200 focus:border-purple-600 focus:ring-purple-100 hover:border-gray-300'
+                }`}
+                disabled={testing}
+              />
+              <button
+                type="button"
+                onClick={() => setShowToken(!showToken)}
+                className="absolute right-4 top-4 p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={showToken ? 'Hide token' : 'Show token'}
+                disabled={testing}
+              >
+                {showToken ? (
+                  <EyeOff className="h-5 w-5" strokeWidth={2.5} />
+                ) : (
+                  <Eye className="h-5 w-5" strokeWidth={2.5} />
+                )}
+              </button>
+            </div>
+            {error && (
+              <div className="mt-3 flex items-start gap-2 text-red-600">
+                <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+                <p className="text-sm font-semibold">{error}</p>
+              </div>
+            )}
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             <button
               onClick={saveToken}
-              className="btn-refined btn-primary"
+              disabled={testing || !apiKey.trim()}
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-2xl hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
             >
-              <Key className="h-4 w-4" />
-              Save Token
+              {testing ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" strokeWidth={2.5} />
+                  <span>Validating & Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Key className="h-5 w-5" strokeWidth={2.5} />
+                  <span>Validate & Save Token</span>
+                </>
+              )}
             </button>
 
             <button
@@ -229,17 +341,17 @@ export default function Settings() {
                 }
               }}
               disabled={testing || !apiKey.trim()}
-              className="btn-refined btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {testing ? (
                 <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  Testing...
+                  <Loader2 className="h-5 w-5 animate-spin" strokeWidth={2.5} />
+                  <span>Testing...</span>
                 </>
               ) : (
                 <>
-                  <CheckCircle className="h-4 w-4" />
-                  Test Before Saving
+                  <Shield className="h-5 w-5" strokeWidth={2.5} />
+                  <span>Test Only</span>
                 </>
               )}
             </button>
