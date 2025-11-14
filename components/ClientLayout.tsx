@@ -4,10 +4,21 @@ import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import WelcomePage from '@/components/WelcomePage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useDashboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { KeyboardShortcutsModal, useKeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { ToastProvider } from '@/components/Toast';
+import { LoadingBar } from '@/components/LoadingBar';
+import { BackToTop } from '@/components/BackToTop';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
   const [isClient, setIsClient] = useState(false);
+
+  // Enable keyboard shortcuts
+  useDashboardShortcuts();
+
+  // Keyboard shortcuts modal
+  const shortcutsModal = useKeyboardShortcutsModal();
 
   useEffect(() => {
     setIsClient(true);
@@ -39,17 +50,26 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <ErrorBoundary>
-      <div className="flex h-screen bg-background transition-colors duration-200">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto bg-stone-50">
-          <ErrorBoundary>
-            <div className="container mx-auto px-8 py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 max-w-[1800px]">
-              {children}
-            </div>
-          </ErrorBoundary>
-        </main>
-      </div>
-    </ErrorBoundary>
+    <ToastProvider>
+      <ErrorBoundary>
+        <LoadingBar />
+
+        <div className="flex h-screen bg-background transition-colors duration-200">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto bg-stone-50">
+            <ErrorBoundary>
+              <div className="container mx-auto px-8 py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 max-w-[1800px]">
+                {children}
+              </div>
+            </ErrorBoundary>
+          </main>
+        </div>
+
+        <BackToTop />
+
+        {/* Keyboard Shortcuts Modal */}
+        <KeyboardShortcutsModal isOpen={shortcutsModal.isOpen} onClose={shortcutsModal.close} />
+      </ErrorBoundary>
+    </ToastProvider>
   );
 }

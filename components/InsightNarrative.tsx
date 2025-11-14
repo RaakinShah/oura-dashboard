@@ -7,7 +7,7 @@ export function InsightNarrative({ narrative }: InsightNarrativeProps) {
   const sections = narrative.split('\n\n').filter(Boolean);
 
   return (
-    <div className="space-y-6 text-stone-700">
+    <div className="space-y-7 text-stone-700 text-[15px]">
       {sections.map((section, idx) => {
         // Check if this is a heading (starts with **)
         const headingMatch = section.match(/^\*\*([^*]+)\*\*:?\s*([\s\S]*)/);
@@ -15,10 +15,10 @@ export function InsightNarrative({ narrative }: InsightNarrativeProps) {
         if (headingMatch) {
           const [, heading, content] = headingMatch;
           return (
-            <div key={idx} className="space-y-3">
-              <h3 className="text-lg font-medium text-stone-900">{heading}</h3>
+            <div key={idx} className="space-y-4">
+              <h3 className="text-lg font-semibold text-stone-900 tracking-tight">{heading}</h3>
               {content && (
-                <div className="space-y-2 pl-4 border-l-2 border-stone-200">
+                <div className="space-y-3 pl-5 border-l-2 border-sage-300">
                   {formatContent(content)}
                 </div>
               )}
@@ -28,7 +28,7 @@ export function InsightNarrative({ narrative }: InsightNarrativeProps) {
 
         // Regular paragraph
         return (
-          <div key={idx} className="space-y-2">
+          <div key={idx} className="space-y-3">
             {formatContent(section)}
           </div>
         );
@@ -46,16 +46,16 @@ function formatContent(text: string) {
     if (line.trim().startsWith('-')) {
       const bulletText = line.trim().substring(1).trim();
       return (
-        <div key={idx} className="flex items-start gap-3 py-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-stone-400 mt-2 flex-shrink-0" />
-          <p className="flex-1 leading-relaxed">{formatInlineStyles(bulletText)}</p>
+        <div key={idx} className="flex items-start gap-4 py-1.5">
+          <div className="w-2 h-2 rounded-full bg-sage-500 mt-[0.6em] flex-shrink-0" />
+          <p className="flex-1 leading-[1.75]">{formatInlineStyles(bulletText)}</p>
         </div>
       );
     }
 
     // Regular line
     return (
-      <p key={idx} className="leading-relaxed">
+      <p key={idx} className="leading-[1.75]">
         {formatInlineStyles(line)}
       </p>
     );
