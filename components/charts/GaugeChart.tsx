@@ -7,13 +7,16 @@ export interface GaugeChartProps {
   max?: number;
   size?: number;
   thickness?: number;
-  color?: string;
-  backgroundColor?: string;
+  startAngle?: number;
+  endAngle?: number;
+  colors?: string[];
+  thresholds?: number[];
   showValue?: boolean;
-  showMinMax?: boolean;
+  showLabels?: boolean;
+  showNeedle?: boolean;
   label?: string;
-  segments?: number;
-  animate?: boolean;
+  unit?: string;
+  title?: string;
   className?: string;
 }
 
@@ -21,143 +24,192 @@ export function GaugeChart({
   value,
   min = 0,
   max = 100,
-  size = 200,
-  thickness = 20,
-  color = '#6366f1',
-  backgroundColor = '#e5e7eb',
+  size = 300,
+  thickness = 30,
+  startAngle = -120,
+  endAngle = 120,
+  colors,
+  thresholds,
   showValue = true,
-  showMinMax = false,
+  showLabels = true,
+  showNeedle = true,
   label,
-  segments = 0,
-  animate = true,
+  unit = '',
+  title,
   className = '',
 }: GaugeChartProps) {
-  const center = size / 2;
   const radius = (size - thickness) / 2;
-  const circumference = Math.PI * radius;
+  const centerX = size / 2;
+  const centerY = size / 2;
 
-  const { percentage, offset, displayValue } = useMemo(() => {
-    const clampedValue = Math.max(min, Math.min(max, value));
-    const percentage = ((clampedValue - min) / (max - min)) * 100;
-    const offset = circumference - (percentage / 100) * circumference;
-    const displayValue = clampedValue.toFixed(0);
+  const defaultColors = ['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e'];
+  const defaultThresholds = [20, 40, 60, 80, 100];
 
-    return { percentage, offset, displayValue };
-  }, [value, min, max, circumference]);
+  const gaugeColors = colors || defaultColors;
+  const gaugeThresholds = thresholds || defaultThresholds;
 
-  const startAngle = -180;
-  const endAngle = 0;
+  const { segments, needleAngle, displayValue } = useMemo(() => {
+    const range = max - min;
+    const normalizedValue = Math.max(min, Math.min(max, value));
+    const valueRatio = (normalizedValue - min) / range;
 
-  const polarToCartesian = (angle: number, r: number) => {
-    const angleInRadians = ((angle - 90) * Math.PI) / 180;
+    const totalAngle = endAngle - startAngle;
+    const needleAngle = startAngle + valueRatio * totalAngle;
+
+    const segments = gaugeThresholds.map((threshold, i) => {
+      const prevThreshold = i === 0 ? min : gaugeThresholds[i - 1];
+      const startRatio = (prevThreshold - min) / range;
+      const endRatio = (threshold - min) / range;
+
+      const segmentStartAngle = startAngle + startRatio * totalAngle;
+      const segmentEndAngle = startAngle + endRatio * totalAngle;
+
+      return {
+        color: gaugeColors[i % gaugeColors.length],
+        startAngle: segmentStartAngle,
+        endAngle: segmentEndAngle,
+        startValue: prevThreshold,
+        endValue: threshold,
+      };
+    });
+
     return {
-      x: center + r * Math.cos(angleInRadians),
-      y: center + r * Math.sin(angleInRadians),
+      segments,
+      needleAngle,
+      displayValue: normalizedValue,
     };
+  }, [value, min, max, startAngle, endAngle, gaugeColors, gaugeThresholds]);
+
+  const createArc = (innerRadius: number, outerRadius: number, startAngle: number, endAngle: number) => {
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+
+    const x1 = centerX + outerRadius * Math.cos(startRad);
+    const y1 = centerY + outerRadius * Math.sin(startRad);
+    const x2 = centerX + outerRadius * Math.cos(endRad);
+    const y2 = centerY + outerRadius * Math.sin(endRad);
+    const x3 = centerX + innerRadius * Math.cos(endRad);
+    const y3 = centerY + innerRadius * Math.sin(endRad);
+    const x4 = centerX + innerRadius * Math.cos(startRad);
+    const y4 = centerY + innerRadius * Math.sin(startRad);
+
+    const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+
+    return `
+      M ${x1} ${y1}
+      A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${x2} ${y2}
+      L ${x3} ${y3}
+      A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4}
+      Z
+    `;
   };
 
-  const describeArc = (startAngle: number, endAngle: number) => {
-    const start = polarToCartesian(endAngle, radius);
-    const end = polarToCartesian(startAngle, radius);
-    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+  const needlePath = useMemo(() => {
+    const needleRad = (needleAngle * Math.PI) / 180;
+    const needleLength = radius + thickness / 2;
+    const needleWidth = 8;
 
-    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-  };
+    const tipX = centerX + needleLength * Math.cos(needleRad);
+    const tipY = centerY + needleLength * Math.sin(needleRad);
 
-  const backgroundPath = describeArc(startAngle, endAngle);
-  const valuePath = describeArc(startAngle, startAngle + (endAngle - startAngle) * (percentage / 100));
+    const perpRad = needleRad + Math.PI / 2;
+    const base1X = centerX + needleWidth * Math.cos(perpRad);
+    const base1Y = centerY + needleWidth * Math.sin(perpRad);
+    const base2X = centerX - needleWidth * Math.cos(perpRad);
+    const base2Y = centerY - needleWidth * Math.sin(perpRad);
+
+    return `M ${tipX} ${tipY} L ${base1X} ${base1Y} L ${base2X} ${base2Y} Z`;
+  }, [needleAngle, radius, thickness, centerX, centerY]);
 
   return (
-    <div className={`inline-flex flex-col items-center ${className}`}>
-      <svg width={size} height={size / 1.5} className="overflow-visible">
-        <g transform={`translate(0, ${size / 6})`}>
-          {/* Background arc */}
-          <path
-            d={backgroundPath}
-            fill="none"
-            stroke={backgroundColor}
-            strokeWidth={thickness}
-            strokeLinecap="round"
-          />
+    <div className={`relative ${className}`}>
+      {title && <h3 className="text-lg font-semibold text-stone-900 mb-4 text-center">{title}</h3>}
 
-          {/* Segments */}
-          {segments > 0 &&
-            Array.from({ length: segments - 1 }).map((_, i) => {
-              const segmentAngle = startAngle + ((i + 1) / segments) * (endAngle - startAngle);
-              const point = polarToCartesian(segmentAngle, radius);
+      <svg width={size} height={size} className="overflow-visible">
+        {segments.map((segment, i) => (
+          <motion.path
+            key={i}
+            d={createArc(radius - thickness / 2, radius + thickness / 2, segment.startAngle, segment.endAngle)}
+            fill={segment.color}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+          />
+        ))}
+
+        {showLabels && (
+          <g className="text-xs fill-stone-600">
+            {[min, ...gaugeThresholds].map((threshold, i) => {
+              const angle = startAngle + ((threshold - min) / (max - min)) * (endAngle - startAngle);
+              const rad = (angle * Math.PI) / 180;
+              const labelRadius = radius + thickness + 20;
+              const x = centerX + labelRadius * Math.cos(rad);
+              const y = centerY + labelRadius * Math.sin(rad);
 
               return (
-                <circle
-                  key={i}
-                  cx={point.x}
-                  cy={point.y}
-                  r={thickness / 4}
-                  fill="white"
-                />
-              );
-            })}
-
-          {/* Value arc */}
-          <motion.path
-            d={valuePath}
-            fill="none"
-            stroke={color}
-            strokeWidth={thickness}
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: animate ? 1 : 0 }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-          />
-
-          {/* Center value */}
-          {showValue && (
-            <g>
-              <motion.text
-                x={center}
-                y={center}
-                textAnchor="middle"
-                alignmentBaseline="middle"
-                className="text-4xl font-bold fill-stone-900"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: animate ? 1 : 0, scale: animate ? 1 : 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-              >
-                {displayValue}
-              </motion.text>
-              {label && (
                 <text
-                  x={center}
-                  y={center + 25}
+                  key={i}
+                  x={x}
+                  y={y}
                   textAnchor="middle"
                   alignmentBaseline="middle"
-                  className="text-sm fill-stone-600"
+                  className="font-semibold"
                 >
-                  {label}
+                  {threshold}
                 </text>
-              )}
-            </g>
-          )}
+              );
+            })}
+          </g>
+        )}
 
-          {/* Min/Max labels */}
-          {showMinMax && (
-            <g className="text-xs fill-stone-600">
+        {showNeedle && (
+          <motion.g
+            initial={{ rotate: startAngle }}
+            animate={{ rotate: needleAngle }}
+            transition={{ type: 'spring', stiffness: 60, damping: 15, duration: 1.5 }}
+            style={{ transformOrigin: `${centerX}px ${centerY}px` }}
+          >
+            <path
+              d={needlePath}
+              fill="#1e293b"
+              stroke="white"
+              strokeWidth={2}
+            />
+          </motion.g>
+        )}
+
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={12}
+          fill="#1e293b"
+          stroke="white"
+          strokeWidth={3}
+        />
+
+        {showValue && (
+          <g>
+            <text
+              x={centerX}
+              y={centerY + 40}
+              textAnchor="middle"
+              className="text-3xl font-bold fill-stone-900"
+            >
+              {displayValue.toFixed(1)}
+              {unit && <tspan className="text-xl fill-stone-600">{unit}</tspan>}
+            </text>
+            {label && (
               <text
-                x={polarToCartesian(startAngle, radius + thickness).x}
-                y={polarToCartesian(startAngle, radius + thickness).y + 15}
-                textAnchor="start"
+                x={centerX}
+                y={centerY + 65}
+                textAnchor="middle"
+                className="text-sm fill-stone-600"
               >
-                {min}
+                {label}
               </text>
-              <text
-                x={polarToCartesian(endAngle, radius + thickness).x}
-                y={polarToCartesian(endAngle, radius + thickness).y + 15}
-                textAnchor="end"
-              >
-                {max}
-              </text>
-            </g>
-          )}
-        </g>
+            )}
+          </g>
+        )}
       </svg>
     </div>
   );
