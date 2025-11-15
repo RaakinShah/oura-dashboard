@@ -18,9 +18,10 @@ interface AIChatProps {
   activity?: ActivityData[];
   readiness?: ReadinessData[];
   className?: string;
+  onAIReady?: (ai: ConversationalAI) => void;
 }
 
-export default function AIChat({ sleep, activity, readiness, className = '' }: AIChatProps) {
+export default function AIChat({ sleep, activity, readiness, className = '', onAIReady }: AIChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +40,11 @@ export default function AIChat({ sleep, activity, readiness, className = '' }: A
 
       if (sleep && activity && readiness) {
         aiRef.current.setHealthData(sleep, activity, readiness);
+      }
+
+      // Notify parent that AI is ready
+      if (onAIReady) {
+        onAIReady(aiRef.current);
       }
 
       // Add welcome message

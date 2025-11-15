@@ -3,17 +3,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AIChat from '@/components/AIChat';
 import AIProfileDisplay from '@/components/AIProfileDisplay';
-import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network, User, Download, FileText, Copy } from 'lucide-react';
+import OllamaSettings from '@/components/OllamaSettings';
+import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network, User, Download, FileText, Copy, Settings } from 'lucide-react';
 import { AIUserProfilingEngine, AIUserProfile } from '@/lib/ai/user-profiling-engine';
+import { ConversationalAI } from '@/lib/ai/conversational-engine';
 import { useOuraData } from '@/hooks/useOura';
 import { DataExporter } from '@/lib/ai/data-export';
 
 export default function AIPage() {
-  const [activeView, setActiveView] = useState<'chat' | 'profile' | 'predictions'>('chat');
+  const [activeView, setActiveView] = useState<'chat' | 'profile' | 'predictions' | 'settings'>('chat');
   const [aiProfile, setAiProfile] = useState<AIUserProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const [exportNotification, setExportNotification] = useState<string | null>(null);
   const profileGeneratedRef = useRef(false);
+  const conversationalAIRef = useRef<ConversationalAI | null>(null);
 
   // Fetch Oura data using the proper hook
   const { sleep, activity, readiness, loading: dataLoading } = useOuraData();
@@ -81,6 +84,27 @@ export default function AIPage() {
     } else {
       setExportNotification('❌ Failed to copy. Try downloading instead.');
       setTimeout(() => setExportNotification(null), 5000);
+    }
+  };
+
+  // Handle AI engine ready
+  const handleAIReady = (ai: ConversationalAI) => {
+    conversationalAIRef.current = ai;
+  };
+
+  // Handle Ollama model change
+  const handleOllamaModelChange = (model: string) => {
+    if (conversationalAIRef.current) {
+      conversationalAIRef.current.setOllamaModel(model);
+      console.log('Ollama model changed to:', model);
+    }
+  };
+
+  // Handle Ollama toggle
+  const handleOllamaToggle = (enabled: boolean) => {
+    if (conversationalAIRef.current) {
+      conversationalAIRef.current.setOllamaMode(enabled);
+      console.log('Ollama mode:', enabled ? 'enabled' : 'disabled');
     }
   };
 
@@ -217,6 +241,17 @@ export default function AIPage() {
             <Cpu className="w-5 h-5" />
             <span>ML Insights</span>
           </button>
+          <button
+            onClick={() => setActiveView('settings')}
+            className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-3 ${
+              activeView === 'settings'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
+          </button>
         </div>
       </div>
 
@@ -258,7 +293,7 @@ export default function AIPage() {
             </div>
 
             <div className="h-[calc(100vh-500px)] min-h-[600px]">
-              <AIChat className="h-full" />
+              <AIChat className="h-full" onAIReady={handleAIReady} />
             </div>
           </div>
         )}
@@ -422,6 +457,25 @@ export default function AIPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {activeView === 'settings' && (
+          <div className="animate-fadeIn space-y-6">
+            <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
+              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-3">
+                <Settings className="w-8 h-8 text-indigo-600" />
+                AI Settings
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Configure your AI experience with local LLM models for enhanced privacy and performance.
+              </p>
+
+              <OllamaSettings
+                onModelChange={handleOllamaModelChange}
+                onToggleOllama={handleOllamaToggle}
+              />
             </div>
           </div>
         )}

@@ -9,6 +9,7 @@ import { SleepData, ActivityData, ReadinessData } from '../oura-api';
 import { AdvancedReasoningEngine, ReasoningChain } from './advanced-reasoning-engine';
 import { OpusReasoningEngine, OpusAnalysisResult } from './opus-reasoning-engine';
 import { StatisticalLanguageModel } from './statistical-language-model';
+import { ollamaClient } from './ollama-client';
 
 export interface AIPersonality {
   name: string;
@@ -44,6 +45,9 @@ export class ConversationalAI {
   };
   private languageModel: StatisticalLanguageModel;
   private useLLM: boolean = true; // Enable true LLM text generation
+  private useOllama: boolean = true; // Try Ollama first before falling back
+  private ollamaModel: string = 'llama3.2:3b'; // Default Ollama model
+  private ollamaAvailable: boolean | null = null; // Cache Ollama availability
 
   constructor(
     userProfile?: Partial<UserProfile>,
@@ -195,16 +199,27 @@ export class ConversationalAI {
   }
 
   /**
-   * Generate dynamic response using the statistical language model (TRUE LLM)
+   * Generate dynamic response using the best available LLM (Ollama or Statistical)
    */
-  private generateLLMResponse(question: string): string {
+  private async generateLLMResponse(question: string): Promise<string> {
     if (!this.healthData) {
       return "I'd love to provide a personalized analysis, but I need access to your health data first. Connect your Oura account and I'll use my language model to generate unique insights tailored to your patterns.";
     }
 
-    // Use the statistical language model to generate a truly dynamic response
+    // Try Ollama first if enabled
+    if (this.useOllama) {
+      try {
+        const response = await this.generateWithOllama(question);
+        if (response) {
+          return response;
+        }
+      } catch (error) {
+        console.log('Ollama unavailable, falling back to statistical LLM:', error);
+      }
+    }
+
+    // Fall back to statistical language model
     // This uses n-grams, Markov chains, attention, beam search, and advanced sampling
-    // NO pre-made templates - every response is generated from learned patterns
     const llmResponse = this.languageModel.generateAndRank(
       question,
       this.healthData,
@@ -212,6 +227,35 @@ export class ConversationalAI {
     );
 
     return llmResponse.response;
+  }
+
+  /**
+   * Generate response using Ollama (true transformer model)
+   */
+  private async generateWithOllama(question: string): Promise<string | null> {
+    if (!this.healthData) return null;
+
+    // Check if Ollama is available (with caching)
+    if (this.ollamaAvailable === null) {
+      this.ollamaAvailable = await ollamaClient.checkHealth();
+    }
+
+    if (!this.ollamaAvailable) {
+      return null;
+    }
+
+    try {
+      const response = await ollamaClient.generateHealthAnalysis(
+        question,
+        this.healthData,
+        this.ollamaModel
+      );
+      return response;
+    } catch (error) {
+      console.error('Ollama generation failed:', error);
+      this.ollamaAvailable = false; // Mark as unavailable
+      return null;
+    }
   }
 
   /**
@@ -280,8 +324,8 @@ export class ConversationalAI {
     const isSimpleQuestion = simpleQuestions.some(pattern => lowerQ.includes(pattern));
 
     if (this.useLLM && isSimpleQuestion && this.healthData) {
-      // Use LLM for simple descriptive questions
-      return this.generateLLMResponse(question);
+      // Use LLM for simple descriptive questions (try Ollama first)
+      return await this.generateLLMResponse(question);
     }
 
     // Check if Opus-level depth is needed (deepest analysis)
@@ -882,5 +926,72 @@ export class ConversationalAI {
    */
   findSimilarWords(word: string, n: number = 5): string[] {
     return this.languageModel.findSimilarWords(word, n);
+  }
+
+  /**
+   * Toggle Ollama mode on/off
+   */
+  setOllamaMode(enabled: boolean): void {
+    this.useOllama = enabled;
+  }
+
+  /**
+   * Get Ollama mode status
+   */
+  isOllamaEnabled(): boolean {
+    return this.useOllama;
+  }
+
+  /**
+   * Set Ollama model to use
+   */
+  setOllamaModel(model: string): void {
+    this.ollamaModel = model;
+    ollamaClient.setDefaultModel(model);
+  }
+
+  /**
+   * Get current Ollama model
+   */
+  getOllamaModel(): string {
+    return this.ollamaModel;
+  }
+
+  /**
+   * Check if Ollama is available
+   */
+  async checkOllamaAvailability(): Promise<boolean> {
+    this.ollamaAvailable = await ollamaClient.checkHealth();
+    return this.ollamaAvailable;
+  }
+
+  /**
+   * Get list of available Ollama models
+   */
+  async getAvailableOllamaModels(): Promise<string[]> {
+    return await ollamaClient.getAvailableModels();
+  }
+
+  /**
+   * Get AI mode status (which LLM is being used)
+   */
+  async getAIMode(): Promise<{
+    mode: 'ollama' | 'statistical' | 'advanced-reasoning';
+    model?: string;
+    available: boolean;
+  }> {
+    if (this.useOllama) {
+      const available = await this.checkOllamaAvailability();
+      return {
+        mode: 'ollama',
+        model: this.ollamaModel,
+        available,
+      };
+    }
+
+    return {
+      mode: 'statistical',
+      available: true,
+    };
   }
 }
