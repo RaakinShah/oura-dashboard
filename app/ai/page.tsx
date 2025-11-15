@@ -1,11 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AIChat from '@/components/AIChat';
-import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network } from 'lucide-react';
+import AIProfileDisplay from '@/components/AIProfileDisplay';
+import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network, User } from 'lucide-react';
+import { AIUserProfilingEngine, AIUserProfile } from '@/lib/ai/user-profiling-engine';
+import { useOuraData } from '@/hooks/useOura';
 
 export default function AIPage() {
-  const [activeView, setActiveView] = useState<'chat' | 'insights' | 'predictions'>('chat');
+  const [activeView, setActiveView] = useState<'chat' | 'profile' | 'predictions'>('chat');
+  const [aiProfile, setAiProfile] = useState<AIUserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const profileGeneratedRef = useRef(false);
+
+  // Fetch Oura data using the proper hook
+  const { sleep, activity, readiness, loading: dataLoading } = useOuraData();
+
+  // Generate AI profile when data is loaded (only once)
+  useEffect(() => {
+    if (!dataLoading && !profileGeneratedRef.current && sleep.length >= 14 && readiness.length >= 14) {
+      profileGeneratedRef.current = true;
+      generateAIProfile();
+    }
+  }, [dataLoading, sleep.length, readiness.length]);
+
+  const generateAIProfile = async () => {
+    setProfileLoading(true);
+    try {
+      const profiler = new AIUserProfilingEngine();
+      const profile = await profiler.buildProfile(sleep, activity, readiness);
+      setAiProfile(profile);
+      console.log('🎯 AI Profile Generated:', profile);
+    } catch (error) {
+      console.error('Error generating AI profile:', error);
+    } finally {
+      setProfileLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 p-6">
@@ -84,18 +115,18 @@ export default function AIPage() {
             }`}
           >
             <MessageSquare className="w-5 h-5" />
-            <span>AI Chat Assistant</span>
+            <span>AI Chat</span>
           </button>
           <button
-            onClick={() => setActiveView('insights')}
+            onClick={() => setActiveView('profile')}
             className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-3 ${
-              activeView === 'insights'
+              activeView === 'profile'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg scale-105'
                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
-            <Brain className="w-5 h-5" />
-            <span>Deep Insights</span>
+            <User className="w-5 h-5" />
+            <span>AI Profile</span>
           </button>
           <button
             onClick={() => setActiveView('predictions')}
@@ -105,8 +136,8 @@ export default function AIPage() {
                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
-            <TrendingUp className="w-5 h-5" />
-            <span>Neural Predictions</span>
+            <Cpu className="w-5 h-5" />
+            <span>ML Insights</span>
           </button>
         </div>
       </div>
@@ -154,97 +185,104 @@ export default function AIPage() {
           </div>
         )}
 
-        {activeView === 'insights' && (
+        {activeView === 'profile' && (
+          <div className="animate-fadeIn">
+            <AIProfileDisplay profile={aiProfile} loading={profileLoading} />
+          </div>
+        )}
+
+        {activeView === 'predictions' && (
           <div className="animate-fadeIn space-y-6">
             <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
               <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-3">
-                <Brain className="w-8 h-8 text-purple-600" />
-                Deep Health Insights
+                <Cpu className="w-8 h-8 text-purple-600" />
+                Machine Learning Insights
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Advanced AI analyzes your health data using multi-dimensional pattern recognition, semantic understanding, and sophisticated statistical models.
+                True machine learning algorithms analyze your data to discover patterns, build your personalized profile, and make predictions.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <FeatureCard
                   icon={<Brain />}
-                  title="Root Cause Analysis"
-                  description="Automatically detects WHY your metrics are high or low"
+                  title="K-Means Clustering"
+                  description="Identifies your health archetype from behavioral patterns"
                   color="purple"
                 />
                 <FeatureCard
                   icon={<TrendingUp />}
-                  title="Predictive Modeling"
-                  description="7-day forecasts with confidence intervals"
+                  title="PCA Analysis"
+                  description="Finds the most important factors affecting your health"
                   color="blue"
                 />
                 <FeatureCard
                   icon={<Activity />}
-                  title="Pattern Recognition"
-                  description="Identifies cascading, cyclical, and compensatory patterns"
+                  title="Bayesian Inference"
+                  description="Updates beliefs about you as more data comes in"
                   color="green"
                 />
                 <FeatureCard
                   icon={<Heart />}
-                  title="Personalized Baselines"
-                  description="Learns YOUR optimal thresholds, not one-size-fits-all"
+                  title="Ensemble Models"
+                  description="Combines multiple AI models for better predictions"
                   color="red"
                 />
                 <FeatureCard
                   icon={<Zap />}
-                  title="Intervention Tracking"
-                  description="Measures what interventions work specifically for you"
+                  title="Anomaly Detection"
+                  description="Identifies unusual patterns that need attention"
                   color="yellow"
                 />
                 <FeatureCard
                   icon={<Network />}
-                  title="Contextual Intelligence"
-                  description="Understands day-of-week, seasonal, and lifestyle factors"
+                  title="Knowledge Graph"
+                  description="Discovers correlations between your metrics"
                   color="indigo"
                 />
               </div>
             </div>
 
             <div className="p-8 bg-gradient-to-br from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 rounded-2xl shadow-2xl border border-indigo-400 dark:border-indigo-600 text-white">
-              <h3 className="text-2xl font-bold mb-4">How It Works</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <h3 className="text-2xl font-bold mb-4">The ML Pipeline</h3>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-3xl font-black mb-2">1</div>
-                  <div className="font-semibold mb-1">Data Collection</div>
-                  <div className="text-sm text-indigo-100">Ingests your Oura health metrics</div>
+                  <div className="font-semibold mb-1">Feature Extraction</div>
+                  <div className="text-sm text-indigo-100">15+ health metrics extracted</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-3xl font-black mb-2">2</div>
-                  <div className="font-semibold mb-1">Pattern Analysis</div>
-                  <div className="text-sm text-indigo-100">Advanced algorithms detect patterns</div>
+                  <div className="font-semibold mb-1">Clustering</div>
+                  <div className="text-sm text-indigo-100">K-means++ identifies archetype</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-3xl font-black mb-2">3</div>
-                  <div className="font-semibold mb-1">Neural Prediction</div>
-                  <div className="text-sm text-indigo-100">Deep learning forecasts future states</div>
+                  <div className="font-semibold mb-1">Dimensionality Reduction</div>
+                  <div className="text-sm text-indigo-100">PCA finds key factors</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-3xl font-black mb-2">4</div>
-                  <div className="font-semibold mb-1">Natural Language</div>
-                  <div className="text-sm text-indigo-100">Generates human-like explanations</div>
+                  <div className="font-semibold mb-1">Bayesian Learning</div>
+                  <div className="text-sm text-indigo-100">Updates probability beliefs</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-3xl font-black mb-2">5</div>
+                  <div className="font-semibold mb-1">Profile Generation</div>
+                  <div className="text-sm text-indigo-100">Creates your AI profile</div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
 
-        {activeView === 'predictions' && (
-          <div className="animate-fadeIn">
             <div className="p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-3">
-                <Cpu className="w-8 h-8 text-indigo-600" />
-                Neural Network Predictions
-              </h2>
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-3">
+                <Cpu className="w-7 h-7 text-indigo-600" />
+                Neural Network Architecture
+              </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Custom-built neural network with backpropagation and adaptive learning predicts your future health states with unprecedented accuracy.
+                Custom-built from scratch with backpropagation, Xavier initialization, and mini-batch gradient descent.
               </p>
 
-              <div className="space-y-6">
+              <div className="space-y-6 mt-6">
                 <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800">
                   <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
                     <Network className="w-6 h-6 text-blue-600" />

@@ -375,8 +375,8 @@ export class HealthPredictionNetwork {
         (activity.active_calories || 0) / 1000,       // Active calories
         (activity.steps || 0) / 20000,                // Steps
         (sleep.restless_periods || 0) / 50,           // Restlessness
-        ((sleep.bedtime_start?.hour || 22) % 24) / 24, // Bedtime hour
-        ((sleep.bedtime_end?.hour || 7) % 24) / 24,    // Wake time
+        ((sleep.bedtime_start ? new Date(sleep.bedtime_start).getHours() : 22) % 24) / 24, // Bedtime hour
+        ((sleep.bedtime_end ? new Date(sleep.bedtime_end).getHours() : 7) % 24) / 24,    // Wake time
       ];
 
       // Output (normalized)
@@ -446,8 +446,8 @@ export class HealthPredictionNetwork {
       (todayActivity?.active_calories || 0) / 1000,
       (todayActivity?.steps || 0) / 20000,
       (tonightSleep.restless_periods || 0) / 50,
-      ((tonightSleep.bedtime_start?.hour || 22) % 24) / 24,
-      ((tonightSleep.bedtime_end?.hour || 7) % 24) / 24,
+      ((tonightSleep.bedtime_start ? new Date(tonightSleep.bedtime_start).getHours() : 22) % 24) / 24,
+      ((tonightSleep.bedtime_end ? new Date(tonightSleep.bedtime_end).getHours() : 7) % 24) / 24,
     ];
 
     const result = this.network.predict(inputs, 10); // Use 10 samples for uncertainty
@@ -471,6 +471,14 @@ export class HealthPredictionNetwork {
       trend,
       recommendation,
     };
+  }
+
+  /**
+   * Generic predict method for ensemble compatibility
+   */
+  predict(input: number[]): number {
+    const result = this.network.predict(input, 1);
+    return result.prediction[0]; // Return first output (readiness score)
   }
 
   /**
