@@ -1,10 +1,11 @@
 /**
  * ADVANCED REASONING ENGINE
  * Claude-level reasoning with chain-of-thought, multi-step problem solving,
- * and deep analytical capabilities
+ * and deep analytical capabilities with natural language generation
  */
 
 import { SleepData, ActivityData, ReadinessData } from '../oura-api';
+import { NaturalLanguageGenerator } from './natural-language-generation';
 
 export interface ReasoningStep {
   step: number;
@@ -174,7 +175,7 @@ export class AdvancedReasoningEngine {
   ): string[] {
     const insights: string[] = [];
 
-    // Insight 1: Personalized sleep need
+    // Insight 1: Personalized sleep need (conversational)
     const sleepDurations = sleep.slice(-14).map(s => s.total_sleep_duration / 3600);
     const highPerformanceDays = readiness.slice(-14)
       .map((r, i) => ({ readiness: r.score, sleepDuration: sleepDurations[i] }))
@@ -183,23 +184,29 @@ export class AdvancedReasoningEngine {
 
     if (highPerformanceDays.length >= 3) {
       const optimalSleep = highPerformanceDays.reduce((sum, d) => sum + d, 0) / highPerformanceDays.length;
-      insights.push(`🎯 Your optimal sleep duration appears to be ${optimalSleep.toFixed(1)} hours. On days you sleep this amount, your readiness is consistently above 85.`);
+      insights.push(`🎯 **Here's Your Magic Number**: I looked at all your best days (readiness above 85) and found a pattern - you slept an average of ${optimalSleep.toFixed(1)} hours on those days. That's YOUR optimal sleep duration, not the generic "8 hours" everyone talks about. Aim for this, and you'll consistently feel your best.`);
     }
 
-    // Insight 2: Recovery patterns
+    // Insight 2: Recovery patterns (conversational)
     const recoveryRate = this.calculateRecoveryRate(readiness);
-    insights.push(`⚡ Your body's recovery rate is ${recoveryRate >= 0.8 ? 'fast' : recoveryRate >= 0.6 ? 'moderate' : 'slow'}. ${recoveryRate < 0.7 ? 'Consider adding more rest days or reducing training intensity.' : 'You recover well from physical stress.'}`);
+    if (recoveryRate >= 0.8) {
+      insights.push(`⚡ **You're a Recovery Machine**: Your body bounces back fast from stress. When your readiness dips, you typically recover within 24-48 hours. This is a huge advantage - it means you can train harder and more frequently than someone who recovers slowly. Use this superpower wisely.`);
+    } else if (recoveryRate >= 0.6) {
+      insights.push(`⚡ **Moderate Recovery Speed**: You recover at a decent pace, but it takes time. After a hard session, give yourself 2-3 days before another big effort. The good news? This is trainable - consistent sleep and stress management can improve your recovery rate over time.`);
+    } else {
+      insights.push(`⚡ **Slow Recovery Pattern**: Your body needs more time to bounce back from stress than average. This isn't weakness - it's information. It means you need to be strategic: more rest days, longer recovery periods between hard sessions, and extra attention to sleep quality. Working with your biology, not against it.`);
+    }
 
-    // Insight 3: Circadian rhythm
+    // Insight 3: Circadian rhythm (conversational)
     const bedtimes = sleep.slice(-14)
       .map(s => s.bedtime_start ? new Date(s.bedtime_start).getHours() : null)
       .filter(h => h !== null) as number[];
     const bedtimeVariance = this.calculateStandardDeviation(bedtimes);
 
     if (bedtimeVariance > 1.5) {
-      insights.push(`🌙 Your bedtime varies significantly (±${bedtimeVariance.toFixed(1)} hours). Consistent sleep timing can improve sleep quality by 15-20%.`);
+      insights.push(`🌙 **Your Sleep Schedule Is All Over the Place**: Your bedtime swings by ±${bedtimeVariance.toFixed(1)} hours. I get it - life happens. But here's the deal: your body has an internal clock, and when you go to bed at wildly different times, you're essentially giving yourself jet lag. Even tightening this to within 30 minutes could improve your sleep quality by 15-20%. Worth a try?`);
     } else {
-      insights.push(`🌙 You maintain a consistent sleep schedule (±${bedtimeVariance.toFixed(1)} hours variation). This excellent habit supports your circadian rhythm.`);
+      insights.push(`🌙 **Consistency Champion**: Your bedtime varies by less than an hour (±${bedtimeVariance.toFixed(1)} hours), which is excellent. This consistency is one of the most underrated sleep hacks. Your circadian rhythm knows what to expect, and your body rewards you with better sleep quality. Keep this up!`);
     }
 
     // Insight 4: Temperature and recovery
@@ -243,33 +250,37 @@ export class AdvancedReasoningEngine {
     const recommendations: string[] = [];
     const avgReadiness = readiness.slice(-7).reduce((sum, r) => sum + r.score, 0) / Math.min(7, readiness.length);
 
-    // High-level recommendation
+    // High-level recommendation with natural language
     if (avgReadiness >= 85) {
-      recommendations.push("✨ **Optimize**: Your recovery is strong. This is an ideal time for high-intensity training or tackling challenging goals.");
+      recommendations.push("✨ **Go For It**: Your recovery is solid - your body is saying \"I'm ready!\" This is the perfect time to push hard, tackle that tough workout you've been planning, or set a new PR. You've earned this moment.");
     } else if (avgReadiness >= 70) {
-      recommendations.push("⚖️ **Balance**: Mix moderate training with adequate recovery. Listen to your body's signals.");
+      recommendations.push("⚖️ **Be Smart**: You're in the middle ground. You can train today, but this isn't the day for hero workouts. Moderate intensity is your friend - save the crushing sessions for when your readiness is higher.");
     } else {
-      recommendations.push("🛡️ **Recover**: Your body needs restoration. Prioritize sleep, reduce training volume, and manage stress.");
+      recommendations.push("🛡️ **Recovery First**: Your body is asking for a break, and ignoring it won't end well. Take an easy day or complete rest. Think of it as an investment - recovering today makes you stronger tomorrow. Trust me on this one.");
     }
 
-    // Sleep optimization
+    // Sleep optimization with analogies
     const avgSleepEfficiency = sleep.slice(-7).reduce((sum, s) => sum + s.efficiency, 0) / Math.min(7, sleep.length);
     if (avgSleepEfficiency < 85) {
-      recommendations.push(`💤 **Sleep Quality**: Your sleep efficiency is ${avgSleepEfficiency.toFixed(0)}%. Aim for 85%+. Try: reducing screen time 1 hour before bed, keeping room cool (65-68°F), and avoiding caffeine after 2 PM.`);
+      const analogy = NaturalLanguageGenerator.createAnalogy('efficiency', avgSleepEfficiency);
+      recommendations.push(`💤 **Fix Your Sleep Efficiency**: ${analogy} Concrete steps: (1) Put your phone in another room 1 hour before bed - seriously, do it. (2) Keep your bedroom at 65-68°F. (3) No caffeine after 2 PM. Just these three changes can boost efficiency by 10-15%.`);
     }
 
     // Activity guidance
     const avgActivity = activity.slice(-7).reduce((sum, a) => sum + a.score, 0) / Math.min(7, activity.length);
     if (avgActivity < 70 && avgReadiness >= 80) {
-      recommendations.push("🏃 **Movement**: Your recovery is good but activity is low. Incorporate more movement - even 30 minutes of walking can boost mood and metabolic health.");
+      recommendations.push("🏃 **You're Ready to Move More**: Here's the paradox - you're recovering well, but you're not using that recovery. It's like filling up your car's gas tank but never driving anywhere. Even a 30-minute walk daily can boost mood, improve metabolic health, and help you sleep better. Start small, build from there.");
     }
 
-    // Stress management
-    const hrvVariability = this.calculateStandardDeviation(
-      readiness.slice(-7).map(r => r.average_hrv || 0)
-    );
-    if (hrvVariability > 15) {
-      recommendations.push("🧘 **Stress Management**: Your HRV shows high variability, indicating stress. Practice: 10-minute daily meditation, deep breathing (4-7-8 technique), or nature walks.");
+    // Stress management with HRV context
+    const hrvSamples = readiness.slice(-7).filter(r => r.average_hrv && r.average_hrv > 0);
+    if (hrvSamples.length >= 5) {
+      const hrvValues = hrvSamples.map(r => r.average_hrv || 0);
+      const hrvVariability = this.calculateStandardDeviation(hrvValues);
+      if (hrvVariability > 15) {
+        const analogy = NaturalLanguageGenerator.createAnalogy('hrv', hrvValues[hrvValues.length - 1]);
+        recommendations.push(`🧘 **Manage Your Stress**: ${analogy} This isn't about being "stressed out" mentally - it's about your nervous system being on high alert. Try this: 10 minutes of slow breathing every morning (5 seconds in, 7 seconds out). It sounds simple, almost too simple, but it works. Give it two weeks and watch your HRV stabilize.`);
+      }
     }
 
     // Consistency
@@ -289,7 +300,7 @@ export class AdvancedReasoningEngine {
   }
 
   /**
-   * Synthesize comprehensive summary
+   * Synthesize comprehensive summary with natural language
    */
   private static synthesizeSummary(
     sleep: SleepData[],
@@ -300,21 +311,36 @@ export class AdvancedReasoningEngine {
   ): string {
     const avgReadiness = readiness.slice(-7).reduce((sum, r) => sum + r.score, 0) / Math.min(7, readiness.length);
     const avgSleep = sleep.slice(-7).reduce((sum, s) => sum + s.score, 0) / Math.min(7, sleep.length);
+    const latestReadiness = readiness[readiness.length - 1];
+    const latestSleep = sleep[sleep.length - 1];
 
-    let summary = `Based on ${sleep.length} days of comprehensive health data, `;
-
-    if (avgReadiness >= 85) {
-      summary += `you're in **excellent condition** (readiness: ${avgReadiness.toFixed(0)}/100). Your body is recovering well and ready for peak performance. `;
-    } else if (avgReadiness >= 70) {
-      summary += `you're in **good condition** (readiness: ${avgReadiness.toFixed(0)}/100) with room for optimization. `;
-    } else {
-      summary += `you're experiencing **suboptimal recovery** (readiness: ${avgReadiness.toFixed(0)}/100). Your body is signaling a need for rest and recovery. `;
-    }
-
-    summary += `Your sleep quality is ${avgSleep >= 85 ? 'exceptional' : avgSleep >= 70 ? 'solid' : 'inconsistent'} (${avgSleep.toFixed(0)}/100). `;
-
+    // Use natural language for readiness description
     const trend = this.analyzeTrend(readiness.slice(-14).map(r => r.score));
-    summary += `The trend over the past two weeks is ${trend > 0.5 ? '**improving** 📈' : trend < -0.5 ? '**declining** 📉' : '**stable** ➡️'}.`;
+    const readinessContext = {
+      hrv: latestReadiness.average_hrv,
+      rhr: latestReadiness.resting_heart_rate,
+      sleep: latestSleep.score,
+    };
+
+    const readinessDesc = NaturalLanguageGenerator.describeReadiness(avgReadiness, trend, readinessContext);
+
+    // Use natural language for sleep description
+    const sleepContext = {
+      duration: latestSleep.total_sleep_duration / 3600,
+      efficiency: latestSleep.efficiency,
+      deepSleep: latestSleep.deep_sleep_duration / 60,
+    };
+
+    const sleepDesc = NaturalLanguageGenerator.describeSleepQuality(latestSleep.score, sleepContext);
+
+    // Use natural language for trend description
+    const trendDesc = NaturalLanguageGenerator.describeTrend('readiness', readiness.slice(-14).map(r => r.score), 'the past two weeks');
+
+    // Compose conversational summary
+    let summary = `After analyzing ${sleep.length} days of your health data, here's what I'm seeing:\n\n`;
+    summary += `**Current Status:** ${readinessDesc}\n\n`;
+    summary += `**Sleep Quality:** ${sleepDesc}\n\n`;
+    summary += `**Trend:** ${trendDesc}`;
 
     return summary;
   }
