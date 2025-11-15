@@ -166,6 +166,29 @@ export class AdvancedAIEngine {
   }
 
   /**
+   * Safe division helper to avoid division by zero
+   */
+  private static safeDivide(numerator: number, denominator: number, defaultValue: number = 0): number {
+    return denominator === 0 || !isFinite(denominator) ? defaultValue : numerator / denominator;
+  }
+
+  /**
+   * Safe array average
+   */
+  private static safeAverage(arr: number[]): number {
+    if (arr.length === 0) return 0;
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+  }
+
+  /**
+   * Safe array slice that ensures minimum length
+   */
+  private static safeSlice<T>(arr: T[], count: number): T[] {
+    if (arr.length === 0) return [];
+    return arr.slice(-Math.min(count, arr.length));
+  }
+
+  /**
    * DEEP HEALTH INSIGHTS
    * Multi-layered analysis with sophisticated pattern recognition
    */
@@ -176,14 +199,16 @@ export class AdvancedAIEngine {
   ): DeepHealthInsight[] {
     const insights: DeepHealthInsight[] = [];
 
-    if (sleep.length < 14) return insights;
+    if (sleep.length < 14 || readiness.length < 14) return insights;
 
     // INSIGHT 1: Sleep Architecture Analysis
-    const recentSleep = sleep.slice(-14);
-    const deepSleepMinutes = recentSleep.map(s => s.deep_sleep_duration / 60);
-    const remSleepMinutes = recentSleep.map(s => s.rem_sleep_duration / 60);
-    const avgDeep = deepSleepMinutes.reduce((a, b) => a + b) / deepSleepMinutes.length;
-    const avgRem = remSleepMinutes.reduce((a, b) => a + b) / remSleepMinutes.length;
+    const recentSleep = this.safeSlice(sleep, 14);
+    if (recentSleep.length === 0) return insights;
+
+    const deepSleepMinutes = recentSleep.map(s => (s.deep_sleep_duration || 0) / 60);
+    const remSleepMinutes = recentSleep.map(s => (s.rem_sleep_duration || 0) / 60);
+    const avgDeep = this.safeAverage(deepSleepMinutes);
+    const avgRem = this.safeAverage(remSleepMinutes);
 
     const deepTrend = this.calculateTrend(deepSleepMinutes);
     const remTrend = this.calculateTrend(remSleepMinutes);
@@ -241,8 +266,10 @@ export class AdvancedAIEngine {
     }
 
     // INSIGHT 2: Recovery Debt Accumulation
-    const last14Readiness = readiness.slice(-14);
-    const recoveryDeficit = last14Readiness.filter(r => r.score < 70).length;
+    const last14Readiness = this.safeSlice(readiness, 14);
+    if (last14Readiness.length === 0) return insights;
+
+    const recoveryDeficit = last14Readiness.filter(r => r && r.score < 70).length;
     const consecutiveLowDays = this.findConsecutiveLowDays(last14Readiness);
 
     if (recoveryDeficit >= 5 || consecutiveLowDays >= 3) {
@@ -294,9 +321,11 @@ export class AdvancedAIEngine {
     }
 
     // INSIGHT 3: Activity-Recovery Imbalance
-    const last14Activity = activity.slice(-14);
-    const avgActivityScore = last14Activity.reduce((sum, a) => sum + a.score, 0) / last14Activity.length;
-    const avgReadinessScore = last14Readiness.reduce((sum, r) => sum + r.score, 0) / last14Readiness.length;
+    const last14Activity = this.safeSlice(activity, 14);
+    if (last14Activity.length === 0) return insights;
+
+    const avgActivityScore = this.safeAverage(last14Activity.map(a => a.score || 0));
+    const avgReadinessScore = this.safeAverage(last14Readiness.map(r => r.score || 0));
     const imbalance = avgActivityScore - avgReadinessScore;
 
     if (imbalance > 15) {
@@ -342,10 +371,12 @@ export class AdvancedAIEngine {
     }
 
     // INSIGHT 4: Positive Momentum Detection
-    const recentReadiness = readiness.slice(-7);
-    const recentReadinessScores = recentReadiness.map(r => r.score);
+    const recentReadiness = this.safeSlice(readiness, 7);
+    if (recentReadiness.length === 0) return insights;
+
+    const recentReadinessScores = recentReadiness.map(r => r.score || 0);
     const readinessTrend = this.calculateTrend(recentReadinessScores);
-    const avgRecentReadiness = recentReadinessScores.reduce((a, b) => a + b) / recentReadinessScores.length;
+    const avgRecentReadiness = this.safeAverage(recentReadinessScores);
 
     if (readinessTrend > 2 && avgRecentReadiness >= 75) {
       const narrative = this.buildComplexNarrative([
@@ -389,9 +420,11 @@ export class AdvancedAIEngine {
 
     // INSIGHT 5: Specific Sleep Duration Impact Analysis
     if (sleep.length >= 14 && readiness.length >= 14) {
-      const recentDays = sleep.slice(-14);
-      const sleepDurations = recentDays.map(s => s.total_sleep_duration / 3600);
-      const readinessScores = readiness.slice(-14).map(r => r.score);
+      const recentDays = this.safeSlice(sleep, 14);
+      if (recentDays.length === 0) return insights;
+
+      const sleepDurations = recentDays.map(s => (s.total_sleep_duration || 0) / 3600);
+      const readinessScores = this.safeSlice(readiness, 14).map(r => r.score || 0);
 
       // Find days with <7h sleep and >8h sleep
       const shortSleepDays = recentDays.filter((s, i) => sleepDurations[i] < 7);
@@ -400,20 +433,32 @@ export class AdvancedAIEngine {
       if (shortSleepDays.length >= 3 && goodSleepDays.length >= 3) {
         const shortSleepReadiness = shortSleepDays.map((s, idx) => {
           const origIdx = recentDays.indexOf(s);
-          return readinessScores[origIdx];
-        });
+          return readinessScores[origIdx] || 0;
+        }).filter(score => score > 0);
         const goodSleepReadiness = goodSleepDays.map((s, idx) => {
           const origIdx = recentDays.indexOf(s);
-          return readinessScores[origIdx];
-        });
+          return readinessScores[origIdx] || 0;
+        }).filter(score => score > 0);
 
-        const shortSleepAvg = shortSleepReadiness.reduce((a, b) => a + b, 0) / shortSleepReadiness.length;
-        const goodSleepAvg = goodSleepReadiness.reduce((a, b) => a + b, 0) / goodSleepReadiness.length;
+        if (shortSleepReadiness.length === 0 || goodSleepReadiness.length === 0) {
+          return insights;
+        }
+
+        const shortSleepAvg = this.safeAverage(shortSleepReadiness);
+        const goodSleepAvg = this.safeAverage(goodSleepReadiness);
         const impactScore = goodSleepAvg - shortSleepAvg;
 
         if (impactScore > 5) {
-          const avgShortDuration = shortSleepDays.reduce((sum, s) => sum + s.total_sleep_duration / 3600, 0) / shortSleepDays.length;
-          const avgGoodDuration = goodSleepDays.reduce((sum, s) => sum + s.total_sleep_duration / 3600, 0) / goodSleepDays.length;
+          const avgShortDuration = this.safeDivide(
+            shortSleepDays.reduce((sum, s) => sum + (s.total_sleep_duration || 0) / 3600, 0),
+            shortSleepDays.length,
+            7
+          );
+          const avgGoodDuration = this.safeDivide(
+            goodSleepDays.reduce((sum, s) => sum + (s.total_sleep_duration || 0) / 3600, 0),
+            goodSleepDays.length,
+            8
+          );
 
           const narrative = this.buildComplexNarrative([
             `I've identified a clear, quantifiable relationship between your sleep duration and next-day performance:`,
@@ -462,20 +507,21 @@ export class AdvancedAIEngine {
       const dayPatterns: { [key: number]: { sleep: number[]; readiness: number[]; activity: number[] } } = {};
 
       sleep.forEach((s, i) => {
+        if (!s || !s.day) return;
         const day = parseOuraDate(s.day).getDay();
         if (!dayPatterns[day]) dayPatterns[day] = { sleep: [], readiness: [], activity: [] };
-        dayPatterns[day].sleep.push(s.score);
-        if (readiness[i]) dayPatterns[day].readiness.push(readiness[i].score);
-        if (activity[i]) dayPatterns[day].activity.push(activity[i].score);
+        if (s.score) dayPatterns[day].sleep.push(s.score);
+        if (readiness[i] && readiness[i].score) dayPatterns[day].readiness.push(readiness[i].score);
+        if (activity[i] && activity[i].score) dayPatterns[day].activity.push(activity[i].score);
       });
 
       const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       const dayAverages = Object.entries(dayPatterns).map(([day, data]) => ({
         day: parseInt(day),
         name: dayNames[parseInt(day)],
-        readinessAvg: data.readiness.length > 0 ? data.readiness.reduce((a, b) => a + b) / data.readiness.length : 0,
-        sleepAvg: data.sleep.length > 0 ? data.sleep.reduce((a, b) => a + b) / data.sleep.length : 0,
-        activityAvg: data.activity.length > 0 ? data.activity.reduce((a, b) => a + b) / data.activity.length : 0,
+        readinessAvg: this.safeAverage(data.readiness),
+        sleepAvg: this.safeAverage(data.sleep),
+        activityAvg: this.safeAverage(data.activity),
         count: data.readiness.length,
       })).filter(d => d.count >= 2);
 
