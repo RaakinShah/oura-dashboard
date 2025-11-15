@@ -1,12 +1,13 @@
 /**
  * CONVERSATIONAL AI ENGINE
- * Claude-level conversational intelligence with memory, context, and personality
- * Now enhanced with advanced reasoning and chain-of-thought capabilities
+ * Opus-level conversational intelligence with memory, context, and personality
+ * Now enhanced with Opus-depth reasoning and multi-perspective analysis
  */
 
 import { NaturalLanguageEngine, ConversationContext, Message, UserProfile, Intent } from './natural-language-engine';
 import { SleepData, ActivityData, ReadinessData } from '../oura-api';
 import { AdvancedReasoningEngine, ReasoningChain } from './advanced-reasoning-engine';
+import { OpusReasoningEngine, OpusAnalysisResult } from './opus-reasoning-engine';
 
 export interface AIPersonality {
   name: string;
@@ -187,6 +188,101 @@ export class ConversationalAI {
    */
   private async answerIntelligentQuestion(question: string, intent: Intent): Promise<string> {
     const lowerQ = question.toLowerCase();
+
+    // Check if Opus-level depth is needed (deepest analysis)
+    const needsOpusDepth =
+      lowerQ.includes('deep') ||
+      lowerQ.includes('comprehensive') ||
+      lowerQ.includes('detailed analysis') ||
+      lowerQ.includes('everything') ||
+      lowerQ.includes('all perspectives') ||
+      lowerQ.includes('multi-perspective') ||
+      lowerQ.includes('causal') ||
+      lowerQ.includes('counterfactual') ||
+      lowerQ.includes('creative solutions') ||
+      lowerQ.includes('opus');
+
+    if (needsOpusDepth && this.healthData && this.healthData.sleep.length >= 14) {
+      // Use Opus-level reasoning for maximum depth
+      const opusAnalysis = OpusReasoningEngine.analyzeWithOpusDepth(
+        this.healthData.sleep,
+        this.healthData.activity,
+        this.healthData.readiness,
+        question
+      );
+
+      let response = `# 🧠 Opus-Level Deep Analysis\n\n`;
+      response += `${opusAnalysis.summary}\n\n`;
+
+      // Show multi-perspective analysis
+      response += `## 📊 Multi-Perspective Analysis\n\n`;
+      response += `**Analytical View:** ${opusAnalysis.multiPerspective.analyticalView}\n\n`;
+      response += `**Holistic View:** ${opusAnalysis.multiPerspective.holisticView}\n\n`;
+      response += `**Causal View:** ${opusAnalysis.multiPerspective.causalView}\n\n`;
+
+      // Show top reasoning layers
+      if (opusAnalysis.deepReasoningChain.length > 0) {
+        response += `## 🔬 Deep Reasoning Chain\n\n`;
+        opusAnalysis.deepReasoningChain.slice(0, 5).forEach(step => {
+          response += `**Layer ${step.layer} (${step.perspective}):**\n`;
+          response += `${step.thought}\n`;
+          response += `→ *${step.conclusion}*\n`;
+          if (step.uncertainties.length > 0) {
+            response += `⚠️ Uncertainties: ${step.uncertainties.join(', ')}\n`;
+          }
+          response += `\n`;
+        });
+      }
+
+      // Show causal analysis
+      if (opusAnalysis.causalAnalysis.length > 0) {
+        response += `## 🎯 Causal Analysis & Intervention Points\n\n`;
+        opusAnalysis.causalAnalysis.slice(0, 2).forEach(chain => {
+          response += `**Root Cause:** ${chain.rootCause}\n`;
+          response += `**Top Interventions:**\n`;
+          chain.interventionPoints.slice(0, 3).forEach(intervention => {
+            response += `- ${intervention.point} (Impact: ${(intervention.impact * 100).toFixed(0)}%, Feasibility: ${(intervention.feasibility * 100).toFixed(0)}%)\n`;
+          });
+          response += `\n`;
+        });
+      }
+
+      // Show creative solutions
+      if (opusAnalysis.creativeSolutions.length > 0) {
+        response += `## 💡 Creative & Unconventional Solutions\n\n`;
+        opusAnalysis.creativeSolutions.slice(0, 5).forEach(solution => {
+          response += `${solution}\n\n`;
+        });
+      }
+
+      // Show prioritized actions
+      if (opusAnalysis.actionableInsights.length > 0) {
+        response += `## ✅ Prioritized Action Plan\n\n`;
+        opusAnalysis.actionableInsights.slice(0, 5).forEach((action, i) => {
+          const priorityEmoji = action.priority === 'critical' ? '🔴' : action.priority === 'high' ? '🟠' : '🟡';
+          response += `${i + 1}. ${priorityEmoji} **${action.insight}**\n`;
+          response += `   Priority: ${action.priority} | Impact: ${(action.expectedImpact * 100).toFixed(0)}% | Timeframe: ${action.timeframe}\n\n`;
+        });
+      }
+
+      // Show uncertainty assessment
+      response += `## 🎲 Confidence & Uncertainty\n\n`;
+      response += `**Overall Confidence:** ${(opusAnalysis.uncertaintyAssessment.overallConfidence * 100).toFixed(0)}%\n\n`;
+      response += `**Key Uncertainties:**\n`;
+      opusAnalysis.uncertaintyAssessment.keyUncertainties.slice(0, 3).forEach(u => {
+        response += `- ${u}\n`;
+      });
+      response += `\n`;
+
+      // Meta-cognitive reflection
+      response += `## 🤔 Meta-Cognitive Reflection\n\n`;
+      response += `**Potential Biases in This Analysis:**\n`;
+      opusAnalysis.metaCognition.biasesPotentiallyPresent.slice(0, 3).forEach(bias => {
+        response += `- ${bias}\n`;
+      });
+
+      return response;
+    }
 
     // Use advanced reasoning for complex health analysis questions
     const needsDeepReasoning =
