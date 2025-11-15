@@ -9,6 +9,7 @@ import { ViolinPlot } from '@/components/charts/ViolinPlot';
 import { StatCard } from '@/components/ui/StatCard';
 import { DataCard } from '@/components/ui/DataCard';
 import { InsightCard } from '@/components/ui/InsightCard';
+import { ChartHelp } from '@/components/ui/ChartHelp';
 import { Tabs } from '@/components/ui/Tabs';
 import { ResponsiveGrid } from '@/components/layouts/ResponsiveGrid';
 import { BayesianInference } from '@/lib/stats/BayesianInference';
@@ -257,11 +258,29 @@ export default function StatisticsLabPage() {
                   <div className="space-y-10 p-8">
                     {/* Time Series Section */}
                     <div>
-                      <div className="mb-6">
-                        <h3 className="text-2xl font-bold text-stone-900 mb-2">Interactive Time Series</h3>
-                        <p className="text-stone-600">
-                          Zoom (scroll), pan (drag), and hover for details. Try interacting with the chart!
-                        </p>
+                      <div className="mb-6 flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-stone-900 mb-2">Interactive Time Series</h3>
+                          <p className="text-stone-600">
+                            Zoom (scroll), pan (drag), and hover for details. Try interacting with the chart!
+                          </p>
+                        </div>
+                        <ChartHelp
+                          title="Interactive Time Series Chart"
+                          description="This chart shows how your health score changes over time. The line represents your daily score, with higher values indicating better health metrics."
+                          controls={[
+                            { label: 'Scroll', description: 'Zoom in/out on the chart' },
+                            { label: 'Click and Drag', description: 'Pan left/right across time' },
+                            { label: 'Hover', description: 'View exact values and metadata' },
+                            { label: 'Reset Pan button', description: 'Return to original view' },
+                          ]}
+                          tips={[
+                            'Look for patterns and trends over weeks',
+                            'Use zoom to focus on specific time periods',
+                            'Compare weekdays vs weekends for insights',
+                            'The crosshair helps align values with the axes',
+                          ]}
+                        />
                       </div>
                       <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8 border border-indigo-100">
                         <InteractiveLineChart
@@ -281,11 +300,46 @@ export default function StatisticsLabPage() {
 
                     {/* Distribution & Correlation Section */}
                     <div>
-                      <div className="mb-6">
-                        <h3 className="text-2xl font-bold text-stone-900 mb-2">Statistical Distributions</h3>
-                        <p className="text-stone-600">
-                          Distribution analysis with KDE, box plots, and correlation matrices
-                        </p>
+                      <div className="mb-6 flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-stone-900 mb-2">Statistical Distributions</h3>
+                          <p className="text-stone-600">
+                            Distribution analysis with KDE, box plots, and correlation matrices
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <ChartHelp
+                            title="Distribution Plot (Histogram + KDE)"
+                            description="This chart shows how your data is distributed. The histogram (bars) shows frequency, while the KDE (smooth curve) estimates the probability density function."
+                            interpretation={[
+                              { label: 'μ (Mu)', description: 'The mean/average of all values', color: '#8b5cf6' },
+                              { label: 'IQR (Interquartile Range)', description: 'The middle 50% of your data (between 25th and 75th percentiles)', color: '#a78bfa' },
+                              { label: 'KDE Curve', description: 'Kernel Density Estimation - smooth approximation of data distribution', color: '#c4b5fd' },
+                            ]}
+                            tips={[
+                              'Normal distribution (bell curve) indicates consistent performance',
+                              'Multiple peaks suggest different patterns (e.g., weekdays vs weekends)',
+                              'Wide spread means high variability in your metrics',
+                              'Box plot whiskers show min/max values excluding outliers',
+                            ]}
+                          />
+                          <ChartHelp
+                            title="Correlation Matrix"
+                            description="Shows how strongly different health metrics are related to each other. Values range from -1 (perfect negative correlation) to +1 (perfect positive correlation)."
+                            interpretation={[
+                              { label: '+1.0 (Dark Red)', description: 'Perfect positive correlation - metrics move together', color: '#dc2626' },
+                              { label: '0.0 (White)', description: 'No correlation - metrics are independent', color: '#ffffff' },
+                              { label: '-1.0 (Dark Blue)', description: 'Perfect negative correlation - metrics move opposite', color: '#2563eb' },
+                              { label: '0.3 to 0.7', description: 'Moderate correlation - some relationship exists', color: '#fb923c' },
+                            ]}
+                            tips={[
+                              'Diagonal is always 1.0 (each metric correlates perfectly with itself)',
+                              'Matrix is symmetrical - top matches bottom',
+                              'Strong correlations can reveal cause-effect relationships',
+                              'Use correlations to predict one metric from another',
+                            ]}
+                          />
+                        </div>
                       </div>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100">

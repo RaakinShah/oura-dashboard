@@ -49,22 +49,22 @@ export default function ModernSidebar() {
       className="relative flex h-screen flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 shadow-2xl"
     >
       {/* Logo */}
-      <div className="flex h-20 items-center justify-between px-6 border-b border-slate-700/50">
+      <div className="flex h-24 items-center justify-between px-5 border-b border-slate-700/30">
         <motion.div
           initial={false}
           animate={{ opacity: collapsed ? 0 : 1 }}
           transition={{ duration: 0.2 }}
           className="flex items-center gap-3"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/50">
-            <div className="h-5 w-5 rounded-full border-2 border-white"></div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-600 shadow-xl shadow-cyan-500/30 ring-2 ring-cyan-400/20">
+            <div className="h-6 w-6 rounded-full border-[3px] border-white"></div>
           </div>
           {!collapsed && (
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-500 bg-clip-text text-transparent tracking-tight">
                 Oura
               </h1>
-              <p className="text-xs text-slate-400">Health Dashboard</p>
+              <p className="text-xs text-slate-400 mt-0.5 tracking-wide">Health Dashboard</p>
             </div>
           )}
         </motion.div>
@@ -72,7 +72,7 @@ export default function ModernSidebar() {
         {/* Collapse Button */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded-lg hover:bg-slate-700/50 transition-colors text-slate-400 hover:text-white"
+          className="p-2.5 rounded-xl hover:bg-slate-700/40 transition-all duration-200 text-slate-400 hover:text-cyan-400 hover:shadow-lg"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
@@ -80,8 +80,8 @@ export default function ModernSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-        <div className="space-y-1">
+      <nav className="flex-1 px-4 py-8 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+        <div className="space-y-2">
           {navigation.map((item, index) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -96,11 +96,11 @@ export default function ModernSidebar() {
                 >
                   <div
                     className={`
-                      flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-medium
-                      transition-all duration-200 relative overflow-hidden
+                      flex items-center gap-4 rounded-2xl px-4 py-3.5 text-sm font-medium
+                      transition-all duration-300 relative overflow-hidden
                       ${isActive
-                        ? 'bg-gradient-to-r ' + item.color + ' text-white shadow-lg'
-                        : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                        ? 'bg-gradient-to-r ' + item.color + ' text-white shadow-xl shadow-' + item.color.split('-')[1] + '-500/20'
+                        : 'text-slate-300 hover:bg-slate-800/60 hover:text-white hover:shadow-md'
                       }
                     `}
                   >
@@ -108,7 +108,7 @@ export default function ModernSidebar() {
                     {isActive && (
                       <motion.div
                         layoutId="activeTab"
-                        className="absolute inset-0 bg-white/10 rounded-xl"
+                        className="absolute inset-0 bg-white/10 rounded-2xl backdrop-blur-sm"
                         transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                       />
                     )}
@@ -116,24 +116,24 @@ export default function ModernSidebar() {
                     {/* Icon Container */}
                     <div className={`relative z-10 ${collapsed ? 'mx-auto' : ''}`}>
                       <div className={`
-                        p-2 rounded-lg transition-all duration-200
+                        p-2.5 rounded-xl transition-all duration-300
                         ${isActive
-                          ? 'bg-white/20 shadow-lg'
-                          : 'bg-slate-800/50 group-hover:bg-slate-700/50'
+                          ? 'bg-white/25 shadow-lg ring-2 ring-white/20'
+                          : 'bg-slate-800/60 group-hover:bg-slate-700/60 group-hover:scale-110'
                         }
                       `}>
-                        <Icon className="h-5 w-5" strokeWidth={2} />
+                        <Icon className="h-5 w-5" strokeWidth={2.5} />
                       </div>
                     </div>
 
                     {/* Label */}
                     {!collapsed && (
-                      <span className="relative z-10 flex-1">{item.name}</span>
+                      <span className="relative z-10 flex-1 tracking-wide">{item.name}</span>
                     )}
 
                     {/* Hover Effect */}
                     {!isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     )}
                   </div>
 
@@ -152,35 +152,35 @@ export default function ModernSidebar() {
       </nav>
 
       {/* Settings at Bottom */}
-      <div className="border-t border-slate-700/50 p-3">
+      <div className="border-t border-slate-700/30 p-4 space-y-4">
         <Link href="/settings">
           <div
             className={`
-              flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-medium
-              transition-all duration-200
+              flex items-center gap-4 rounded-2xl px-4 py-3.5 text-sm font-medium
+              transition-all duration-300
               ${pathname === '/settings'
-                ? 'bg-gradient-to-r from-slate-700 to-slate-600 text-white'
-                : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                ? 'bg-gradient-to-r from-slate-700 to-slate-600 text-white shadow-lg'
+                : 'text-slate-300 hover:bg-slate-800/60 hover:text-white hover:shadow-md'
               }
             `}
           >
             <div className={`relative ${collapsed ? 'mx-auto' : ''}`}>
-              <div className={`p-2 rounded-lg ${pathname === '/settings' ? 'bg-white/20' : 'bg-slate-800/50'}`}>
-                <Settings className="h-5 w-5" strokeWidth={2} />
+              <div className={`p-2.5 rounded-xl transition-all ${pathname === '/settings' ? 'bg-white/20 ring-2 ring-white/20' : 'bg-slate-800/60 hover:scale-110'}`}>
+                <Settings className="h-5 w-5" strokeWidth={2.5} />
               </div>
             </div>
-            {!collapsed && <span>Settings</span>}
+            {!collapsed && <span className="tracking-wide">Settings</span>}
           </div>
         </Link>
 
         {/* Footer Info */}
         {!collapsed && (
-          <div className="mt-4 px-4 py-3 bg-slate-800/30 rounded-lg border border-slate-700/30">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="h-2 w-2 rounded-full bg-green-400 shadow-lg shadow-green-400/50 animate-pulse"></div>
-              <span className="text-xs font-medium text-slate-300">All Systems Online</span>
+          <div className="mt-4 px-5 py-4 bg-slate-800/40 rounded-2xl border border-slate-700/30 backdrop-blur-sm">
+            <div className="flex items-center gap-2.5 mb-2">
+              <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50 animate-pulse"></div>
+              <span className="text-xs font-semibold text-slate-200 tracking-wide">All Systems Online</span>
             </div>
-            <p className="text-xs text-slate-500">Powered by AI & ML</p>
+            <p className="text-xs text-slate-500 font-medium">Powered by AI & ML</p>
           </div>
         )}
       </div>

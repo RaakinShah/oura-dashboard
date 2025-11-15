@@ -57,12 +57,13 @@ export default function HeatmapCalendar({ sleep, activity, readiness }: HeatmapC
   const generateCalendarDays = (): Date[] => {
     const days: Date[] = [];
     const today = new Date();
-    const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 83); // 12 weeks = 84 days
+    // Create a new date for the start to avoid mutation
+    const startDate = new Date(today.getTime());
+    startDate.setDate(startDate.getDate() - 83); // 12 weeks = 84 days
 
     for (let i = 0; i < 84; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
+      const date = new Date(startDate.getTime());
+      date.setDate(date.getDate() + i);
       days.push(date);
     }
 
@@ -210,21 +211,25 @@ export default function HeatmapCalendar({ sleep, activity, readiness }: HeatmapC
         <div>
           <p className="text-xs text-gray-500 mb-1">Best Score</p>
           <p className="text-2xl font-bold text-green-600">
-            {selectedMetric === 'sleep'
+            {selectedMetric === 'sleep' && sleep.length > 0
               ? Math.max(...sleep.map(s => s.score))
-              : selectedMetric === 'activity'
+              : selectedMetric === 'activity' && activity.length > 0
               ? Math.max(...activity.map(a => a.score))
-              : Math.max(...readiness.map(r => r.score))}
+              : readiness.length > 0
+              ? Math.max(...readiness.map(r => r.score))
+              : 'N/A'}
           </p>
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-1">Average Score</p>
           <p className="text-2xl font-bold text-blue-600">
-            {selectedMetric === 'sleep'
+            {selectedMetric === 'sleep' && sleep.length > 0
               ? Math.round(sleep.reduce((sum, s) => sum + s.score, 0) / sleep.length)
-              : selectedMetric === 'activity'
+              : selectedMetric === 'activity' && activity.length > 0
               ? Math.round(activity.reduce((sum, a) => sum + a.score, 0) / activity.length)
-              : Math.round(readiness.reduce((sum, r) => sum + r.score, 0) / readiness.length)}
+              : readiness.length > 0
+              ? Math.round(readiness.reduce((sum, r) => sum + r.score, 0) / readiness.length)
+              : 'N/A'}
           </p>
         </div>
         <div>

@@ -22,6 +22,10 @@ export function useOuraData() {
       return;
     }
 
+    // Create AbortController to cancel requests on unmount or re-fetch
+    const abortController = new AbortController();
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -45,6 +49,11 @@ export function useOuraData() {
           client.getActivity(startDate, endDate),
           client.getReadiness(startDate, endDate),
         ]);
+
+        // Only update state if component is still mounted (prevents memory leak)
+        if (!isMounted || abortController.signal.aborted) {
+          return;
+        }
 
         // Filter out days with no actual data (score must exist and be valid)
         // Keep days even if some secondary metrics are 0
@@ -70,13 +79,25 @@ export function useOuraData() {
         setActivity(validActivity);
         setReadiness(validReadiness);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch data');
+        // Only set error if component is still mounted
+        if (isMounted && !abortController.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Failed to fetch data');
+        }
       } finally {
-        setLoading(false);
+        // Only update loading if component is still mounted
+        if (isMounted && !abortController.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
+
+    // Cleanup function to prevent memory leaks and race conditions
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
   }, [refetchTrigger]);
 
   const refetch = () => {

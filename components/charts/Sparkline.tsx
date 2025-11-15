@@ -48,7 +48,8 @@ export function Sparkline({
     const currentValue = data[data.length - 1];
     const previousValue = data[0];
     const change = currentValue - previousValue;
-    const changePercent = (change / previousValue) * 100;
+    // Prevent division by zero - if previousValue is 0, show 0% or calculate from absolute change
+    const changePercent = previousValue !== 0 ? (change / previousValue) * 100 : 0;
 
     return { pathD, areaD, currentValue, change, changePercent };
   }, [data, width, height]);

@@ -133,16 +133,17 @@ export function InteractiveLineChart({
 
   useEffect(() => {
     const svg = svgRef.current;
-    if (!svg) return;
+    if (!svg || !enableZoom) return;
 
     const preventScroll = (e: WheelEvent) => {
-      if (enableZoom) {
-        e.preventDefault();
-      }
+      e.preventDefault();
     };
 
     svg.addEventListener('wheel', preventScroll, { passive: false });
-    return () => svg.removeEventListener('wheel', preventScroll);
+    return () => {
+      // Always remove listener in cleanup to prevent memory leak
+      svg.removeEventListener('wheel', preventScroll);
+    };
   }, [enableZoom]);
 
   return (

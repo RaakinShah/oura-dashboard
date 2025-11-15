@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 
@@ -62,7 +63,7 @@ const colorClasses = {
   },
 };
 
-export function ModernStatWidget({
+export const ModernStatWidget = memo(function ModernStatWidget({
   title,
   value,
   subtitle,
@@ -83,55 +84,55 @@ export function ModernStatWidget({
     >
       {/* Main Card */}
       <div className={`
-        relative bg-white rounded-2xl p-6 border-2 ${colors.border}
-        shadow-lg shadow-${color}-500/10 transition-all duration-300
-        group-hover:shadow-2xl group-hover:shadow-${color}-500/20
+        relative bg-white rounded-3xl p-8 border-2 ${colors.border}
+        shadow-xl shadow-${color}-500/10 transition-all duration-300
+        group-hover:shadow-2xl group-hover:shadow-${color}-500/25 group-hover:border-${color}-300
       `}>
         {/* Background Gradient */}
-        <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${colors.bg} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity duration-300`} />
+        <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${colors.bg} opacity-5 rounded-full blur-3xl group-hover:opacity-15 transition-opacity duration-500`} />
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-6">
           <div className="flex-1">
-            <p className="text-sm font-medium text-stone-600 mb-1">{title}</p>
-            <h3 className="text-3xl font-bold text-stone-900">
+            <p className="text-sm font-semibold text-stone-500 mb-2 uppercase tracking-wider">{title}</p>
+            <h3 className="text-4xl font-black text-stone-900 tracking-tight">
               {value}
             </h3>
             {subtitle && (
-              <p className="text-sm text-stone-500 mt-1">{subtitle}</p>
+              <p className="text-sm text-stone-600 mt-2 font-medium">{subtitle}</p>
             )}
           </div>
 
           {/* Icon */}
           <div className={`
-            p-3 rounded-xl bg-gradient-to-br ${colors.bg}
-            shadow-lg shadow-${color}-500/50
-            group-hover:scale-110 transition-transform duration-300
+            p-4 rounded-2xl bg-gradient-to-br ${colors.bg}
+            shadow-xl shadow-${color}-500/60 ring-2 ring-${color}-400/20
+            group-hover:scale-110 group-hover:rotate-6 transition-all duration-300
           `}>
-            <Icon className="h-6 w-6 text-white" strokeWidth={2.5} />
+            <Icon className="h-7 w-7 text-white" strokeWidth={2.5} />
           </div>
         </div>
 
         {/* Trend Indicator */}
         {trend && (
-          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-stone-100">
+          <div className="flex items-center gap-3 mt-6 pt-6 border-t-2 border-stone-100">
             <div className={`
-              flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold
+              flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold
               ${trend.positive
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
+                ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 ring-2 ring-green-200'
+                : 'bg-gradient-to-r from-red-100 to-rose-100 text-red-700 ring-2 ring-red-200'
               }
             `}>
-              <span>{trend.positive ? '↑' : '↓'}</span>
-              <span>{Math.abs(trend.value)}%</span>
+              <span className="text-base">{trend.positive ? '↑' : '↓'}</span>
+              <span>{Math.abs(trend.value).toFixed(1)}%</span>
             </div>
-            <span className="text-xs text-stone-500">{trend.label}</span>
+            <span className="text-xs text-stone-600 font-semibold">{trend.label}</span>
           </div>
         )}
 
         {/* Shine Effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
       </div>
     </motion.div>
   );
-}
+});

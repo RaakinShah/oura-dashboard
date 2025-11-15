@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import { motion } from 'framer-motion';
 
 export interface MetricData {
@@ -17,7 +17,7 @@ export interface MetricCardProps {
   className?: string;
 }
 
-export function MetricCard({
+export const MetricCard = memo(function MetricCard({
   title,
   metrics,
   icon,
@@ -27,32 +27,32 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <motion.div
-      className={`rounded-xl border border-stone-200 bg-white p-6 ${className}`}
-      whileHover={{ scale: 1.02 }}
+      className={`rounded-3xl border-2 border-stone-200 bg-white p-8 shadow-xl hover:shadow-2xl transition-all duration-300 ${className}`}
+      whileHover={{ scale: 1.02, y: -4 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-4 mb-6">
         {icon && <div className="text-stone-700">{icon}</div>}
-        <h3 className="text-lg font-semibold text-stone-900">{title}</h3>
+        <h3 className="text-xl font-bold text-stone-900 tracking-tight">{title}</h3>
       </div>
 
-      <div className={`flex ${orientation === 'vertical' ? 'flex-col' : 'flex-row items-center justify-between'} gap-4`}>
+      <div className={`flex ${orientation === 'vertical' ? 'flex-col' : 'flex-row items-center justify-between'} gap-5`}>
         {metrics.map((metric, index) => (
           <div key={index} className="flex-1">
             {index > 0 && showDividers && orientation === 'vertical' && (
-              <div className="border-t border-stone-200 mb-4" />
+              <div className="border-t-2 border-stone-200 mb-5" />
             )}
             {index > 0 && showDividers && orientation === 'horizontal' && (
-              <div className="border-l border-stone-200 h-12 mx-4" />
+              <div className="border-l-2 border-stone-200 h-12 mx-4" />
             )}
             <div className={orientation === 'horizontal' ? 'text-center' : ''}>
-              <p className="text-sm text-stone-600">{metric.label}</p>
-              <p className={`text-2xl font-bold mt-1 ${metric.color || 'text-stone-900'}`}>
+              <p className="text-sm font-semibold text-stone-600 uppercase tracking-wide">{metric.label}</p>
+              <p className={`text-3xl font-black mt-2 tracking-tight ${metric.color || 'text-stone-900'}`}>
                 {metric.value}
               </p>
               {metric.change !== undefined && (
-                <p className={`text-xs mt-1 ${metric.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {metric.change >= 0 ? '+' : ''}{metric.change}% from last period
+                <p className={`text-xs mt-2 font-bold ${metric.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {metric.change >= 0 ? '↑ +' : '↓ '}{metric.change}% from last period
                 </p>
               )}
             </div>
@@ -61,4 +61,4 @@ export function MetricCard({
       </div>
     </motion.div>
   );
-}
+});

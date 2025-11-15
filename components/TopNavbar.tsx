@@ -19,17 +19,17 @@ export default function TopNavbar() {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-stone-200/50 shadow-sm">
-      <div className="flex items-center justify-between h-16 px-6">
+    <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-2xl border-b border-stone-200/60 shadow-lg shadow-stone-900/5">
+      <div className="flex items-center justify-between h-20 px-8">
         {/* Search Bar */}
-        <div className="flex-1 max-w-2xl">
+        <div className="flex-1 max-w-3xl">
           <div className={`
             relative transition-all duration-300
-            ${searchFocused ? 'scale-105' : 'scale-100'}
+            ${searchFocused ? 'scale-[1.02]' : 'scale-100'}
           `}>
             <Search className={`
-              absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors duration-200
-              ${searchFocused ? 'text-blue-500' : 'text-stone-400'}
+              absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors duration-200
+              ${searchFocused ? 'text-blue-600' : 'text-stone-400'}
             `} />
             <input
               type="text"
@@ -37,15 +37,15 @@ export default function TopNavbar() {
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
               className={`
-                w-full pl-11 pr-4 py-2.5 rounded-xl border-2 bg-stone-50/50
-                transition-all duration-200 focus:outline-none
+                w-full pl-12 pr-20 py-3.5 rounded-2xl border-2 bg-stone-50/80 font-medium
+                transition-all duration-300 focus:outline-none placeholder:text-stone-400
                 ${searchFocused
-                  ? 'border-blue-500 bg-white shadow-lg shadow-blue-500/10'
-                  : 'border-transparent hover:border-stone-300 hover:bg-white'
+                  ? 'border-blue-500 bg-white shadow-xl shadow-blue-500/15 ring-4 ring-blue-500/10'
+                  : 'border-transparent hover:border-stone-300 hover:bg-white hover:shadow-md'
                 }
               `}
             />
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold text-stone-500 bg-white border border-stone-200 rounded shadow-sm">
+            <kbd className="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold text-stone-600 bg-white border-2 border-stone-200 rounded-lg shadow-sm">
               ⌘K
             </kbd>
           </div>
@@ -54,18 +54,18 @@ export default function TopNavbar() {
         {/* Actions */}
         <div className="flex items-center gap-2 ml-6">
           {/* Quick Actions */}
-          <div className="hidden md:flex items-center gap-1 mr-2">
+          <div className="hidden md:flex items-center gap-2 mr-3">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.95 }}
-              className="px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
+              className="px-4 py-2.5 text-sm font-semibold text-stone-700 hover:text-blue-600 bg-stone-50 hover:bg-blue-50 rounded-xl transition-all duration-200 border-2 border-transparent hover:border-blue-200"
             >
               Today
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.95 }}
-              className="px-3 py-2 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
+              className="px-4 py-2.5 text-sm font-semibold text-stone-700 hover:text-purple-600 bg-stone-50 hover:bg-purple-50 rounded-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200"
             >
               Trends
             </motion.button>
@@ -79,17 +79,17 @@ export default function TopNavbar() {
           {/* Notifications */}
           <div className="relative">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08, y: -1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2.5 rounded-xl hover:bg-stone-100 transition-colors"
+              className="relative p-3 rounded-2xl bg-stone-50 hover:bg-blue-50 transition-all duration-200 border-2 border-transparent hover:border-blue-200"
             >
-              <Bell className="h-5 w-5 text-stone-600" />
+              <Bell className="h-5 w-5 text-stone-700 hover:text-blue-600 transition-colors" />
               {unreadCount > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute top-1 right-1 h-4 w-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg"
+                  className="absolute top-1.5 right-1.5 h-5 w-5 bg-gradient-to-br from-red-500 to-rose-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg ring-2 ring-white"
                 >
                   {unreadCount}
                 </motion.span>
@@ -158,17 +158,17 @@ export default function TopNavbar() {
           {/* Profile */}
           <div className="relative">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowProfile(!showProfile)}
-              className="flex items-center gap-3 p-2 rounded-xl hover:bg-stone-100 transition-colors"
+              className="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-stone-50 transition-all duration-200 border-2 border-transparent hover:border-stone-200 hover:shadow-md"
             >
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-lg">
+              <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-xl ring-2 ring-purple-400/30">
                 OU
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-stone-900">Oura User</p>
-                <p className="text-xs text-stone-500">Premium</p>
+                <p className="text-sm font-semibold text-stone-900">Oura User</p>
+                <p className="text-xs text-stone-500 font-medium">Premium</p>
               </div>
             </motion.button>
 
