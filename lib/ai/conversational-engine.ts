@@ -8,6 +8,7 @@ import { NaturalLanguageEngine, ConversationContext, Message, UserProfile, Inten
 import { SleepData, ActivityData, ReadinessData } from '../oura-api';
 import { AdvancedReasoningEngine, ReasoningChain } from './advanced-reasoning-engine';
 import { OpusReasoningEngine, OpusAnalysisResult } from './opus-reasoning-engine';
+import { StatisticalLanguageModel } from './statistical-language-model';
 
 export interface AIPersonality {
   name: string;
@@ -41,6 +42,8 @@ export class ConversationalAI {
     activity: ActivityData[];
     readiness: ReadinessData[];
   };
+  private languageModel: StatisticalLanguageModel;
+  private useLLM: boolean = true; // Enable true LLM text generation
 
   constructor(
     userProfile?: Partial<UserProfile>,
@@ -72,6 +75,9 @@ export class ConversationalAI {
       humorLevel: 40,
       ...personality,
     };
+
+    // Initialize the statistical language model for true dynamic text generation
+    this.languageModel = new StatisticalLanguageModel();
   }
 
   /**
@@ -80,6 +86,11 @@ export class ConversationalAI {
   setHealthData(sleep: SleepData[], activity: ActivityData[], readiness: ReadinessData[]): void {
     this.healthData = { sleep, activity, readiness };
     this.updateUserInsights();
+
+    // Train the language model on the health data
+    if (sleep.length > 0 && activity.length > 0 && readiness.length > 0) {
+      this.languageModel.train(sleep, activity, readiness);
+    }
   }
 
   /**
@@ -184,10 +195,94 @@ export class ConversationalAI {
   }
 
   /**
+   * Generate dynamic response using the statistical language model (TRUE LLM)
+   */
+  private generateLLMResponse(question: string): string {
+    if (!this.healthData) {
+      return "I'd love to provide a personalized analysis, but I need access to your health data first. Connect your Oura account and I'll use my language model to generate unique insights tailored to your patterns.";
+    }
+
+    // Use the statistical language model to generate a truly dynamic response
+    // This uses n-grams, Markov chains, attention, beam search, and advanced sampling
+    // NO pre-made templates - every response is generated from learned patterns
+    const llmResponse = this.languageModel.generateAndRank(
+      question,
+      this.healthData,
+      8 // Generate 8 candidate responses and pick the best one
+    );
+
+    return llmResponse.response;
+  }
+
+  /**
+   * Generate LLM response with specific sampling strategy
+   */
+  private generateLLMWithSampling(question: string, creativity: number = 0.8): string {
+    if (!this.healthData) {
+      return "I need your health data to generate personalized insights.";
+    }
+
+    // Use advanced sampling for more creative or conservative responses
+    return this.languageModel.generateWithSampling(
+      question,
+      this.healthData,
+      {
+        temperature: creativity, // 0.7 = conservative, 1.0 = creative
+        topK: 40,
+        topP: 0.9,
+        maxSentences: 4
+      }
+    );
+  }
+
+  /**
+   * Generate LLM response with beam search for higher quality
+   */
+  private generateLLMWithBeamSearch(question: string): string {
+    if (!this.healthData) {
+      return "I need your health data to generate personalized insights.";
+    }
+
+    return this.languageModel.generateWithBeamSearch(
+      question,
+      this.healthData,
+      3 // Generate 3 sentences
+    );
+  }
+
+  /**
+   * Generate coherent LLM response (checks semantic coherence)
+   */
+  private generateCoherentLLMResponse(question: string): string {
+    if (!this.healthData) {
+      return "I need your health data to generate personalized insights.";
+    }
+
+    return this.languageModel.generateCoherent(
+      question,
+      this.healthData,
+      0.65 // Minimum coherence threshold
+    );
+  }
+
+  /**
    * Answer questions with deep intelligence using chain-of-thought reasoning
    */
   private async answerIntelligentQuestion(question: string, intent: Intent): Promise<string> {
     const lowerQ = question.toLowerCase();
+
+    // For simple questions, use the LLM to generate dynamic responses
+    const simpleQuestions = [
+      'how am i doing', 'how is my', 'what about my', 'tell me about',
+      'how was my', 'did i', 'am i', 'is my'
+    ];
+
+    const isSimpleQuestion = simpleQuestions.some(pattern => lowerQ.includes(pattern));
+
+    if (this.useLLM && isSimpleQuestion && this.healthData) {
+      // Use LLM for simple descriptive questions
+      return this.generateLLMResponse(question);
+    }
 
     // Check if Opus-level depth is needed (deepest analysis)
     const needsOpusDepth =
@@ -748,5 +843,44 @@ export class ConversationalAI {
       profile: this.context.userProfile,
       insights: Object.fromEntries(this.memory.userInsights),
     };
+  }
+
+  /**
+   * Toggle LLM mode on/off
+   */
+  setLLMMode(enabled: boolean): void {
+    this.useLLM = enabled;
+  }
+
+  /**
+   * Get LLM mode status
+   */
+  isLLMEnabled(): boolean {
+    return this.useLLM;
+  }
+
+  /**
+   * Get language model statistics
+   */
+  getLLMStats(): {
+    isTrained: boolean;
+    vocabularySize: number;
+    topWords: string[];
+  } {
+    return this.languageModel.getModelStats();
+  }
+
+  /**
+   * Evaluate a response using perplexity
+   */
+  evaluateResponseQuality(response: string): number {
+    return this.languageModel.evaluateResponse(response);
+  }
+
+  /**
+   * Find contextually similar words
+   */
+  findSimilarWords(word: string, n: number = 5): string[] {
+    return this.languageModel.findSimilarWords(word, n);
   }
 }
