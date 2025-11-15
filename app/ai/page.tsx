@@ -3,14 +3,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AIChat from '@/components/AIChat';
 import AIProfileDisplay from '@/components/AIProfileDisplay';
-import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network, User } from 'lucide-react';
+import { Brain, Sparkles, TrendingUp, Activity, Heart, Zap, MessageSquare, Cpu, Network, User, Download, FileText, Copy } from 'lucide-react';
 import { AIUserProfilingEngine, AIUserProfile } from '@/lib/ai/user-profiling-engine';
 import { useOuraData } from '@/hooks/useOura';
+import { DataExporter } from '@/lib/ai/data-export';
 
 export default function AIPage() {
   const [activeView, setActiveView] = useState<'chat' | 'profile' | 'predictions'>('chat');
   const [aiProfile, setAiProfile] = useState<AIUserProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
+  const [exportNotification, setExportNotification] = useState<string | null>(null);
   const profileGeneratedRef = useRef(false);
 
   // Fetch Oura data using the proper hook
@@ -35,6 +37,50 @@ export default function AIPage() {
       console.error('Error generating AI profile:', error);
     } finally {
       setProfileLoading(false);
+    }
+  };
+
+  const handleExportMarkdown = () => {
+    if (sleep.length === 0) {
+      setExportNotification('No data to export');
+      return;
+    }
+
+    const exportData = DataExporter.exportForClaude(sleep, activity, readiness, aiProfile || undefined);
+    const filename = `oura-health-data-${new Date().toISOString().split('T')[0]}.md`;
+    DataExporter.downloadExport(exportData.markdown, filename, 'markdown');
+    setExportNotification('✅ Markdown exported! Upload to Claude AI for analysis.');
+    setTimeout(() => setExportNotification(null), 5000);
+  };
+
+  const handleExportJSON = () => {
+    if (sleep.length === 0) {
+      setExportNotification('No data to export');
+      return;
+    }
+
+    const exportData = DataExporter.exportForClaude(sleep, activity, readiness, aiProfile || undefined);
+    const filename = `oura-health-data-${new Date().toISOString().split('T')[0]}.json`;
+    DataExporter.downloadExport(exportData.json, filename, 'json');
+    setExportNotification('✅ JSON exported successfully!');
+    setTimeout(() => setExportNotification(null), 5000);
+  };
+
+  const handleCopyToClipboard = async () => {
+    if (sleep.length === 0) {
+      setExportNotification('No data to copy');
+      return;
+    }
+
+    const exportData = DataExporter.exportForClaude(sleep, activity, readiness, aiProfile || undefined);
+    const success = await DataExporter.copyToClipboard(exportData.markdown);
+
+    if (success) {
+      setExportNotification('✅ Copied to clipboard! Paste into Claude AI for analysis.');
+      setTimeout(() => setExportNotification(null), 5000);
+    } else {
+      setExportNotification('❌ Failed to copy. Try downloading instead.');
+      setTimeout(() => setExportNotification(null), 5000);
     }
   };
 
@@ -67,7 +113,39 @@ export default function AIPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+                {/* Export Buttons */}
+                <div className="flex flex-wrap gap-3 mt-6 mb-4">
+                  <button
+                    onClick={handleCopyToClipboard}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl font-semibold transition-all duration-200 border border-white/30 hover:scale-105 shadow-lg"
+                  >
+                    <Copy className="w-4 h-4" />
+                    Copy for Claude AI
+                  </button>
+                  <button
+                    onClick={handleExportMarkdown}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl font-semibold transition-all duration-200 border border-white/30 hover:scale-105 shadow-lg"
+                  >
+                    <FileText className="w-4 h-4" />
+                    Export Markdown
+                  </button>
+                  <button
+                    onClick={handleExportJSON}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl font-semibold transition-all duration-200 border border-white/30 hover:scale-105 shadow-lg"
+                  >
+                    <Download className="w-4 h-4" />
+                    Export JSON
+                  </button>
+                </div>
+
+                {/* Export Notification */}
+                {exportNotification && (
+                  <div className="mb-4 p-3 bg-white/30 backdrop-blur-sm rounded-xl border border-white/40 text-white font-semibold animate-fadeIn">
+                    {exportNotification}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
                   <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
                     <div className="flex items-center gap-2 mb-1">
                       <MessageSquare className="w-5 h-5 text-white" />

@@ -1,10 +1,12 @@
 /**
  * CONVERSATIONAL AI ENGINE
  * Claude-level conversational intelligence with memory, context, and personality
+ * Now enhanced with advanced reasoning and chain-of-thought capabilities
  */
 
 import { NaturalLanguageEngine, ConversationContext, Message, UserProfile, Intent } from './natural-language-engine';
 import { SleepData, ActivityData, ReadinessData } from '../oura-api';
+import { AdvancedReasoningEngine, ReasoningChain } from './advanced-reasoning-engine';
 
 export interface AIPersonality {
   name: string;
@@ -181,10 +183,57 @@ export class ConversationalAI {
   }
 
   /**
-   * Answer questions with deep intelligence
+   * Answer questions with deep intelligence using chain-of-thought reasoning
    */
   private async answerIntelligentQuestion(question: string, intent: Intent): Promise<string> {
     const lowerQ = question.toLowerCase();
+
+    // Use advanced reasoning for complex health analysis questions
+    const needsDeepReasoning =
+      lowerQ.includes('analyze') ||
+      lowerQ.includes('pattern') ||
+      lowerQ.includes('trend') ||
+      lowerQ.includes('overall') ||
+      lowerQ.includes('assess') ||
+      (lowerQ.includes('why') && this.healthData && this.healthData.sleep.length > 7);
+
+    if (needsDeepReasoning && this.healthData) {
+      // Use chain-of-thought reasoning for deep analysis
+      const analysis = AdvancedReasoningEngine.analyzeHealthWithReasoning(
+        this.healthData.sleep,
+        this.healthData.activity,
+        this.healthData.readiness,
+        question
+      );
+
+      let response = `${analysis.summary}\n\n`;
+
+      // Add reasoning chain for transparency
+      if (analysis.reasoning.steps.length > 0) {
+        response += `**My Reasoning Process:**\n\n`;
+        analysis.reasoning.steps.slice(0, 3).forEach(step => {
+          response += `${step.step}. ${step.thought}\n→ ${step.conclusion}\n\n`;
+        });
+      }
+
+      // Add key insights
+      if (analysis.insights.length > 0) {
+        response += `**Key Insights:**\n\n`;
+        analysis.insights.slice(0, 4).forEach(insight => {
+          response += `${insight}\n\n`;
+        });
+      }
+
+      // Add recommendations
+      if (analysis.recommendations.length > 0) {
+        response += `**Recommendations:**\n\n`;
+        analysis.recommendations.slice(0, 3).forEach(rec => {
+          response += `${rec}\n\n`;
+        });
+      }
+
+      return response;
+    }
 
     // Root cause analysis questions
     if (lowerQ.includes('why')) {
